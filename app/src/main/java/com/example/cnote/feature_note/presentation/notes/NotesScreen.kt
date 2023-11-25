@@ -44,13 +44,8 @@ fun NotesScreen(
 ) {
     val state = viewModel.state.value
 
-
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    var paddingValues by remember {
-        mutableStateOf(PaddingValues())
-    }
-
 
     Scaffold(
         floatingActionButton = {
@@ -63,8 +58,8 @@ fun NotesScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-    ) {paddingValues ->
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -126,7 +121,7 @@ fun NotesScreen(
                                     message = "Note deleted",
                                     actionLabel = "Undo"
                                 )
-                                if(result == SnackbarResult.ActionPerformed) {
+                                if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(NotesEvent.RestoreNote)
                                 }
                             }
