@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CNote</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="color">Color</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 </resources>
