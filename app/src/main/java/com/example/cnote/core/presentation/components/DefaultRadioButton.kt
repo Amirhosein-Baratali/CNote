@@ -1,4 +1,4 @@
-package com.example.cnote.feature_note.presentation.notes.components
+package com.example.cnote.core.presentation.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

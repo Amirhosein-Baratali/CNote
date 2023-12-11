@@ -1,6 +1,6 @@
 package com.example.cnote.feature_task.domain.use_case
 
-import com.example.cnote.feature_note.domain.util.OrderType
+import com.example.cnote.core.domain.util.OrderType
 import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.feature_task.domain.repository.TaskRepository
 import com.example.cnote.feature_task.domain.util.TaskOrder

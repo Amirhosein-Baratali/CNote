@@ -20,11 +20,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,7 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cnote.feature_note.presentation.notes.components.NoteItem
 import com.example.cnote.feature_note.presentation.notes.components.OrderSection
-import com.example.cnote.feature_note.presentation.util.Screen
+import com.example.cnote.feature_note.presentation.util.NoteScreens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +48,7 @@ fun NotesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Screen.AddEditNoteScreen.route)
+                    navController.navigate(NoteScreens.AddEditNote.route)
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -72,7 +69,7 @@ fun NotesScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Your note",
+                    text = "Your notes",
                     style = MaterialTheme.typography.headlineSmall
                 )
                 IconButton(
@@ -110,7 +107,7 @@ fun NotesScreen(
                             .fillMaxWidth()
                             .clickable {
                                 navController.navigate(
-                                    Screen.AddEditNoteScreen.route +
+                                    NoteScreens.AddEditNote.route +
                                             "?noteId=${note.id}&noteColor=${note.color}"
                                 )
                             },
