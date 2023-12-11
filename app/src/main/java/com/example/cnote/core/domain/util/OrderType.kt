@@ -1,4 +1,4 @@
-package com.example.cnote.feature_note.domain.util
+package com.example.cnote.core.domain.util
 
 sealed class OrderType {
     object Ascending: OrderType()

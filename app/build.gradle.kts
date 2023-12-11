@@ -4,6 +4,7 @@ plugins {
     kotlin("kapt")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "1.5.31"
 }
 
 android {
@@ -94,4 +95,15 @@ dependencies {
 
     // Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:2.6.0")
+
+    //Data Store
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    //gson
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("org.danilopianini:gson-extras:0.2.1")
+
+    // Kotlin
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+
 }

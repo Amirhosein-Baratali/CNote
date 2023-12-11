@@ -2,7 +2,7 @@ package com.example.cnote.feature_note.presentation.notes
 
 import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.util.NoteOrder
-import com.example.cnote.feature_note.domain.util.OrderType
+import com.example.cnote.core.domain.util.OrderType
 
 data class NotesState(
     val notes: List<Note> = emptyList(),

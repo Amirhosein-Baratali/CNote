@@ -3,7 +3,7 @@ package com.example.cnote.feature_note.domain.use_case
 import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.repository.NoteRepository
 import com.example.cnote.feature_note.domain.util.NoteOrder
-import com.example.cnote.feature_note.domain.util.OrderType
+import com.example.cnote.core.domain.util.OrderType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
