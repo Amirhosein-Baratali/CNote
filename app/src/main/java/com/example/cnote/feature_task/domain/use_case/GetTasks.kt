@@ -11,7 +11,7 @@ class GetTasks(
     private val repository:TaskRepository
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         taskOrder: TaskOrder = TaskOrder.Date(OrderType.Descending)
     ): Flow<List<Task>> {
         return repository.getTasks().map { tasks ->

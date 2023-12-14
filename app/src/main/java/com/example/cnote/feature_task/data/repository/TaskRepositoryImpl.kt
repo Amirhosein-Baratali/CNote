@@ -24,4 +24,12 @@ class TaskRepositoryImpl(
         dao.deleteTask(task)
     }
 
+    override suspend fun updateTask(task: Task) {
+        dao.updateTask(task)
+    }
+
+    override suspend fun deleteCompletedTasks() {
+        dao.deleteCompletedTasks()
+    }
+
 }

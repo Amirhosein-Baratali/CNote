@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.cnote.feature_task.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
@@ -22,4 +23,10 @@ interface TaskDao {
 
     @Delete
     suspend fun deleteTask(task: Task)
+
+    @Update
+    suspend fun updateTask(task:Task)
+
+    @Query("delete from task where completed = 1")
+    suspend fun deleteCompletedTasks()
 }

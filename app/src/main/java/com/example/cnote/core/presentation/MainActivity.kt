@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.example.cnote.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.example.cnote.feature_note.presentation.notes.NotesScreen
 import com.example.cnote.feature_note.presentation.util.NoteScreens
+import com.example.cnote.feature_task.presentation.tasks.TasksScreen
 import com.example.cnote.ui.theme.CNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,39 +28,40 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
-                    NavHost(
-                        navController = navController,
-                        startDestination = NoteScreens.Notes.route
-                    ) {
-                        composable(route = NoteScreens.Notes.route) {
-                            NotesScreen(navController = navController)
-                        }
-                        composable(
-                            route = NoteScreens.AddEditNote.route +
-                                    "?noteId={noteId}&noteColor={noteColor}",
-                            arguments = listOf(
-                                navArgument(
-                                    name = "noteId"
-                                ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                },
-                                navArgument(
-                                    name = "noteColor"
-                                ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                },
-                            )
-                        ) {
-                            val color = it.arguments?.getInt("noteColor") ?: -1
-                            AddEditNoteScreen(
-                                navController = navController,
-                                noteColor = color
-                            )
-                        }
-                    }
+//                    val navController = rememberNavController()
+//                    NavHost(
+//                        navController = navController,
+//                        startDestination = NoteScreens.Notes.route
+//                    ) {
+//                        composable(route = NoteScreens.Notes.route) {
+//                            NotesScreen(navController = navController)
+//                        }
+//                        composable(
+//                            route = NoteScreens.AddEditNote.route +
+//                                    "?noteId={noteId}&noteColor={noteColor}",
+//                            arguments = listOf(
+//                                navArgument(
+//                                    name = "noteId"
+//                                ) {
+//                                    type = NavType.IntType
+//                                    defaultValue = -1
+//                                },
+//                                navArgument(
+//                                    name = "noteColor"
+//                                ) {
+//                                    type = NavType.IntType
+//                                    defaultValue = -1
+//                                },
+//                            )
+//                        ) {
+//                            val color = it.arguments?.getInt("noteColor") ?: -1
+//                            AddEditNoteScreen(
+//                                navController = navController,
+//                                noteColor = color
+//                            )
+//                        }
+//                    }
+                    TasksScreen(navController = rememberNavController())
                 }
             }
         }

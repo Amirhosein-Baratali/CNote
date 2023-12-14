@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cnote.feature_note.domain.model.Note
-import com.example.cnote.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import com.example.cnote.core.presentation.components.TransparentHintTextField
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

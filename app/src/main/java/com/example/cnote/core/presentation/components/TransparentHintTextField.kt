@@ -1,4 +1,4 @@
-package com.example.cnote.feature_note.presentation.add_edit_note.components
+package com.example.cnote.core.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

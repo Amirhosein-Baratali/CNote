@@ -7,10 +7,12 @@ import com.example.cnote.feature_task.data.data_source.TaskDatabase
 import com.example.cnote.feature_task.data.repository.TaskRepositoryImpl
 import com.example.cnote.feature_task.domain.repository.TaskRepository
 import com.example.cnote.feature_task.domain.use_case.AddTask
+import com.example.cnote.feature_task.domain.use_case.DeleteCompletedTasks
 import com.example.cnote.feature_task.domain.use_case.DeleteTask
 import com.example.cnote.feature_task.domain.use_case.GetTask
 import com.example.cnote.feature_task.domain.use_case.GetTasks
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
+import com.example.cnote.feature_task.domain.use_case.UpdateTask
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,6 +40,8 @@ object TaskModule {
             getTasks = GetTasks(repository),
             addTask = AddTask(repository),
             getTask = GetTask(repository),
-            deleteTask = DeleteTask(repository)
+            deleteTask = DeleteTask(repository),
+            updateTask = UpdateTask(repository),
+            deleteCompletedTasks = DeleteCompletedTasks(repository)
         )
 }
