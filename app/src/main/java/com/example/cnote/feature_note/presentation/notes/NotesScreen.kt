@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.cnote.core.presentation.bottom_navigation.BottomNavigation
 import com.example.cnote.feature_note.presentation.notes.components.NoteItem
 import com.example.cnote.feature_note.presentation.notes.components.OrderSection
 import com.example.cnote.feature_note.presentation.util.NoteScreens
@@ -55,7 +56,8 @@ fun NotesScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = { BottomNavigation(navController = navController)}
     ) { paddingValues ->
         Column(
             modifier = Modifier

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cnote.R
+import com.example.cnote.core.presentation.bottom_navigation.BottomNavigation
 import com.example.cnote.feature_task.presentation.tasks.components.TaskItem
 import com.example.cnote.feature_task.presentation.tasks.components.TaskOrderSection
 import kotlinx.coroutines.launch
@@ -89,7 +90,8 @@ fun TasksScreen(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = { BottomNavigation(navController = navController)}
     ) { paddingValues ->
         Column(
             modifier = Modifier
