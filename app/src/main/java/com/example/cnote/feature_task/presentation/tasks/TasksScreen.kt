@@ -41,6 +41,7 @@ import com.example.cnote.R
 import com.example.cnote.core.presentation.bottom_navigation.BottomNavigation
 import com.example.cnote.feature_task.presentation.tasks.components.TaskItem
 import com.example.cnote.feature_task.presentation.tasks.components.TaskOrderSection
+import com.example.cnote.feature_task.presentation.util.TaskScreens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +59,7 @@ fun TasksScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    navController.navigate(TaskScreens.AddEditTask.route)
                 }, containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -91,7 +92,7 @@ fun TasksScreen(
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        bottomBar = { BottomNavigation(navController = navController)}
+        bottomBar = { BottomNavigation(navController = navController) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -113,34 +114,38 @@ fun TasksScreen(
                         viewModel.onEvent(TasksEvent.Order(it))
                     }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(state.tasks) { task ->
-                        TaskItem(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
+            }
 
-                                },
-                            task = task,
-                            onDeleteClick = {
-                                viewModel.onEvent(TasksEvent.DeleteTask(task))
-                                scope.launch {
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = "Task deleted",
-                                        actionLabel = "Undo"
-                                    )
-                                    if (result == SnackbarResult.ActionPerformed) {
-                                        viewModel.onEvent(TasksEvent.RestoreTask)
-                                    }
-                                }
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(state.tasks) { task ->
+                    TaskItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(
+                                    TaskScreens.AddEditTask.route +
+                                            "?${TaskScreens.ARG_Task_ID}=${task.id}"
+                                )
                             },
-                            onCheckClick = {
-                                viewModel.onEvent(TasksEvent.UpdateTask(task.copy(completed = it)))
+                        task = task,
+                        onDeleteClick = {
+                            viewModel.onEvent(TasksEvent.DeleteTask(task))
+                            scope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = "Task deleted",
+                                    actionLabel = "Undo"
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    viewModel.onEvent(TasksEvent.RestoreTask)
+                                }
                             }
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                        },
+                        onCheckClick = {
+                            viewModel.onEvent(TasksEvent.UpdateTask(task.copy(completed = it)))
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

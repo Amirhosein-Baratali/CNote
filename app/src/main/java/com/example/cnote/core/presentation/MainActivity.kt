@@ -8,8 +8,8 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.cnote.feature_note.presentation.util.NoteScreens
-import com.example.cnote.feature_note.presentation.util.NotesNavigation
-import com.example.cnote.feature_task.presentation.util.TasksNavigation
+import com.example.cnote.feature_note.presentation.util.notesNavigation
+import com.example.cnote.feature_task.presentation.util.tasksNavigation
 import com.example.cnote.ui.theme.CNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,8 +27,8 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = NoteScreens.Notes.route
                     ) {
-                        NotesNavigation(navController)
-                        TasksNavigation(navController)
+                        notesNavigation(navController)
+                        tasksNavigation(navController)
                     }
                 }
             }
