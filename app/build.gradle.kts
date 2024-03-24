@@ -40,7 +40,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    kotlin{
+    kotlin {
         jvmToolchain(17)
     }
     buildFeatures {
@@ -73,7 +73,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    
+
     // Compose dependencies
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-beta01")
     implementation("androidx.navigation:navigation-compose:2.7.5")

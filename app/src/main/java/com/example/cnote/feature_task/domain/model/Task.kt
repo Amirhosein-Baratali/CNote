@@ -6,10 +6,10 @@ import java.text.DateFormat
 
 @Entity
 data class Task(
-    val name:String,
-    val description:String,
-    val completed:Boolean,
-    val timeStamp:Long = System.currentTimeMillis(),
+    val name: String,
+    val description: String,
+    val completed: Boolean,
+    val timeStamp: Long = System.currentTimeMillis(),
     val importance: Boolean = false,
     @PrimaryKey val id: Int? = null
 ) {
@@ -17,4 +17,4 @@ data class Task(
         get() = DateFormat.getDateTimeInstance().format(timeStamp)
 }
 
-class InvalidTaskException(message:String) : Exception(message)
+class InvalidTaskException(message: String) : Exception(message)

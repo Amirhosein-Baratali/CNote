@@ -1,9 +1,10 @@
 package com.example.cnote.feature_task.domain.repository
 
+import com.example.cnote.core.domain.repository.OrderRepository
 import com.example.cnote.feature_task.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
-interface TaskRepository {
+interface TaskRepository : OrderRepository {
 
     fun getTasks(): Flow<List<Task>>
 

@@ -6,7 +6,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cnote.core.presentation.TextFieldState
-import com.example.cnote.feature_note.domain.model.InvalidNoteException
 import com.example.cnote.feature_task.domain.model.InvalidTaskException
 import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
@@ -42,7 +41,7 @@ class AddEditTaskViewModel @Inject constructor(
 
     private val _isCompletedState = mutableStateOf(false)
     val isCompletedState: State<Boolean> = _isCompletedState
-    
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -126,6 +125,7 @@ class AddEditTaskViewModel @Inject constructor(
             AddEditTaskEvent.ToggleCompletion -> {
                 _isCompletedState.value = !isCompletedState.value
             }
+
             AddEditTaskEvent.ToggleImportance -> {
                 _isImportantState.value = !isImportantState.value
             }

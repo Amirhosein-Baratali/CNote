@@ -6,10 +6,14 @@
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="add_task">Add Task</string>
+    <string name="add_note">Add Note</string>
     <string name="your_tasks">Your Tasks</string>
+    <string name="your_notes">Your Notes</string>
     <string name="deleted_completed_tasks">Deleted Completed Tasks</string>
     <string name="sort">Sort</string>
     <string name="important_task">Important Task</string>
     <string name="task_completed">Task Completed</string>
     <string name="save_task">Save task</string>
+    <string name="sort_by_date">Order by Date</string>
+    <string name="sort_by_title">Order by Title</string>
 </resources>

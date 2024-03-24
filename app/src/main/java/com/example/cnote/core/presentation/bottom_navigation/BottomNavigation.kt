@@ -4,7 +4,6 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -33,12 +32,12 @@ fun BottomNavigation(navController: NavController) {
                         navController.navigate(item.direction)
                     }
                 },
-               /* colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = contentColor,
-                    selectedTextColor = contentColor,
-                    unselectedIconColor = contentColor.copy(0.4f),
-                    unselectedTextColor = contentColor.copy(0.4f)
-                ),*/
+                /* colors = NavigationBarItemDefaults.colors(
+                     selectedIconColor = contentColor,
+                     selectedTextColor = contentColor,
+                     unselectedIconColor = contentColor.copy(0.4f),
+                     unselectedTextColor = contentColor.copy(0.4f)
+                 ),*/
                 icon = {
                     Icon(imageVector = item.icon, contentDescription = item.title)
                 }

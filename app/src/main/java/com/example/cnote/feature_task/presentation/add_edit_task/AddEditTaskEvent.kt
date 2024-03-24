@@ -7,7 +7,7 @@ sealed class AddEditTaskEvent {
     data class ChangeNameFocus(val focusState: FocusState) : AddEditTaskEvent()
     data class EnteredDescription(val value: String) : AddEditTaskEvent()
     data class ChangeDescriptionFocus(val focusState: FocusState) : AddEditTaskEvent()
-    object ToggleImportance: AddEditTaskEvent()
-    object ToggleCompletion: AddEditTaskEvent()
+    object ToggleImportance : AddEditTaskEvent()
+    object ToggleCompletion : AddEditTaskEvent()
     object SaveTask : AddEditTaskEvent()
 }

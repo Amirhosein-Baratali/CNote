@@ -2,7 +2,11 @@ package com.example.cnote.feature_note.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.cnote.ui.theme.*
+import com.example.cnote.ui.theme.BabyBlue
+import com.example.cnote.ui.theme.LightGreen
+import com.example.cnote.ui.theme.RedOrange
+import com.example.cnote.ui.theme.RedPink
+import com.example.cnote.ui.theme.Violet
 
 @Entity
 data class Note(
@@ -17,4 +21,4 @@ data class Note(
     }
 }
 
-class InvalidNoteException(message: String): Exception(message)
+class InvalidNoteException(message: String) : Exception(message)

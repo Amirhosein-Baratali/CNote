@@ -1,4 +1,4 @@
-package com.example.cnote.feature_task.presentation.tasks.components
+package com.example.cnote.core.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
@@ -9,15 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.cnote.R
+import com.example.cnote.core.domain.util.Order
 import com.example.cnote.core.domain.util.OrderType
-import com.example.cnote.feature_task.domain.util.TaskOrder
-
+import com.example.cnote.feature_task.presentation.tasks.components.OrderMenuItem
 
 @Composable
-fun TaskOrderSection(
+fun OrderSection(
     modifier: Modifier = Modifier,
-    taskOrder: TaskOrder = TaskOrder.Date(OrderType.Descending),
-    onOrderChange: (TaskOrder) -> Unit,
+    order: Order = Order.Date(OrderType.Descending),
+    onOrderChange: (Order) -> Unit,
     expanded: Boolean,
     onExpandChange: (Boolean) -> Unit
 ) {
@@ -26,14 +26,14 @@ fun TaskOrderSection(
         expanded = expanded,
         onDismissRequest = { onExpandChange(false) }
     ) {
-        val isDateSelected = taskOrder is TaskOrder.Date
-        val isTitleSelected = taskOrder is TaskOrder.Name
+        val isDateSelected = order is Order.Date
+        val isTitleSelected = order is Order.Name
 
         val orderByDate = {
             val newOrder = if (isDateSelected) {
-                TaskOrder.Date(taskOrder.orderType.changeOrderType())
+                Order.Date(order.orderType.changeOrderType())
             } else {
-                TaskOrder.Date(OrderType.default)
+                Order.Date(OrderType.default)
             }
             onOrderChange(newOrder)
             onExpandChange(false)
@@ -41,9 +41,9 @@ fun TaskOrderSection(
 
         val orderByTitle = {
             val newOrder = if (isTitleSelected) {
-                TaskOrder.Name(taskOrder.orderType.changeOrderType())
+                Order.Name(order.orderType.changeOrderType())
             } else {
-                TaskOrder.Name(OrderType.default)
+                Order.Name(OrderType.default)
             }
             onOrderChange(newOrder)
             onExpandChange(false)
@@ -59,7 +59,7 @@ fun TaskOrderSection(
                     icon = Icons.Outlined.DateRange,
                     text = dateText,
                     isSelected = isDateSelected,
-                    orderType = taskOrder.orderType
+                    orderType = order.orderType
                 )
             }
         )
@@ -71,7 +71,7 @@ fun TaskOrderSection(
                     icon = Icons.Outlined.Title,
                     text = titleText,
                     isSelected = isTitleSelected,
-                    orderType = taskOrder.orderType
+                    orderType = order.orderType
                 )
             }
         )

@@ -4,11 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cnote.core.domain.util.OrderType
+import com.example.cnote.core.domain.util.Order
 import com.example.cnote.feature_task.domain.model.Task
-import com.example.cnote.feature_task.domain.use_case.DeleteCompletedTasks
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
-import com.example.cnote.feature_task.domain.util.TaskOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -29,20 +27,26 @@ class TasksViewModel @Inject constructor(
     private var recentlyDeletedTask: Task? = null
 
     init {
-        getTasks(TaskOrder.Date(OrderType.Descending))
+        viewModelScope.launch {
+            getTasks(taskUseCases.retrieveTaskOrder())
+        }
     }
 
     fun onEvent(event: TasksEvent) {
         when (event) {
-            is TasksEvent.Order -> {
-                if (state.value.taskOrder::class == event.taskOrder::class && state.value.taskOrder.orderType == event.taskOrder.orderType) return
-                getTasks(event.taskOrder)
+            is TasksEvent.Sort -> {
+                val taskOrder = event.taskOrder
+                viewModelScope.launch {
+                    taskUseCases.storeTaskOrder(taskOrder)
+                }
+                getTasks(taskOrder)
             }
 
             is TasksEvent.DeleteTask -> {
                 viewModelScope.launch {
-                    taskUseCases.deleteTask(event.task)
-                    recentlyDeletedTask = event.task
+                    val task = event.task
+                    taskUseCases.deleteTask(task)
+                    recentlyDeletedTask = task
                 }
             }
 
@@ -53,11 +57,6 @@ class TasksViewModel @Inject constructor(
                 }
             }
 
-            TasksEvent.ToggleOrderSection -> {
-                _state.value =
-                    state.value.copy(isOrderSectionVisible = !state.value.isOrderSectionVisible)
-            }
-
             is TasksEvent.UpdateTask -> {
                 viewModelScope.launch {
                     taskUseCases.updateTask(event.task)
@@ -65,7 +64,7 @@ class TasksViewModel @Inject constructor(
                 getTasks(state.value.taskOrder)
             }
 
-            is TasksEvent.DeleteCompletedTasks ->{
+            is TasksEvent.DeleteCompletedTasks -> {
                 viewModelScope.launch {
                     taskUseCases.deleteCompletedTasks()
                 }
@@ -73,12 +72,17 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    private fun getTasks(taskOrder: TaskOrder) {
+    private fun getTasks(taskOrder: Order) {
         getTasksJob?.cancel()
         getTasksJob = taskUseCases.getTasks(taskOrder).onEach { tasks ->
             _state.value = state.value.copy(
                 tasks = tasks, taskOrder = taskOrder
             )
         }.launchIn(viewModelScope)
+    }
+
+    override fun onCleared() {
+        getTasksJob?.cancel()
+        super.onCleared()
     }
 }
