@@ -1,4 +1,4 @@
-package com.example.cnote.core.presentation.components
+package com.example.cnote.core.presentation.components.order
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import com.example.cnote.R
 import com.example.cnote.core.domain.util.Order
 import com.example.cnote.core.domain.util.OrderType
-import com.example.cnote.feature_task.presentation.tasks.components.OrderMenuItem
 
 @Composable
 fun OrderSection(

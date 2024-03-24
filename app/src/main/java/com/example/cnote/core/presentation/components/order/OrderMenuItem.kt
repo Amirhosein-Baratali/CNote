@@ -1,4 +1,4 @@
-package com.example.cnote.feature_task.presentation.tasks.components
+package com.example.cnote.core.presentation.components.order
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding

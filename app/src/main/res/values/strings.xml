@@ -16,4 +16,6 @@
     <string name="save_task">Save task</string>
     <string name="sort_by_date">Order by Date</string>
     <string name="sort_by_title">Order by Title</string>
+    <string name="more">more</string>
+    <string name="delete_completed">Delete Completed</string>
 </resources>

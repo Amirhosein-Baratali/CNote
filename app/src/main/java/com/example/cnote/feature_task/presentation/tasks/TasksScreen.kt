@@ -8,17 +8,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoDelete
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,6 +28,7 @@ import com.example.cnote.R
 import com.example.cnote.core.presentation.TopBar
 import com.example.cnote.core.presentation.bottom_navigation.BottomNavigation
 import com.example.cnote.core.presentation.components.FloatingAddButton
+import com.example.cnote.feature_task.presentation.tasks.components.DeleteCompletedMenuItem
 import com.example.cnote.feature_task.presentation.tasks.components.TaskItem
 import com.example.cnote.feature_task.presentation.util.TaskScreens
 import kotlinx.coroutines.launch
@@ -43,6 +44,8 @@ fun TasksScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var moreMenuExpanded by remember { mutableStateOf(false) }
+
     Scaffold(
         floatingActionButton = {
             FloatingAddButton(
@@ -55,14 +58,17 @@ fun TasksScreen(
                 stringResource(R.string.your_tasks),
                 order = state.taskOrder,
                 onOrderChange = { viewModel.onEvent(TasksEvent.Sort(it)) },
-                extraActions = {
-                    if (haveCompletedTask)
-                        Icon(
-                            modifier = Modifier.clickable { viewModel.onEvent(TasksEvent.DeleteCompletedTasks) },
-                            imageVector = Icons.Default.AutoDelete,
-                            contentDescription = stringResource(R.string.deleted_completed_tasks)
-                        )
-                }
+                showMoreIcon = haveCompletedTask,
+                dropMenuItems = {
+                    DeleteCompletedMenuItem(
+                        onDeleteCompletedTasks = {
+                            viewModel.onEvent(TasksEvent.DeleteCompletedTasks)
+                            moreMenuExpanded = false
+                        }
+                    )
+                },
+                moreExpanded = moreMenuExpanded,
+                onMoreExpandedChange = { moreMenuExpanded = it }
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
