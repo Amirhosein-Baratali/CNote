@@ -20,6 +20,9 @@ sealed class Order(val orderType: OrderType) {
                     "Name" -> Name(orderType)
                     else -> Date(orderType)
                 }
-            } ?: Date(OrderType.default)
+            } ?: defaultDateOrder()
+
+        fun defaultNameOrder(): Order = Name(OrderType.Ascending)
+        fun defaultDateOrder(): Order = Date(OrderType.Descending)
     }
 }

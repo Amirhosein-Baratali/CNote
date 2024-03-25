@@ -31,9 +31,7 @@ fun OrderSection(
         val orderByDate = {
             val newOrder = if (isDateSelected) {
                 Order.Date(order.orderType.changeOrderType())
-            } else {
-                Order.Date(OrderType.default)
-            }
+            } else Order.defaultDateOrder()
             onOrderChange(newOrder)
             onExpandChange(false)
         }
@@ -41,9 +39,7 @@ fun OrderSection(
         val orderByTitle = {
             val newOrder = if (isTitleSelected) {
                 Order.Name(order.orderType.changeOrderType())
-            } else {
-                Order.Name(OrderType.default)
-            }
+            } else Order.defaultNameOrder()
             onOrderChange(newOrder)
             onExpandChange(false)
         }

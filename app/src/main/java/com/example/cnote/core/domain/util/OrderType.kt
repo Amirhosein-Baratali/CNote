@@ -10,8 +10,4 @@ sealed class OrderType {
             Descending -> Ascending
         }
     }
-
-    companion object {
-        val default = Descending
-    }
 }
