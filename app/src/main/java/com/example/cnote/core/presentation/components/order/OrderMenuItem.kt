@@ -1,5 +1,6 @@
 package com.example.cnote.core.presentation.components.order
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -7,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +25,8 @@ fun OrderMenuItem(
     isSelected: Boolean,
     orderType: OrderType
 ) {
-    val color = if (isSelected) Color.Blue else Color.Black
+    val selectedColor = if (isSystemInDarkTheme()) Color(0xFF0077B6) else Color.Blue
+    val color = if (isSelected) selectedColor else LocalContentColor.current
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             imageVector = icon,

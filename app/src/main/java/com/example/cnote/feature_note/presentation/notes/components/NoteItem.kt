@@ -36,6 +36,7 @@ fun NoteItem(
     cutCornerSize: Dp = 30.dp,
     onDeleteClick: () -> Unit
 ) {
+    val contentColor = Color.Black
     Box(
         modifier = modifier
     ) {
@@ -73,7 +74,7 @@ fun NoteItem(
             Text(
                 text = note.title,
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = contentColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -81,7 +82,7 @@ fun NoteItem(
             Text(
                 text = note.content,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = contentColor,
                 maxLines = 10,
                 overflow = TextOverflow.Ellipsis
             )
@@ -93,7 +94,7 @@ fun NoteItem(
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete note",
-                tint = MaterialTheme.colorScheme.onSurface
+                tint = contentColor
             )
         }
     }

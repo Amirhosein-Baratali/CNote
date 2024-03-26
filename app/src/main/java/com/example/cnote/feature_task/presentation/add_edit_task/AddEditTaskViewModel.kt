@@ -11,6 +11,7 @@ import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
 import com.example.cnote.feature_task.presentation.util.TaskScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -21,6 +22,12 @@ class AddEditTaskViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private var getTaskJob: Job? = null
+    private var saveTaskJob: Job? = null
+
+    private val _title = mutableStateOf("")
+    val title: State<String> = _title
 
     private val _taskName = mutableStateOf(
         TextFieldState(
@@ -48,24 +55,56 @@ class AddEditTaskViewModel @Inject constructor(
     private var currentTaskId: Int? = null
 
     init {
-        savedStateHandle.get<Int>(TaskScreens.ARG_Task_ID)?.let { taskId ->
-            if (taskId != -1) {
-                viewModelScope.launch {
-                    taskUseCases.getTask(taskId)?.also { task ->
-                        currentTaskId = task.id
-                        _taskName.value = taskName.value.copy(
-                            text = task.name,
-                            isHintVisible = false
-                        )
-                        _taskDescription.value = _taskDescription.value.copy(
-                            text = task.description,
-                            isHintVisible = task.description.isBlank()
-                        )
+        savedStateHandle.run {
+            get<Int>(TaskScreens.ARG_TASK_ID)?.takeIf { it != -1 }
+                ?.let { taskId -> getTask(taskId) }
+            get<String>(TaskScreens.ARG_TITLE)?.let { title ->
+                _title.value = title
+            }
+        }
+    }
 
-                        _isCompletedState.value = task.completed
-                        _isImportantState.value = task.importance
-                    }
-                }
+    private fun getTask(id: Int) {
+        getTaskJob?.cancel()
+        getTaskJob = viewModelScope.launch {
+            taskUseCases.getTask(id)?.also { task ->
+                currentTaskId = task.id
+                _taskName.value = taskName.value.copy(
+                    text = task.name,
+                    isHintVisible = false
+                )
+                _taskDescription.value = _taskDescription.value.copy(
+                    text = task.description,
+                    isHintVisible = task.description.isBlank()
+                )
+
+                _isCompletedState.value = task.completed
+                _isImportantState.value = task.importance
+            }
+        }
+    }
+
+    private fun saveTask() {
+        saveTaskJob?.cancel()
+        saveTaskJob = viewModelScope.launch {
+            try {
+                taskUseCases.addTask(
+                    Task(
+                        name = taskName.value.text,
+                        description = taskDescription.value.text,
+                        timeStamp = System.currentTimeMillis(),
+                        completed = isCompletedState.value,
+                        importance = isImportantState.value,
+                        id = currentTaskId
+                    )
+                )
+                _eventFlow.emit(UiEvent.SaveTask)
+            } catch (e: InvalidTaskException) {
+                _eventFlow.emit(
+                    UiEvent.ShowError(
+                        message = e.message ?: "Couldn't save task"
+                    )
+                )
             }
         }
     }
@@ -99,27 +138,7 @@ class AddEditTaskViewModel @Inject constructor(
             }
 
             is AddEditTaskEvent.SaveTask -> {
-                viewModelScope.launch {
-                    try {
-                        taskUseCases.addTask(
-                            Task(
-                                name = taskName.value.text,
-                                description = taskDescription.value.text,
-                                timeStamp = System.currentTimeMillis(),
-                                completed = isCompletedState.value,
-                                importance = isImportantState.value,
-                                id = currentTaskId
-                            )
-                        )
-                        _eventFlow.emit(UiEvent.SaveTask)
-                    } catch (e: InvalidTaskException) {
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save task"
-                            )
-                        )
-                    }
-                }
+                saveTask()
             }
 
             AddEditTaskEvent.ToggleCompletion -> {
@@ -134,7 +153,13 @@ class AddEditTaskViewModel @Inject constructor(
 
 
     sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
+        data class ShowError(val message: String) : UiEvent()
         object SaveTask : UiEvent()
+    }
+
+    override fun onCleared() {
+        saveTaskJob?.cancel()
+        getTaskJob?.cancel()
+        super.onCleared()
     }
 }

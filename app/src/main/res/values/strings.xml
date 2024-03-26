@@ -6,16 +6,18 @@
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="add_task">Add Task</string>
+    <string name="edit_task">Edit Task</string>
     <string name="add_note">Add Note</string>
-    <string name="your_tasks">Your Tasks</string>
-    <string name="your_notes">Your Notes</string>
-    <string name="deleted_completed_tasks">Deleted Completed Tasks</string>
+    <string name="tasks">Tasks</string>
+    <string name="notes">Notes</string>
     <string name="sort">Sort</string>
     <string name="important_task">Important Task</string>
     <string name="task_completed">Task Completed</string>
-    <string name="save_task">Save task</string>
-    <string name="sort_by_date">Order by Date</string>
-    <string name="sort_by_title">Order by Title</string>
+    <string name="save">Save</string>
+    <string name="sort_by_date">Sort by Date</string>
+    <string name="sort_by_title">Sort by Title</string>
     <string name="more">more</string>
-    <string name="delete_completed">Delete Completed</string>
+    <string name="delete_all_completed">Delete All Completed</string>
+    <string name="completed">Completed</string>
+    <string name="important">Important</string>
 </resources>

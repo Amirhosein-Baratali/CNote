@@ -8,36 +8,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun TransparentHintTextField(
+    modifier: Modifier = Modifier,
     text: String,
     hint: String,
-    modifier: Modifier = Modifier,
     isHintVisible: Boolean = true,
     onValueChange: (String) -> Unit,
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
     onFocusChange: (FocusState) -> Unit
 ) {
-    Box(
-        modifier = modifier
-    ) {
+    Box {
         BasicTextField(
+            modifier = modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    onFocusChange(it)
+                },
             value = text,
             onValueChange = onValueChange,
             singleLine = singleLine,
             textStyle = textStyle,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged {
-                    onFocusChange(it)
-                }
+            cursorBrush = SolidColor(textStyle.color)
         )
         if (isHintVisible) {
-            Text(text = hint, style = textStyle, color = Color.DarkGray)
+            Text(text = hint, style = textStyle.copy(color = textStyle.color.copy(alpha = 0.5f)))
         }
     }
 }

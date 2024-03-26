@@ -5,6 +5,7 @@ sealed class TaskScreens(val route: String) {
     object AddEditTask : TaskScreens("add_edit_task_screen")
 
     companion object {
-        const val ARG_Task_ID = "taskId"
+        const val ARG_TASK_ID = "taskId"
+        const val ARG_TITLE = "title"
     }
 }

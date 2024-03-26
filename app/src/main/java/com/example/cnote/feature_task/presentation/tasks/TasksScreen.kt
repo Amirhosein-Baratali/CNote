@@ -46,16 +46,24 @@ fun TasksScreen(
 
     var moreMenuExpanded by remember { mutableStateOf(false) }
 
+    val addTask = stringResource(R.string.add_task)
+    val editTask = stringResource(R.string.edit_task)
+
     Scaffold(
         floatingActionButton = {
             FloatingAddButton(
-                onClick = { navController.navigate(TaskScreens.AddEditTask.route) },
-                stringResource(R.string.add_task)
+                onClick = {
+                    navController.navigate(
+                        TaskScreens.AddEditTask.route
+                                + "?${TaskScreens.ARG_TITLE}=${addTask}"
+                    )
+                },
+                addTask
             )
         },
         topBar = {
             TopBar(
-                stringResource(R.string.your_tasks),
+                stringResource(R.string.tasks),
                 order = state.taskOrder,
                 onOrderChange = { viewModel.onEvent(TasksEvent.Sort(it)) },
                 showMoreIcon = haveCompletedTask,
@@ -86,8 +94,9 @@ fun TasksScreen(
                         .fillMaxWidth()
                         .clickable {
                             navController.navigate(
-                                TaskScreens.AddEditTask.route +
-                                        "?${TaskScreens.ARG_Task_ID}=${task.id}"
+                                TaskScreens.AddEditTask.route
+                                        + "?${TaskScreens.ARG_TASK_ID}=${task.id}"
+                                        + "&${TaskScreens.ARG_TITLE}=${editTask}"
                             )
                         },
                     task = task,

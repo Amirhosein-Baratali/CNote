@@ -1,5 +1,7 @@
 package com.example.cnote.core.util
 
+import android.content.Context
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
@@ -18,3 +20,7 @@ suspend fun DataStore<Preferences>.getStringValue(key: Preferences.Key<String>):
     }.map { preferences ->
         preferences[key]
     }.firstOrNull()
+
+fun Context.showShortToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}

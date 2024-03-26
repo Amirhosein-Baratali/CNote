@@ -1,11 +1,13 @@
 package com.example.cnote.feature_task.presentation.tasks.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.example.cnote.R
 import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.ui.theme.CNoteTheme
+import com.example.cnote.ui.theme.spacing
 
 @Composable
 fun TaskItem(
@@ -32,15 +35,37 @@ fun TaskItem(
     onDeleteClick: () -> Unit,
     onCheckClick: (isChecked: Boolean) -> Unit
 ) {
-    val taskNameDecoration = if (task.completed) TextDecoration.LineThrough else TextDecoration.None
-    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(checked = task.completed, onCheckedChange = onCheckClick)
+    val completed = task.completed
+
+    val taskNameDecoration = if (completed) TextDecoration.LineThrough else TextDecoration.None
+
+    val bgColor = MaterialTheme.colorScheme.surfaceVariant
+    val contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(color = bgColor, shape = MaterialTheme.shapes.medium)
+            .padding(
+                vertical = MaterialTheme.spacing.medium,
+                horizontal = MaterialTheme.spacing.medium
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RoundCheckbox(
+            checked = completed,
+            onCheckedChange = onCheckClick,
+            circleColor = contentColor
+        )
         Text(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp),
             text = AnnotatedString.Builder().apply {
                 withStyle(
                     style = SpanStyle(
-                        textDecoration = taskNameDecoration
+                        textDecoration = taskNameDecoration,
+                        color = contentColor
                     )
                 ) {
                     append(task.name)
@@ -53,12 +78,14 @@ fun TaskItem(
             Icon(
                 painter = painterResource(id = R.drawable.exclamation_mark),
                 tint = Color.Red,
-                contentDescription = "This task is important"
+                contentDescription = "This task is important",
+                modifier = Modifier.size(24.dp)
             )
         }
-        Icon(imageVector = Icons.Default.Delete,
+        Icon(
+            imageVector = Icons.Default.Delete,
             contentDescription = "Delete task",
-            tint = MaterialTheme.colorScheme.primary,
+            tint = contentColor,
             modifier = Modifier
                 .clickable { onDeleteClick() }
                 .padding(horizontal = 8.dp)

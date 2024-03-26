@@ -20,7 +20,7 @@ fun DeleteCompletedMenuItem(onDeleteCompletedTasks: () -> Unit) {
     DropdownMenuItem(
         text = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                val deleteCompletedText = stringResource(R.string.delete_completed)
+                val deleteCompletedText = stringResource(R.string.delete_all_completed)
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = deleteCompletedText,

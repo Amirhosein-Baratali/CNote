@@ -51,7 +51,7 @@ fun NotesScreen(
         },
         topBar = {
             TopBar(
-                stringResource(R.string.your_notes),
+                stringResource(R.string.notes),
                 order = state.noteOrder,
                 onOrderChange = { viewModel.onEvent(NotesEvent.Sort(it)) }
             )
