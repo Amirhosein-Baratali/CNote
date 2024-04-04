@@ -1,8 +1,5 @@
 package com.example.cnote.feature_task.presentation.add_edit_task.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +28,6 @@ import com.example.cnote.R
 import com.example.cnote.core.presentation.TextFieldState
 import com.example.cnote.core.presentation.components.TransparentHintTextField
 import com.example.cnote.feature_task.presentation.add_edit_task.AddEditTaskEvent
-import com.example.cnote.feature_task.presentation.tasks.components.RoundCheckbox
 import com.example.cnote.ui.theme.spacing
 
 @Composable
@@ -65,7 +61,7 @@ fun AddEditTaskDialog(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = stringResource(id = R.string.save))
+                    Text(text = stringResource(id = R.string.save_task))
                 }
             }
         },

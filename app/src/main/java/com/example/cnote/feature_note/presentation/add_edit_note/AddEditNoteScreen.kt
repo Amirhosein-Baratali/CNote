@@ -35,10 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.cnote.R
 import com.example.cnote.core.presentation.components.TransparentHintTextField
+import com.example.cnote.core.util.TestTags
 import com.example.cnote.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -85,7 +88,10 @@ fun AddEditNoteScreen(
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+                Icon(
+                    imageVector = Icons.Default.Save,
+                    contentDescription = stringResource(R.string.save_note)
+                )
             }
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
@@ -144,10 +150,12 @@ fun AddEditNoteScreen(
                 },
                 isHintVisible = titleState.isHintVisible,
                 singleLine = true,
-                textStyle = MaterialTheme.typography.headlineSmall
+                textStyle = MaterialTheme.typography.headlineSmall,
+                testTag = TestTags.NOTE_TITLE_TEXT_FIELD
             )
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
+                modifier = Modifier.fillMaxHeight(),
                 text = contentState.text,
                 hint = contentState.hint,
                 onValueChange = {
@@ -158,7 +166,7 @@ fun AddEditNoteScreen(
                 },
                 isHintVisible = contentState.isHintVisible,
                 textStyle = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.fillMaxHeight()
+                testTag = TestTags.NOTE_CONTENT_TEXT_FIELD
             )
         }
     }

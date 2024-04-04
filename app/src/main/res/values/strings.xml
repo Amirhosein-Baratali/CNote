@@ -13,11 +13,12 @@
     <string name="sort">Sort</string>
     <string name="important_task">Important Task</string>
     <string name="task_completed">Task Completed</string>
-    <string name="save">Save</string>
+    <string name="save_task">Save Task</string>
     <string name="sort_by_date">Sort by Date</string>
     <string name="sort_by_title">Sort by Title</string>
     <string name="more">more</string>
     <string name="delete_all_completed">Delete All Completed</string>
     <string name="completed">Completed</string>
     <string name="important">Important</string>
+    <string name="save_note">Save note</string>
 </resources>

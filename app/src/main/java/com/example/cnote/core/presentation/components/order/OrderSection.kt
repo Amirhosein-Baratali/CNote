@@ -62,6 +62,7 @@ fun OrderSection(
         )
 
         DropdownMenuItem(
+            modifier = Modifier.testTag(TestTags.ORDER_BY_NAME),
             onClick = orderByTitle,
             text = {
                 OrderMenuItem(
