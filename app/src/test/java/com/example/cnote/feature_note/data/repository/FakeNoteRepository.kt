@@ -1,21 +1,25 @@
 package com.example.cnote.feature_note.data.repository
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.example.cnote.core.domain.util.Order
 import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeNoteRepository: NoteRepository {
+class FakeNoteRepository : NoteRepository {
 
     private val notes = mutableListOf<Note>()
+    private var noteOrder by mutableStateOf(Order.defaultDateOrder())
 
     override suspend fun saveOrder(order: Order) {
-        TODO("Not yet implemented")
+        noteOrder = order
     }
 
     override suspend fun getSavedOrder(): Order {
-        TODO("Not yet implemented")
+        return noteOrder
     }
 
     override fun getNotes(): Flow<List<Note>> {

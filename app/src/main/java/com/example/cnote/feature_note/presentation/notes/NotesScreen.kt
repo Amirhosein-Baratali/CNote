@@ -1,6 +1,5 @@
 package com.example.cnote.feature_note.presentation.notes
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +30,6 @@ import com.example.cnote.feature_note.presentation.util.NoteScreens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalAnimationApi
 @Composable
 fun NotesScreen(
     navController: NavController,

@@ -7,10 +7,12 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.example.cnote.R
 import com.example.cnote.core.domain.util.Order
 import com.example.cnote.core.domain.util.OrderType
+import com.example.cnote.core.util.TestTags
 
 @Composable
 fun OrderSection(
@@ -21,7 +23,7 @@ fun OrderSection(
     onExpandChange: (Boolean) -> Unit
 ) {
     DropdownMenu(
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.ORDER_SECTION),
         expanded = expanded,
         onDismissRequest = { onExpandChange(false) }
     ) {
