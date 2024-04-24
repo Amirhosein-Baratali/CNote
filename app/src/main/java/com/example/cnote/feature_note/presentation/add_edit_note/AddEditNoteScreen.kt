@@ -1,5 +1,6 @@
 package com.example.cnote.feature_note.presentation.add_edit_note
 
+import android.util.Log
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -43,26 +44,27 @@ import com.example.cnote.R
 import com.example.cnote.core.presentation.components.TransparentHintTextField
 import com.example.cnote.core.util.TestTags
 import com.example.cnote.feature_note.domain.model.Note
+import com.example.cnote.ui.theme.CNoteTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
 
-    val noteBackgroundAnimatable = remember {
-        Animatable(
-            Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
-        )
-    }
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    AddEditNoteScreenContent(
+        titleState = viewModel.noteTitle.value,
+        contentState = viewModel.noteContent.value,
+        colorState = viewModel.noteColor.value,
+        noteColor = noteColor,
+        sendVmEvent = viewModel::onEvent,
+        snackbarHostState = snackbarHostState
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -79,12 +81,30 @@ fun AddEditNoteScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddEditNoteScreenContent(
+    titleState: String,
+    contentState: String,
+    colorState: Int,
+    noteColor: Int,
+    sendVmEvent: (AddEditNoteEvent) -> Unit,
+    snackbarHostState: SnackbarHostState
+) {
+    val noteBackgroundAnimatable = remember {
+        Animatable(
+            Color(if (noteColor != -1) noteColor else colorState)
+        )
+    }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    sendVmEvent(AddEditNoteEvent.SaveNote)
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -119,7 +139,7 @@ fun AddEditNoteScreen(
                             .background(color)
                             .border(
                                 width = 3.dp,
-                                color = if (viewModel.noteColor.value == colorInt) {
+                                color = if (colorState == colorInt) {
                                     Color.Black
                                 } else Color.Transparent,
                                 shape = CircleShape
@@ -133,41 +153,52 @@ fun AddEditNoteScreen(
                                         )
                                     )
                                 }
-                                viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                sendVmEvent(AddEditNoteEvent.ChangeColor(colorInt))
                             }
                     )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
-                text = titleState.text,
-                hint = titleState.hint,
+                text = titleState,
+                hint = stringResource(id = R.string.title),
                 onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    sendVmEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                },
-                isHintVisible = titleState.isHintVisible,
                 singleLine = true,
-                textStyle = MaterialTheme.typography.headlineSmall,
+                textStyle = MaterialTheme.typography.headlineSmall.copy(color = Color.Black),
                 testTag = TestTags.NOTE_TITLE_TEXT_FIELD
             )
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
-                modifier = Modifier.fillMaxHeight(),
-                text = contentState.text,
-                hint = contentState.hint,
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        Log.d("Focuss", "thtf clicked")
+                    },
+                text = contentState,
+                hint = stringResource(id = R.string.content),
                 onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+                    sendVmEvent(AddEditNoteEvent.EnteredContent(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                },
-                isHintVisible = contentState.isHintVisible,
-                textStyle = MaterialTheme.typography.bodyLarge,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                 testTag = TestTags.NOTE_CONTENT_TEXT_FIELD
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAddEditNote() {
+    CNoteTheme {
+        AddEditNoteScreenContent(
+            titleState = "",
+            contentState = "",
+            colorState = 0,
+            noteColor = -1,
+            sendVmEvent = {},
+            snackbarHostState = SnackbarHostState()
+        )
     }
 }

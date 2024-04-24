@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CNote</string>
     <string name="title">Title</string>
+    <string name="content">Content</string>
     <string name="date">Date</string>
     <string name="color">Color</string>
     <string name="ascending">Ascending</string>
@@ -9,6 +10,8 @@
     <string name="edit_task">Edit Task</string>
     <string name="add_note">Add Note</string>
     <string name="tasks">Tasks</string>
+    <string name="task_name">Task Name</string>
+    <string name="description">Description</string>
     <string name="notes">Notes</string>
     <string name="sort">Sort</string>
     <string name="important_task">Important Task</string>

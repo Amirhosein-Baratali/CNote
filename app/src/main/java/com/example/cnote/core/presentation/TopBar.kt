@@ -55,7 +55,7 @@ fun TopBar(
                 onExpandChange = { sortMenuExpanded = it }
             )
             if (showMoreIcon)
-                IconButton(onClick = { onMoreExpandedChange(!moreExpanded)}) {
+                IconButton(onClick = { onMoreExpandedChange(!moreExpanded) }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = stringResource(R.string.more)

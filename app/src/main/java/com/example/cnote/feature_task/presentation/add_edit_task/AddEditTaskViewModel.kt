@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cnote.core.presentation.TextFieldState
 import com.example.cnote.feature_task.domain.model.InvalidTaskException
 import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
@@ -29,19 +28,11 @@ class AddEditTaskViewModel @Inject constructor(
     private val _title = mutableStateOf("")
     val title: State<String> = _title
 
-    private val _taskName = mutableStateOf(
-        TextFieldState(
-            hint = "Enter name..."
-        )
-    )
-    val taskName: State<TextFieldState> = _taskName
+    private val _taskName = mutableStateOf("")
+    val taskName: State<String> = _taskName
 
-    private val _taskDescription = mutableStateOf(
-        TextFieldState(
-            hint = "Enter some description if you want..."
-        )
-    )
-    val taskDescription: State<TextFieldState> = _taskDescription
+    private val _taskDescription = mutableStateOf("")
+    val taskDescription: State<String> = _taskDescription
 
     private val _isImportantState = mutableStateOf(false)
     val isImportantState: State<Boolean> = _isImportantState
@@ -69,14 +60,8 @@ class AddEditTaskViewModel @Inject constructor(
         getTaskJob = viewModelScope.launch {
             taskUseCases.getTask(id)?.also { task ->
                 currentTaskId = task.id
-                _taskName.value = taskName.value.copy(
-                    text = task.name,
-                    isHintVisible = false
-                )
-                _taskDescription.value = _taskDescription.value.copy(
-                    text = task.description,
-                    isHintVisible = task.description.isBlank()
-                )
+                _taskName.value = task.name
+                _taskDescription.value = task.description
 
                 _isCompletedState.value = task.completed
                 _isImportantState.value = task.importance
@@ -90,8 +75,8 @@ class AddEditTaskViewModel @Inject constructor(
             try {
                 taskUseCases.addTask(
                     Task(
-                        name = taskName.value.text,
-                        description = taskDescription.value.text,
+                        name = taskName.value,
+                        description = taskDescription.value,
                         timeStamp = System.currentTimeMillis(),
                         completed = isCompletedState.value,
                         importance = isImportantState.value,
@@ -112,29 +97,11 @@ class AddEditTaskViewModel @Inject constructor(
     fun onEvent(event: AddEditTaskEvent) {
         when (event) {
             is AddEditTaskEvent.EnteredName -> {
-                _taskName.value = taskName.value.copy(
-                    text = event.value
-                )
-            }
-
-            is AddEditTaskEvent.ChangeNameFocus -> {
-                _taskName.value = taskName.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            taskName.value.text.isBlank()
-                )
+                _taskName.value = event.value
             }
 
             is AddEditTaskEvent.EnteredDescription -> {
-                _taskDescription.value = _taskDescription.value.copy(
-                    text = event.value
-                )
-            }
-
-            is AddEditTaskEvent.ChangeDescriptionFocus -> {
-                _taskDescription.value = _taskDescription.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _taskDescription.value.text.isBlank()
-                )
+                _taskDescription.value = event.value
             }
 
             is AddEditTaskEvent.SaveTask -> {

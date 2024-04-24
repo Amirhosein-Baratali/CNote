@@ -25,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cnote.R
-import com.example.cnote.core.presentation.TextFieldState
 import com.example.cnote.core.presentation.components.TransparentHintTextField
 import com.example.cnote.feature_task.presentation.add_edit_task.AddEditTaskEvent
 import com.example.cnote.ui.theme.spacing
@@ -35,8 +34,8 @@ fun AddEditTaskDialog(
     modifier: Modifier = Modifier,
     title: String,
     onEvent: (AddEditTaskEvent) -> Unit,
-    name: TextFieldState,
-    desc: TextFieldState,
+    name: String,
+    desc: String,
     isImportant: Boolean,
     isCompleted: Boolean,
     onDismiss: () -> Unit,
@@ -70,15 +69,11 @@ fun AddEditTaskDialog(
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
                 TransparentHintTextField(
-                    text = name.text,
-                    hint = name.hint,
+                    text = name,
+                    hint = stringResource(id = R.string.task_name),
                     onValueChange = {
                         onEvent(AddEditTaskEvent.EnteredName(it))
                     },
-                    onFocusChange = {
-                        onEvent(AddEditTaskEvent.ChangeNameFocus(it))
-                    },
-                    isHintVisible = name.isHintVisible,
                     singleLine = true,
                     textStyle = textFieldStyle,
                 )
@@ -132,15 +127,11 @@ fun AddEditTaskDialog(
                 }
                 TransparentHintTextField(
                     modifier = Modifier.height(MaterialTheme.spacing.xLarge),
-                    text = desc.text,
-                    hint = desc.hint,
+                    text = desc,
+                    hint = stringResource(id = R.string.description),
                     onValueChange = {
                         onEvent(AddEditTaskEvent.EnteredDescription(it))
                     },
-                    onFocusChange = {
-                        onEvent(AddEditTaskEvent.ChangeDescriptionFocus(it))
-                    },
-                    isHintVisible = desc.isHintVisible,
                     textStyle = textFieldStyle
                 )
             }

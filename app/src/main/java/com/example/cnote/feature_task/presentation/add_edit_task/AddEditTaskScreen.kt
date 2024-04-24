@@ -7,7 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.cnote.core.presentation.TextFieldState
 import com.example.cnote.core.util.showShortToast
 import com.example.cnote.feature_task.presentation.add_edit_task.components.AddEditTaskDialog
 import com.example.cnote.ui.theme.CNoteTheme
@@ -54,8 +53,8 @@ fun AddEditTaskScreenPreview() {
         AddEditTaskDialog(
             title = "Add Task",
             onEvent = {},
-            name = TextFieldState(),
-            desc = TextFieldState(),
+            name = "",
+            desc = "",
             isImportant = true,
             isCompleted = false,
             onDismiss = {}
