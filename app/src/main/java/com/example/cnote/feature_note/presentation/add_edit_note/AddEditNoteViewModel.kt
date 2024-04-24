@@ -22,11 +22,25 @@ class AddEditNoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private var initialNote: Note? = null
+
     private val _noteTitle = mutableStateOf("")
     val noteTitle: State<String> = _noteTitle
 
     private val _noteContent = mutableStateOf("")
     val noteContent: State<String> = _noteContent
+
+    private fun hasNoteContent(): Boolean {
+        return noteTitle.value.isNotBlank() || noteContent.value.isNotBlank()
+    }
+
+    private fun hasNoteChanged(): Boolean = initialNote?.run {
+        noteTitle.value.trim() != title.trim()
+                || noteContent.value.trim() != content.trim()
+                || _noteColor.value != color
+    } ?: false
+
+    fun isNoteEdited(): Boolean = initialNote?.let { hasNoteChanged() } ?: hasNoteContent()
 
     private val _noteColor = mutableStateOf(Note.noteColors.random().toArgb())
     val noteColor: State<Int> = _noteColor
@@ -45,6 +59,7 @@ class AddEditNoteViewModel @Inject constructor(
                         _noteTitle.value = note.title
                         _noteContent.value = note.content
                         _noteColor.value = note.color
+                        initialNote = note
                     }
                 }
             }

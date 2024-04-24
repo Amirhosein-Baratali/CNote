@@ -24,4 +24,8 @@
     <string name="completed">Completed</string>
     <string name="important">Important</string>
     <string name="save_note">Save note</string>
+    <string name="exit_check_message">Keep the thoughts? Hit \'Save\'! 😊</string>
+    <string name="exit_check_title">Quick Check</string>
+    <string name="exit_check_confirm">Save</string>
+    <string name="exit_check_discard">Discard</string>
 </resources>

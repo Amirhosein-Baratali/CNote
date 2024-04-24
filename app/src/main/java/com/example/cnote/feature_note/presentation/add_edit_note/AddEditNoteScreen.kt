@@ -1,6 +1,7 @@
 package com.example.cnote.feature_note.presentation.add_edit_note
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -28,8 +29,11 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -44,6 +48,7 @@ import com.example.cnote.R
 import com.example.cnote.core.presentation.components.TransparentHintTextField
 import com.example.cnote.core.util.TestTags
 import com.example.cnote.feature_note.domain.model.Note
+import com.example.cnote.feature_note.presentation.add_edit_note.components.ConfirmExitDialog
 import com.example.cnote.ui.theme.CNoteTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,6 +61,7 @@ fun AddEditNoteScreen(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var showExitDialog by remember { mutableStateOf(false) }
 
     AddEditNoteScreenContent(
         titleState = viewModel.noteTitle.value,
@@ -80,6 +86,20 @@ fun AddEditNoteScreen(
                 }
             }
         }
+    }
+
+    BackHandler {
+        if (viewModel.isNoteEdited())
+            showExitDialog = true
+        else
+            navController.navigateUp()
+    }
+    if (showExitDialog) {
+        ConfirmExitDialog(
+            onConfirmExit = { viewModel.onEvent(AddEditNoteEvent.SaveNote) },
+            onDismissRequest = { showExitDialog = false },
+            onDiscardChanges = { navController.navigateUp() }
+        )
     }
 }
 
