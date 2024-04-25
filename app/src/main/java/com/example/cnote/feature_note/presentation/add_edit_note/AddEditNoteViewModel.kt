@@ -2,7 +2,6 @@ package com.example.cnote.feature_note.presentation.add_edit_note
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +10,9 @@ import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.use_case.NoteUseCases
 import com.example.cnote.feature_note.presentation.util.NoteScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,91 +22,83 @@ class AddEditNoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private var saveNoteJob: Job? = null
+    private var getNoteJob: Job? = null
+
     private var initialNote: Note? = null
+    private var currentNoteId: Int? = null
 
-    private val _noteTitle = mutableStateOf("")
-    val noteTitle: State<String> = _noteTitle
-
-    private val _noteContent = mutableStateOf("")
-    val noteContent: State<String> = _noteContent
+    private val _noteState = mutableStateOf(NoteState())
+    val noteState: State<NoteState> = _noteState
 
     private fun hasNoteContent(): Boolean {
-        return noteTitle.value.isNotBlank() || noteContent.value.isNotBlank()
+        return noteState.value.title.isNotBlank() || noteState.value.content.isNotBlank()
     }
 
     private fun hasNoteChanged(): Boolean = initialNote?.run {
-        noteTitle.value.trim() != title.trim()
-                || noteContent.value.trim() != content.trim()
-                || _noteColor.value != color
+        noteState.value.title.trim() != title.trim()
+                || noteState.value.content.trim() != content.trim()
+                || noteState.value.color != color
     } ?: false
 
     fun isNoteEdited(): Boolean = initialNote?.let { hasNoteChanged() } ?: hasNoteContent()
 
-    private val _noteColor = mutableStateOf(Note.noteColors.random().toArgb())
-    val noteColor: State<Int> = _noteColor
-
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
-    private var currentNoteId: Int? = null
+    private val _eventFlow = Channel<UiEvent>()
+    val eventFlow = _eventFlow.receiveAsFlow()
 
     init {
         savedStateHandle.get<Int>(NoteScreens.ARG_NOTE_ID)?.let { noteId ->
             if (noteId != -1) {
-                viewModelScope.launch {
-                    noteUseCases.getNote(noteId)?.also { note ->
-                        currentNoteId = note.id
-                        _noteTitle.value = note.title
-                        _noteContent.value = note.content
-                        _noteColor.value = note.color
-                        initialNote = note
-                    }
-                }
+                getInitialNote(noteId)
+            }
+        }
+    }
+
+    private fun getInitialNote(noteId: Int) {
+        getNoteJob = viewModelScope.launch {
+            noteUseCases.getNote(noteId)?.also { note ->
+                currentNoteId = note.id
+                _noteState.value = NoteState.fromNote(note)
+                initialNote = note
             }
         }
     }
 
     fun onEvent(event: AddEditNoteEvent) {
-        when (event) {
-            is AddEditNoteEvent.EnteredTitle -> {
-                _noteTitle.value = event.value
-            }
-
-            is AddEditNoteEvent.EnteredContent -> {
-                _noteContent.value = event.value
-            }
-
-            is AddEditNoteEvent.ChangeColor -> {
-                _noteColor.value = event.color
-            }
-
+        _noteState.value = when (event) {
+            is AddEditNoteEvent.EnteredTitle -> noteState.value.copy(title = event.value)
+            is AddEditNoteEvent.EnteredContent -> noteState.value.copy(content = event.value)
+            is AddEditNoteEvent.ChangeColor -> noteState.value.copy(color = event.color)
             is AddEditNoteEvent.SaveNote -> {
-                viewModelScope.launch {
-                    try {
-                        noteUseCases.addNote(
-                            Note(
-                                title = noteTitle.value,
-                                content = noteContent.value,
-                                timestamp = System.currentTimeMillis(),
-                                color = noteColor.value,
-                                id = currentNoteId
-                            )
-                        )
-                        _eventFlow.emit(UiEvent.SaveNote)
-                    } catch (e: InvalidNoteException) {
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save note"
-                            )
-                        )
-                    }
-                }
+                saveNote()
+                return
+            }
+        }
+    }
+
+    private fun saveNote() {
+        saveNoteJob = viewModelScope.launch {
+            try {
+                noteUseCases.addNote(noteState.value.toNote(currentNoteId))
+                _eventFlow.send(UiEvent.SaveNote)
+            } catch (e: InvalidNoteException) {
+                _eventFlow.send(
+                    UiEvent.ShowError(
+                        message = e.message ?: "Couldn't save note"
+                    )
+                )
             }
         }
     }
 
     sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
+        data class ShowError(val message: String) : UiEvent()
         object SaveNote : UiEvent()
+    }
+
+    override fun onCleared() {
+        getNoteJob?.cancel()
+        saveNoteJob?.cancel()
+        super.onCleared()
     }
 }

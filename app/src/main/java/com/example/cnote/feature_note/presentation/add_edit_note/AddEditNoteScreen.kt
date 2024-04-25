@@ -64,9 +64,7 @@ fun AddEditNoteScreen(
     var showExitDialog by remember { mutableStateOf(false) }
 
     AddEditNoteScreenContent(
-        titleState = viewModel.noteTitle.value,
-        contentState = viewModel.noteContent.value,
-        colorState = viewModel.noteColor.value,
+        noteState = viewModel.noteState.value,
         noteColor = noteColor,
         sendVmEvent = viewModel::onEvent,
         snackbarHostState = snackbarHostState
@@ -75,7 +73,7 @@ fun AddEditNoteScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
+                is AddEditNoteViewModel.UiEvent.ShowError -> {
                     snackbarHostState.showSnackbar(
                         message = event.message
                     )
@@ -106,16 +104,14 @@ fun AddEditNoteScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditNoteScreenContent(
-    titleState: String,
-    contentState: String,
-    colorState: Int,
+    noteState: NoteState,
     noteColor: Int,
     sendVmEvent: (AddEditNoteEvent) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else colorState)
+            Color(if (noteColor != -1) noteColor else noteState.color)
         )
     }
     val scope = rememberCoroutineScope()
@@ -159,7 +155,7 @@ fun AddEditNoteScreenContent(
                             .background(color)
                             .border(
                                 width = 3.dp,
-                                color = if (colorState == colorInt) {
+                                color = if (noteState.color == colorInt) {
                                     Color.Black
                                 } else Color.Transparent,
                                 shape = CircleShape
@@ -180,7 +176,7 @@ fun AddEditNoteScreenContent(
             }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
-                text = titleState,
+                text = noteState.title,
                 hint = stringResource(id = R.string.title),
                 onValueChange = {
                     sendVmEvent(AddEditNoteEvent.EnteredTitle(it))
@@ -196,7 +192,7 @@ fun AddEditNoteScreenContent(
                     .clickable {
                         Log.d("Focuss", "thtf clicked")
                     },
-                text = contentState,
+                text = noteState.content,
                 hint = stringResource(id = R.string.content),
                 onValueChange = {
                     sendVmEvent(AddEditNoteEvent.EnteredContent(it))
@@ -213,9 +209,7 @@ fun AddEditNoteScreenContent(
 fun PreviewAddEditNote() {
     CNoteTheme {
         AddEditNoteScreenContent(
-            titleState = "",
-            contentState = "",
-            colorState = 0,
+            noteState = NoteState(),
             noteColor = -1,
             sendVmEvent = {},
             snackbarHostState = SnackbarHostState()
