@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -24,11 +25,13 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.example.cnote.core.util.TestTags
 import com.example.cnote.feature_note.domain.model.Note
+import com.example.cnote.ui.theme.CNoteTheme
 
 @Composable
 fun NoteItem(
@@ -74,6 +77,7 @@ fun NoteItem(
                 .padding(end = 32.dp)
         ) {
             Text(
+                modifier = modifier.fillMaxWidth(),
                 text = note.title,
                 style = MaterialTheme.typography.headlineSmall,
                 color = contentColor,
@@ -82,6 +86,7 @@ fun NoteItem(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
+                modifier = modifier.fillMaxWidth(),
                 text = note.content,
                 style = MaterialTheme.typography.bodyLarge,
                 color = contentColor,
@@ -98,6 +103,23 @@ fun NoteItem(
                 contentDescription = "Delete note",
                 tint = contentColor
             )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NoteItemPreview() {
+    CNoteTheme {
+        NoteItem(
+            note = Note(
+                title = "عنوان فارسی",
+                content = "english content",
+                timestamp = 0L,
+                color = 2334,
+            )
+        ) {
+
         }
     }
 }
