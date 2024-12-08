@@ -1,6 +1,5 @@
 package com.example.cnote.feature_note.presentation.util
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -9,7 +8,6 @@ import androidx.navigation.navArgument
 import com.example.cnote.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.example.cnote.feature_note.presentation.notes.NotesScreen
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.notesNavigation(navController: NavController) {
     composable(route = NoteScreens.Notes.route) {
         NotesScreen(navController = navController)
