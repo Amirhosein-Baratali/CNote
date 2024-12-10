@@ -15,6 +15,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -36,7 +38,7 @@ fun NotesScreen(
     navController: NavController,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val state by viewModel.state.collectAsState(NotesState())
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -52,7 +54,8 @@ fun NotesScreen(
             TopBar(
                 stringResource(R.string.notes),
                 order = state.noteOrder,
-                onOrderChange = { viewModel.onEvent(NotesEvent.Sort(it)) }
+                onOrderChange = { viewModel.onEvent(NotesEvent.Sort(it)) },
+                onSearchQueryChange = { viewModel.onEvent(NotesEvent.OnSearchQueryChanged(it)) }
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

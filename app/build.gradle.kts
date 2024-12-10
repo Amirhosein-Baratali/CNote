@@ -8,15 +8,23 @@ plugins {
 }
 
 android {
+    val versionMajor = 1
+    val versionMinor = 1
+    val versionPatch = 0
+    val appName = "CNote"
+    val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
+    val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
+
     namespace = "com.example.cnote"
+
     compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.cnote"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner = "com.example.cnote.HiltTestRunner"
         vectorDrawables {
@@ -25,8 +33,20 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
+        getByName("debug") {
+            isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -45,6 +65,14 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val buildType = name.split("-")[0]
+            outputImpl.outputFileName =
+                "${appName}-${buildType}-v${appVersionName}-c${appVersionCode}.apk"
+        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"

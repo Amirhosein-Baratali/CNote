@@ -28,4 +28,6 @@
     <string name="exit_check_title">Quick Check</string>
     <string name="exit_check_confirm">Save</string>
     <string name="exit_check_discard">Discard</string>
+    <string name="search">search</string>
+    <string name="back">back</string>
 </resources>
