@@ -1,7 +1,5 @@
 package com.example.cnote.feature_note.presentation.notes
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cnote.core.domain.util.Order
@@ -9,8 +7,11 @@ import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +20,17 @@ class NotesViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(NotesState())
-    val state: State<NotesState> = _state
+    private val _searchText = MutableStateFlow("")
+
+    private val _state = MutableStateFlow(NotesState())
+    val state = _searchText
+        .combine(_state) { text, state ->
+            state.copy(
+                notes = state.notes.filter {
+                    it.title.contains(text) || it.content.contains(text)
+                }
+            )
+        }
 
     private var recentlyDeletedNote: Note? = null
 
@@ -56,6 +66,8 @@ class NotesViewModel @Inject constructor(
                     recentlyDeletedNote = null
                 }
             }
+
+            is NotesEvent.OnSearchQueryChanged -> _searchText.update { event.query }
         }
     }
 

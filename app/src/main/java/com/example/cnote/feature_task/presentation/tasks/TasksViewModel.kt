@@ -1,7 +1,5 @@
 package com.example.cnote.feature_task.presentation.tasks
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cnote.core.domain.util.Order
@@ -9,8 +7,12 @@ import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +21,17 @@ class TasksViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(TasksState())
-    val state: State<TasksState> = _state
+    private val _searchText = MutableStateFlow("")
+
+    private val _state = MutableStateFlow(TasksState())
+    val state = _searchText
+        .combine(_state) { text, state ->
+            state.copy(
+                tasks = state.tasks.filter {
+                    it.name.contains(text) || it.description.contains(text)
+                }
+            )
+        }
 
     private var getTasksJob: Job? = null
 
@@ -60,8 +71,8 @@ class TasksViewModel @Inject constructor(
             is TasksEvent.UpdateTask -> {
                 viewModelScope.launch {
                     taskUseCases.updateTask(event.task)
+                    state.collectLatest { getTasks(it.taskOrder) }
                 }
-                getTasks(state.value.taskOrder)
             }
 
             is TasksEvent.DeleteCompletedTasks -> {
@@ -69,15 +80,20 @@ class TasksViewModel @Inject constructor(
                     taskUseCases.deleteCompletedTasks()
                 }
             }
+
+            is TasksEvent.OnSearchQueryChanged -> _searchText.update { event.query }
         }
     }
 
     private fun getTasks(taskOrder: Order) {
         getTasksJob?.cancel()
         getTasksJob = taskUseCases.getTasks(taskOrder).onEach { tasks ->
-            _state.value = state.value.copy(
-                tasks = tasks, taskOrder = taskOrder
-            )
+            _state.update {
+                it.copy(
+                    tasks = tasks,
+                    taskOrder = taskOrder
+                )
+            }
         }.launchIn(viewModelScope)
     }
 

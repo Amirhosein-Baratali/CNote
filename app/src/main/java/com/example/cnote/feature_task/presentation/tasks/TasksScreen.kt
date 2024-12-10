@@ -14,6 +14,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 fun TasksScreen(
     navController: NavController, viewModel: TasksViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val state by viewModel.state.collectAsState(TasksState())
     val haveCompletedTask: Boolean = state.tasks.map { it.completed }.contains(true)
 
     val scope = rememberCoroutineScope()
@@ -76,7 +77,8 @@ fun TasksScreen(
                     )
                 },
                 moreExpanded = moreMenuExpanded,
-                onMoreExpandedChange = { moreMenuExpanded = it }
+                onMoreExpandedChange = { moreMenuExpanded = it },
+                onSearchQueryChange = { viewModel.onEvent(TasksEvent.OnSearchQueryChanged(it)) }
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
