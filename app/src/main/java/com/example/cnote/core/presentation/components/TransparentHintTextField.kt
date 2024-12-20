@@ -2,7 +2,6 @@ package com.example.cnote.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -13,7 +12,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransparentHintTextField(
     text: String,
@@ -40,8 +38,7 @@ fun TransparentHintTextField(
                 style = textStyle.copy(color = textStyle.color.copy(alpha = 0.5f))
             )
         },
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = backgroundColor,
+        colors = TextFieldDefaults.colors(
             focusedIndicatorColor = backgroundColor,
             unfocusedIndicatorColor = backgroundColor,
             cursorColor = textStyle.color
