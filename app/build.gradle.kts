@@ -5,12 +5,13 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
     val versionMajor = 1
     val versionMinor = 1
-    val versionPatch = 1
+    val versionPatch = 2
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
@@ -144,7 +145,6 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
     androidTestImplementation(libs.junit4)
-    androidTestImplementation(libs.kotlinx.coroutines.test.v164)
     androidTestImplementation(libs.arch.core.testing)
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.androidx.test.ext.junit)

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -34,7 +33,6 @@ import com.example.cnote.feature_task.presentation.tasks.components.TaskItem
 import com.example.cnote.feature_task.presentation.util.TaskScreens
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreen(
     navController: NavController, viewModel: TasksViewModel = hiltViewModel()
@@ -54,10 +52,7 @@ fun TasksScreen(
         floatingActionButton = {
             FloatingAddButton(
                 onClick = {
-                    navController.navigate(
-                        TaskScreens.AddEditTask.route
-                                + "?${TaskScreens.ARG_TITLE}=${addTask}"
-                    )
+                    navController.navigate(TaskScreens.AddEditTask(null))
                 },
                 addTask
             )
@@ -95,11 +90,7 @@ fun TasksScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate(
-                                TaskScreens.AddEditTask.route
-                                        + "?${TaskScreens.ARG_TASK_ID}=${task.id}"
-                                        + "&${TaskScreens.ARG_TITLE}=${editTask}"
-                            )
+                            navController.navigate(TaskScreens.AddEditTask(taskId = task.id))
                         },
                     task = task,
                     onDeleteClick = {

@@ -1,11 +1,16 @@
 package com.example.cnote.feature_task.presentation.util
 
-sealed class TaskScreens(val route: String) {
-    object Tasks : TaskScreens("tasks_screen")
-    object AddEditTask : TaskScreens("add_edit_task_screen")
+import kotlinx.serialization.Serializable
 
-    companion object {
-        const val ARG_TASK_ID = "taskId"
-        const val ARG_TITLE = "title"
-    }
+sealed class TaskScreens() {
+    @Serializable
+    object Tasks : TaskScreens()
+
+    @Serializable
+    data class AddEditTask(val taskId: Int?) : TaskScreens()
+
+//    companion object {
+//        const val ARG_TASK_ID = "taskId"
+//        const val ARG_TITLE = "title"
+//    }
 }

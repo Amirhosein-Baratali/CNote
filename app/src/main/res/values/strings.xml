@@ -10,7 +10,7 @@
     <string name="edit_task">Edit Task</string>
     <string name="add_note">Add Note</string>
     <string name="tasks">Tasks</string>
-    <string name="task_name">Task Name</string>
+    <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="notes">Notes</string>
     <string name="sort">Sort</string>
