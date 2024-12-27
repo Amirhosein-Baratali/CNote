@@ -11,7 +11,7 @@ plugins {
 android {
     val versionMajor = 1
     val versionMinor = 1
-    val versionPatch = 2
+    val versionPatch = 3
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"

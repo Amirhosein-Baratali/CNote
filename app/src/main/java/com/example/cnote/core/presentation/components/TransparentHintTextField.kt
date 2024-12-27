@@ -3,7 +3,6 @@ package com.example.cnote.core.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -33,7 +32,7 @@ fun TransparentHintTextField(
         textStyle = textStyle,
         singleLine = singleLine,
         placeholder = {
-            Text(
+            CustomText(
                 text = hint,
                 style = textStyle.copy(color = textStyle.color.copy(alpha = 0.5f))
             )

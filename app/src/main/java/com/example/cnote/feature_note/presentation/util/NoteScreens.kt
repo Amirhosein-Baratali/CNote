@@ -7,5 +7,8 @@ sealed class NoteScreens {
     object Notes : NoteScreens()
 
     @Serializable
+    object NoteList : NoteScreens()
+
+    @Serializable
     data class AddEditNote(val noteId: Int?, val noteColor: Int?) : NoteScreens()
 }

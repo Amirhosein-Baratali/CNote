@@ -7,10 +7,8 @@ sealed class TaskScreens() {
     object Tasks : TaskScreens()
 
     @Serializable
-    data class AddEditTask(val taskId: Int?) : TaskScreens()
+    object TaskList : TaskScreens()
 
-//    companion object {
-//        const val ARG_TASK_ID = "taskId"
-//        const val ARG_TITLE = "title"
-//    }
+    @Serializable
+    data class AddEditTask(val taskId: Int?) : TaskScreens()
 }

@@ -30,4 +30,6 @@
     <string name="exit_check_discard">Discard</string>
     <string name="search">search</string>
     <string name="back">back</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
 </resources>

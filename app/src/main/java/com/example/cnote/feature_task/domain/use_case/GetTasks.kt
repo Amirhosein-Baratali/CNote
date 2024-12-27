@@ -19,14 +19,14 @@ class GetTasks(
                 is OrderType.Ascending -> {
                     when (taskOrder) {
                         is Order.Name -> tasks.sortedBy { it.name }
-                        is Order.Date -> tasks.sortedBy { it.timeStamp }
+                        is Order.Date -> tasks.sortedBy { it.timeCreated }
                     }
                 }
 
                 is OrderType.Descending -> {
                     when (taskOrder) {
                         is Order.Name -> tasks.sortedByDescending { it.name }
-                        is Order.Date -> tasks.sortedByDescending { it.timeStamp }
+                        is Order.Date -> tasks.sortedByDescending { it.timeCreated }
                     }
                 }
             }

@@ -10,15 +10,16 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -38,6 +40,7 @@ import androidx.navigation.NavController
 import com.example.cnote.R
 import com.example.cnote.core.presentation.components.CustomText
 import com.example.cnote.core.util.showShortToast
+import com.example.cnote.feature_task.presentation.add_edit_task.component.CustomDatePicker
 import com.example.cnote.ui.theme.CNoteTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -82,15 +85,12 @@ fun AddEditTaskBottomSheet(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditTaskContent(
     state: AddEditTaskState,
     onEvent: (AddEditTaskEvent) -> Unit
 ) {
-    val textFieldStyle =
-        MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface)
-
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -100,7 +100,7 @@ fun AddEditTaskContent(
         val focusRequester = FocusRequester()
         OutlinedTextField(
             value = state.name,
-            onValueChange = { onEvent(AddEditTaskEvent.EnteredName(it)) },
+            onValueChange = { onEvent(AddEditTaskEvent.NameChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp),
@@ -112,28 +112,36 @@ fun AddEditTaskContent(
             ),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
+            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             )
         )
 
         OutlinedTextField(
             value = state.description,
-            onValueChange = { onEvent(AddEditTaskEvent.EnteredDescription(it)) },
+            onValueChange = { onEvent(AddEditTaskEvent.DescriptionChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
                 .focusRequester(focusRequester),
             placeholder = {
                 CustomText(text = stringResource(R.string.description))
-            }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            )
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onEvent(AddEditTaskEvent.DateClicked) }) {
                 Icon(
-                    imageVector = Icons.Outlined.Timer,
+                    imageVector = Icons.Outlined.DateRange,
                     contentDescription = "Timer Icon",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -161,6 +169,12 @@ fun AddEditTaskContent(
                 )
             }
         }
+    }
+    if (state.showDatePicker) {
+        CustomDatePicker(
+            onDismiss = { (onEvent(AddEditTaskEvent.DateDismissed)) },
+            onDateSelected = {onEvent(AddEditTaskEvent.DateSelected(it))}
+        )
     }
 }
 

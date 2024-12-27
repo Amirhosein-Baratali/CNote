@@ -1,9 +1,7 @@
 package com.example.cnote.feature_task.presentation.tasks
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +24,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cnote.R
 import com.example.cnote.core.presentation.TopBar
-import com.example.cnote.core.presentation.bottom_navigation.BottomNavigation
 import com.example.cnote.core.presentation.components.FloatingAddButton
 import com.example.cnote.feature_task.presentation.tasks.components.DeleteCompletedMenuItem
 import com.example.cnote.feature_task.presentation.tasks.components.TaskItem
@@ -45,16 +42,12 @@ fun TasksScreen(
 
     var moreMenuExpanded by remember { mutableStateOf(false) }
 
-    val addTask = stringResource(R.string.add_task)
-    val editTask = stringResource(R.string.edit_task)
-
     Scaffold(
         floatingActionButton = {
             FloatingAddButton(
                 onClick = {
                     navController.navigate(TaskScreens.AddEditTask(null))
-                },
-                addTask
+                }
             )
         },
         topBar = {
@@ -76,8 +69,7 @@ fun TasksScreen(
                 onSearchQueryChange = { viewModel.onEvent(TasksEvent.OnSearchQueryChanged(it)) }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        bottomBar = { BottomNavigation(navController = navController) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -87,12 +79,10 @@ fun TasksScreen(
         ) {
             items(state.tasks) { task ->
                 TaskItem(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate(TaskScreens.AddEditTask(taskId = task.id))
-                        },
                     task = task,
+                    onTaskClick = {
+                        navController.navigate(TaskScreens.AddEditTask(taskId = task.id))
+                    },
                     onDeleteClick = {
                         viewModel.onEvent(TasksEvent.DeleteTask(task))
                         scope.launch {

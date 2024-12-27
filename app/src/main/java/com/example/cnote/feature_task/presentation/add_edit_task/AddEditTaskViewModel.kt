@@ -27,7 +27,6 @@ class AddEditTaskViewModel @Inject constructor(
     private var getTaskJob: Job? = null
     private var saveTaskJob: Job? = null
 
-
     private val _state = MutableStateFlow(AddEditTaskState())
     val state = _state.asStateFlow()
 
@@ -64,13 +63,13 @@ class AddEditTaskViewModel @Inject constructor(
                         Task(
                             name = name,
                             description = description,
-                            timeStamp = System.currentTimeMillis(),
+                            timeCreated = System.currentTimeMillis(),
                             completed = true,
                             importance = true,
-                            id = currentTaskId
+                            id = currentTaskId,
+                            date = date
                         )
                     }
-
                 )
                 _eventFlow.send(UiEvent.SaveTask)
             } catch (e: InvalidTaskException) {
@@ -85,11 +84,11 @@ class AddEditTaskViewModel @Inject constructor(
 
     fun onEvent(event: AddEditTaskEvent) {
         when (event) {
-            is AddEditTaskEvent.EnteredName -> {
+            is AddEditTaskEvent.NameChanged -> {
                 _state.update { it.copy(name = event.name) }
             }
 
-            is AddEditTaskEvent.EnteredDescription -> {
+            is AddEditTaskEvent.DescriptionChanged -> {
                 _state.update { it.copy(description = event.description) }
             }
 
@@ -97,22 +96,20 @@ class AddEditTaskViewModel @Inject constructor(
                 saveTask()
             }
 
-            AddEditTaskEvent.ToggleCompletion -> {
-
-            }
-
-            AddEditTaskEvent.ToggleImportance -> {
-
-            }
-
             AddEditTaskEvent.Dismiss -> {
                 viewModelScope.launch {
                     _eventFlow.send(UiEvent.Dismiss)
                 }
             }
+
+            AddEditTaskEvent.DateClicked -> {
+                _state.update { it.copy(showDatePicker = true) }
+            }
+
+            AddEditTaskEvent.DateDismissed -> _state.update { it.copy(showDatePicker = false) }
+            is AddEditTaskEvent.DateSelected -> _state.update { it.copy(date = event.date) }
         }
     }
-
 
     sealed class UiEvent {
         data class ShowError(val message: String) : UiEvent()
