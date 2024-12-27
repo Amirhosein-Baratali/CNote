@@ -1,58 +1,93 @@
 package com.example.cnote.core.presentation.bottom_navigation
 
-import androidx.compose.material3.BottomAppBar
+import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.NoteAlt
+import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.cnote.core.presentation.components.CustomText
+import com.example.cnote.feature_note.presentation.util.NoteScreens
+import com.example.cnote.feature_task.presentation.util.TaskScreens
 import com.example.cnote.ui.theme.CNoteTheme
 
 @Composable
 fun BottomNavigation(navController: NavController) {
 
     val items = listOf(
-        BottomNavItem.Notes,
-        BottomNavItem.Tasks
+        BottomNavItem(
+            title = "Notes",
+            selectedIcon = Icons.Filled.NoteAlt,
+            unselectedIcon = Icons.Outlined.NoteAlt,
+            destination = NoteScreens.Notes
+        ),
+        BottomNavItem(
+            title = "Tasks",
+            selectedIcon = Icons.Default.Checklist,
+            unselectedIcon = Icons.Outlined.Checklist,
+            destination = TaskScreens.Tasks
+        )
     )
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    val contentColor = MaterialTheme.colorScheme.primaryContainer
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    BottomAppBar(
-//        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        contentColor = contentColor
+    NavigationBar(
+        modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) {
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = item.selected,
+                selected = selectedItemIndex == index,
                 onClick = {
-                    if (!item.selected) {
-                        navController.navigate(item.direction)
-                    }
+                    selectedItemIndex = index
+                    navController.navigate(item.destination)
+                    Log.d("TTT", "BottomNavigation: $currentRoute")
                 },
-                /* colors = NavigationBarItemDefaults.colors(
-                     selectedIconColor = contentColor,
-                     selectedTextColor = contentColor,
-                     unselectedIconColor = contentColor.copy(0.4f),
-                     unselectedTextColor = contentColor.copy(0.4f)
-                 ),*/
                 icon = {
-                    Icon(imageVector = item.icon, contentDescription = item.title)
+                    Icon(
+                        imageVector = if (index == selectedItemIndex) {
+                            item.selectedIcon
+                        } else item.unselectedIcon,
+                        contentDescription = item.title
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                ),
+                label = {
+                    CustomText(
+                        text = item.title,
+                        color = Color.Unspecified
+                    )
                 }
             )
         }
     }
-
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        items.forEach { item ->
-            item.selected = item.direction == destination.route
-        }
-    }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun BottomNavigationPreview() {
     CNoteTheme {

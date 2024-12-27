@@ -23,24 +23,96 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF7F67F0),
-    secondary = Color(0xFF4E4E4E),
-    tertiary = Color(0xFF1F1F1F),
-    background = Color(0xFF121212),
-    surface = Color(0xFF2E2E2E),
     onPrimary = Color.White,
+    primaryContainer = Color(0xFF514BA3),
+    onPrimaryContainer = Color(0xFFE6E0FF),
+    inversePrimary = Color(0xFF6200EE),
+
+    secondary = Color(0xFF4E4E4E),
     onSecondary = Color.White,
-    onTertiary = Color.White
+    secondaryContainer = Color(0xFF3A3A3A),
+    onSecondaryContainer = Color(0xFFCFCFCF),
+
+    tertiary = Color(0xFF1F1F1F),
+    onTertiary = Color.White,
+    tertiaryContainer = Color(0xFF373737),
+    onTertiaryContainer = Color(0xFFD5D5D5),
+
+    background = Color(0xFF121212),
+    onBackground = Color(0xFFE6E6E6),
+
+    surface = Color(0xFF2E2E2E),
+    onSurface = Color(0xFFE6E6E6),
+    surfaceVariant = Color(0xFF424242),
+    onSurfaceVariant = Color(0xFFCFCFCF),
+
+    surfaceTint = Color(0xFF7F67F0),
+    inverseSurface = Color(0xFFE6E6E6),
+    inverseOnSurface = Color(0xFF1A1A1A),
+
+    error = Color(0xFFCF6679),
+    onError = Color.White,
+    errorContainer = Color(0xFF601410),
+    onErrorContainer = Color(0xFFFFDAD4),
+
+    outline = Color(0xFF8A8A8A),
+    outlineVariant = Color(0xFF515151),
+    scrim = Color.Black,
+
+    surfaceBright = Color(0xFF3C3C3C),
+    surfaceContainer = Color(0xFF2E2E2E),
+    surfaceContainerHigh = Color(0xFF383838),
+    surfaceContainerHighest = Color(0xFF404040),
+    surfaceContainerLow = Color(0xFF242424),
+    surfaceContainerLowest = Color(0xFF1A1A1A),
+    surfaceDim = Color(0xFF212121)
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF6200EE),
-    secondary = Color(0xFFF3F3F3),
-    tertiary = Color(0xFFFFFFFF),
-    background = Color(0xFFF5F5F5),
-    surface = Color(0xFFFFFFFF),
     onPrimary = Color.White,
+    primaryContainer = Color(0xFFBB86FC),
+    onPrimaryContainer = Color(0xFF3700B3),
+    inversePrimary = Color(0xFF7F67F0),
+
+    secondary = Color(0xFFF3F3F3),
     onSecondary = Color.Black,
-    onTertiary = Color.Black
+    secondaryContainer = Color(0xFFE0E0E0),
+    onSecondaryContainer = Color(0xFF404040),
+
+    tertiary = Color(0xFFFFFFFF),
+    onTertiary = Color.Black,
+    tertiaryContainer = Color(0xFFE6E6E6),
+    onTertiaryContainer = Color(0xFF303030),
+
+    background = Color(0xFFF5F5F5),
+    onBackground = Color(0xFF121212),
+
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF121212),
+    surfaceVariant = Color(0xFFE0E0E0),
+    onSurfaceVariant = Color(0xFF404040),
+
+    surfaceTint = Color(0xFF6200EE),
+    inverseSurface = Color(0xFF1A1A1A),
+    inverseOnSurface = Color(0xFFE6E6E6),
+
+    error = Color(0xFFB00020),
+    onError = Color.White,
+    errorContainer = Color(0xFFFFDAD4),
+    onErrorContainer = Color(0xFF410002),
+
+    outline = Color(0xFF8A8A8A),
+    outlineVariant = Color(0xFFCFCFCF),
+    scrim = Color.Black,
+
+    surfaceBright = Color(0xFFFFFFFF),
+    surfaceContainer = Color(0xFFF5F5F5),
+    surfaceContainerHigh = Color(0xFFEBEBEB),
+    surfaceContainerHighest = Color(0xFFE0E0E0),
+    surfaceContainerLow = Color(0xFFF0F0F0),
+    surfaceContainerLowest = Color(0xFFF8F8F8),
+    surfaceDim = Color(0xFFECECEC)
 )
 
 val typography = Typography(

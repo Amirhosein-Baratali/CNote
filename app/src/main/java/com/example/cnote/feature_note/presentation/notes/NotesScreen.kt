@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cnote.R
 import com.example.cnote.core.presentation.TopBar
-import com.example.cnote.core.presentation.bottom_navigation.BottomNavigation
 import com.example.cnote.core.presentation.components.FloatingAddButton
 import com.example.cnote.feature_note.presentation.notes.components.NoteItem
 import com.example.cnote.feature_note.presentation.util.NoteScreens
@@ -56,8 +55,7 @@ fun NotesScreen(
                 onSearchQueryChange = { viewModel.onEvent(NotesEvent.OnSearchQueryChanged(it)) }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        bottomBar = { BottomNavigation(navController = navController) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
