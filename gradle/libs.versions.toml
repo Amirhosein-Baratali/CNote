@@ -1,18 +1,18 @@
 [versions]
+kotlin = "2.0.0"
 android-gradle-plugin = "8.7.3"
 core-ktx-version = "1.6.1"
 hilt-android-testing = "2.37"
-hilt-compiler-version = "1.2.0"
+hilt-compiler-version = "1.1.0"
 compose-bom = "2024.12.01"
 activity-compose = "1.9.3"
 core-ktx = "1.15.0"
 kotlinx-coroutines-core = "1.8.1"
 kotlinx-coroutines-test = "1.8.1"
-kotlinx-coroutines-test-version = "1.8.1"
 lifecycle-runtime-ktx = "2.8.7"
 lifecycle-viewmodel-compose = "2.8.7"
 navigation-compose = "2.8.5"
-hilt = "2.51.1"
+hilt = "2.48"
 hilt-compiler = "2.48"
 hilt-navigation-compose = "1.2.0"
 room = "2.6.1"
@@ -49,7 +49,6 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt-android-testing" }
 kotlinx-coroutines-core-v171 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
-kotlinx-coroutines-test-v164 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test-version" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -81,3 +80,4 @@ kapt = { id = "org.jetbrains.kotlin.kapt" }
 ksp = { id = "com.google.devtools.ksp" }
 hilt = { id = "dagger.hilt.android.plugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization-plugin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize"  }

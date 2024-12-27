@@ -41,7 +41,10 @@ fun TransparentHintTextField(
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = backgroundColor,
             unfocusedIndicatorColor = backgroundColor,
-            cursorColor = textStyle.color
+            cursorColor = textStyle.color,
+            disabledContainerColor = backgroundColor,
+            focusedContainerColor = backgroundColor,
+            unfocusedContainerColor = backgroundColor
         )
     )
 }

@@ -9,21 +9,21 @@ import com.example.cnote.feature_task.presentation.util.TaskScreens
 
 sealed class BottomNavItem(
     var title: String,
-    var direction: String,
+    var direction: Any,
     var icon: ImageVector,
     var selected: Boolean = false,
 ) {
 
     object Notes : BottomNavItem(
         title = "Notes",
-        direction = NoteScreens.Notes.route,
+        direction = NoteScreens.Notes,
         icon = Icons.Default.Notes,
         selected = true
     )
 
     object Tasks : BottomNavItem(
         title = "Tasks",
-        direction = TaskScreens.Tasks.route,
+        direction = TaskScreens.Tasks,
         icon = Icons.Default.Checklist
     )
 }

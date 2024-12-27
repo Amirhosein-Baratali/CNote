@@ -1,6 +1,5 @@
 package com.example.cnote.feature_note.presentation.add_edit_note
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
-    noteColor: Int,
+    noteColor: Int?,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
 
@@ -101,17 +99,16 @@ fun AddEditNoteScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditNoteScreenContent(
     noteState: NoteState,
-    noteColor: Int,
+    noteColor: Int?,
     sendVmEvent: (AddEditNoteEvent) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else noteState.color)
+            Color(noteColor ?: noteState.color)
         )
     }
     val scope = rememberCoroutineScope()
@@ -187,16 +184,10 @@ fun AddEditNoteScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        Log.d("Focuss", "thtf clicked")
-                    },
+                modifier = Modifier.weight(1f),
                 text = noteState.content,
                 hint = stringResource(id = R.string.content),
-                onValueChange = {
-                    sendVmEvent(AddEditNoteEvent.EnteredContent(it))
-                },
+                onValueChange = { sendVmEvent(AddEditNoteEvent.EnteredContent(it)) },
                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                 testTag = TestTags.NOTE_CONTENT_TEXT_FIELD
             )

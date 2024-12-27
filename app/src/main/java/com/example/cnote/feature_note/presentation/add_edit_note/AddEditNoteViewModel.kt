@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.cnote.feature_note.domain.model.InvalidNoteException
 import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.use_case.NoteUseCases
@@ -47,10 +48,8 @@ class AddEditNoteViewModel @Inject constructor(
     val eventFlow = _eventFlow.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Int>(NoteScreens.ARG_NOTE_ID)?.let { noteId ->
-            if (noteId != -1) {
-                getInitialNote(noteId)
-            }
+        savedStateHandle.toRoute<NoteScreens.AddEditNote>().noteId?.let { noteId ->
+            getInitialNote(noteId)
         }
     }
 

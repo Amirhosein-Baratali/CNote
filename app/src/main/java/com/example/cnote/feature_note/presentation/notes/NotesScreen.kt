@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -32,7 +31,6 @@ import com.example.cnote.feature_note.presentation.notes.components.NoteItem
 import com.example.cnote.feature_note.presentation.util.NoteScreens
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesScreen(
     navController: NavController,
@@ -46,7 +44,7 @@ fun NotesScreen(
     Scaffold(
         floatingActionButton = {
             FloatingAddButton(
-                onClick = { navController.navigate(NoteScreens.AddEditNote.route) },
+                onClick = { navController.navigate(NoteScreens.AddEditNote(null, null)) },
                 stringResource(R.string.add_note),
             )
         },
@@ -74,9 +72,10 @@ fun NotesScreen(
                         .fillMaxWidth()
                         .clickable {
                             navController.navigate(
-                                NoteScreens.AddEditNote.route +
-                                        "?${NoteScreens.ARG_NOTE_ID}=${note.id}" +
-                                        "&${NoteScreens.ARG_NOTE_COLOR}=${note.color}"
+                                NoteScreens.AddEditNote(
+                                    note.id,
+                                    note.color
+                                )
                             )
                         },
                     onDeleteClick = {
