@@ -54,7 +54,7 @@ class NotesEndToEndTest {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = NoteScreens.Notes.route
+                        startDestination = NoteScreens.Notes
                     ) {
                         notesNavigation(navController)
                         tasksNavigation(navController)

@@ -1,6 +1,6 @@
 package com.example.cnote.core.presentation.bottom_navigation
 
-import android.util.Log
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.NoteAlt
@@ -19,10 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.cnote.R
 import com.example.cnote.core.presentation.components.CustomText
 import com.example.cnote.feature_note.presentation.util.NoteScreens
 import com.example.cnote.feature_task.presentation.util.TaskScreens
@@ -33,13 +35,13 @@ fun BottomNavigation(navController: NavController) {
 
     val items = listOf(
         BottomNavItem(
-            title = "Notes",
+            title = stringResource(R.string.notes),
             selectedIcon = Icons.Filled.NoteAlt,
             unselectedIcon = Icons.Outlined.NoteAlt,
             destination = NoteScreens.Notes
         ),
         BottomNavItem(
-            title = "Tasks",
+            title = stringResource(R.string.tasks),
             selectedIcon = Icons.Default.Checklist,
             unselectedIcon = Icons.Outlined.Checklist,
             destination = TaskScreens.Tasks
@@ -47,26 +49,22 @@ fun BottomNavigation(navController: NavController) {
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
     NavigationBar(
-        modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier.clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         items.forEachIndexed { index, item ->
+            val selected = selectedItemIndex == index
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = selected,
                 onClick = {
-                    selectedItemIndex = index
+                    if (selectedItemIndex == index) return@NavigationBarItem
                     navController.navigate(item.destination)
-                    Log.d("TTT", "BottomNavigation: $currentRoute")
+                    selectedItemIndex = index
                 },
                 icon = {
                     Icon(
-                        imageVector = if (index == selectedItemIndex) {
-                            item.selectedIcon
-                        } else item.unselectedIcon,
+                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
                         contentDescription = item.title
                     )
                 },
@@ -77,12 +75,19 @@ fun BottomNavigation(navController: NavController) {
                     selectedTextColor = MaterialTheme.colorScheme.primary,
                 ),
                 label = {
-                    CustomText(
-                        text = item.title,
-                        color = Color.Unspecified
-                    )
+                    if (selected)
+                        CustomText(
+                            text = item.title,
+                            color = Color.Unspecified
+                        )
                 }
             )
+        }
+    }
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        when (destination.route) {
+            NoteScreens.NoteList.javaClass.canonicalName -> selectedItemIndex = 0
+            TaskScreens.TaskList.javaClass.canonicalName -> selectedItemIndex = 1
         }
     }
 }

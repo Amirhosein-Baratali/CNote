@@ -85,12 +85,13 @@ fun TaskItem(
                 CustomText(
                     text = nameText,
                     maxLines = 1,
+                    style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start
                 )
-                Spacer(Modifier.height(MaterialTheme.spacing.small))
-                Row {
-                    task.date?.let {
-                        CustomText(it)
+                task.date?.let { date ->
+                    Spacer(Modifier.height(MaterialTheme.spacing.small))
+                    Row {
+                        CustomText(date)
                     }
                 }
             }

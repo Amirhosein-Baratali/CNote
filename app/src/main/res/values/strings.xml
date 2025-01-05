@@ -31,5 +31,10 @@
     <string name="search">search</string>
     <string name="back">back</string>
     <string name="cancel">Cancel</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="note_deleted">Note Deleted</string>
+    <string name="undo">Undo</string>
+    <string name="cant_save_note">Can\'t save note</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="not_now">Not now</string>
 </resources>

@@ -42,9 +42,9 @@ class NotesScreenTest {
             CNoteTheme {
                 NavHost(
                     navController = navController,
-                    startDestination = NoteScreens.Notes.route
+                    startDestination = NoteScreens.Notes
                 ) {
-                    composable(route = NoteScreens.Notes.route) {
+                    composable<NoteScreens.Notes> {
                         NotesScreen(navController = navController)
                     }
                 }

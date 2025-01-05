@@ -1,11 +1,13 @@
 package com.example.cnote.feature_note.presentation.add_edit_note
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.example.cnote.R
+import com.example.cnote.core.presentation.BaseViewModel
+import com.example.cnote.core.presentation.components.UiText
+import com.example.cnote.core.presentation.components.snackbar.SnackbarAction
+import com.example.cnote.core.presentation.components.snackbar.SnackbarType
 import com.example.cnote.feature_note.domain.model.InvalidNoteException
 import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.domain.use_case.NoteUseCases
@@ -13,7 +15,10 @@ import com.example.cnote.feature_note.presentation.util.NoteScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +26,7 @@ import javax.inject.Inject
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseViewModel() {
 
     private var saveNoteJob: Job? = null
     private var getNoteJob: Job? = null
@@ -29,8 +34,8 @@ class AddEditNoteViewModel @Inject constructor(
     private var initialNote: Note? = null
     private var currentNoteId: Int? = null
 
-    private val _noteState = mutableStateOf(NoteState())
-    val noteState: State<NoteState> = _noteState
+    private val _noteState = MutableStateFlow(NoteState())
+    val noteState = _noteState.asStateFlow()
 
     private fun hasNoteContent(): Boolean {
         return noteState.value.title.isNotBlank() || noteState.value.content.isNotBlank()
@@ -42,7 +47,7 @@ class AddEditNoteViewModel @Inject constructor(
                 || noteState.value.color != color
     } ?: false
 
-    fun isNoteEdited(): Boolean = initialNote?.let { hasNoteChanged() } ?: hasNoteContent()
+    private fun isNoteEdited(): Boolean = initialNote?.let { hasNoteChanged() } ?: hasNoteContent()
 
     private val _eventFlow = Channel<UiEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
@@ -64,35 +69,54 @@ class AddEditNoteViewModel @Inject constructor(
     }
 
     fun onEvent(event: AddEditNoteEvent) {
-        _noteState.value = when (event) {
-            is AddEditNoteEvent.EnteredTitle -> noteState.value.copy(title = event.value)
-            is AddEditNoteEvent.EnteredContent -> noteState.value.copy(content = event.value)
-            is AddEditNoteEvent.ChangeColor -> noteState.value.copy(color = event.color)
-            is AddEditNoteEvent.SaveNote -> {
-                saveNote()
-                return
+        _noteState.update {
+            when (event) {
+                is AddEditNoteEvent.EnteredTitle -> it.copy(title = event.value)
+                is AddEditNoteEvent.EnteredContent -> it.copy(content = event.value)
+                is AddEditNoteEvent.ChangeColor -> it.copy(color = event.color)
+                is AddEditNoteEvent.SaveNote -> {
+                    saveNote()
+                    it
+                }
+
+                AddEditNoteEvent.ExitDialogDismissed -> it.copy(showExitDialog = false)
+                AddEditNoteEvent.BackButtonClicked -> {
+                    if (isNoteEdited())
+                        it.copy(showExitDialog = true)
+                    else {
+                        viewModelScope.launch { _eventFlow.send(UiEvent.NavigateUp) }
+                        it
+                    }
+                }
             }
         }
     }
 
     private fun saveNote() {
+        saveNoteJob?.cancel()
         saveNoteJob = viewModelScope.launch {
             try {
                 noteUseCases.addNote(noteState.value.toNote(currentNoteId))
-                _eventFlow.send(UiEvent.SaveNote)
+                _eventFlow.send(UiEvent.NavigateUp)
             } catch (e: InvalidNoteException) {
-                _eventFlow.send(
-                    UiEvent.ShowError(
-                        message = e.message ?: "Couldn't save note"
+                e.message?.let {
+                    showSnackbar(
+                        it,
+                        action = SnackbarAction(
+                            name = UiText.StringResource(R.string.not_now),
+                            action = { _eventFlow.send(UiEvent.NavigateUp) }
+                        )
                     )
+                } ?: showSnackbar(
+                    messageId = R.string.cant_save_note,
+                    snackbarType = SnackbarType.ERROR
                 )
             }
         }
     }
 
     sealed class UiEvent {
-        data class ShowError(val message: String) : UiEvent()
-        object SaveNote : UiEvent()
+        object NavigateUp : UiEvent()
     }
 
     override fun onCleared() {

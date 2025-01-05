@@ -1,17 +1,21 @@
 package com.example.cnote.feature_task.presentation.tasks
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cnote.R
 import com.example.cnote.core.domain.util.Order
-import com.example.cnote.feature_task.domain.model.Task
+import com.example.cnote.core.presentation.BaseViewModel
+import com.example.cnote.core.presentation.components.UiText
+import com.example.cnote.core.presentation.components.snackbar.SnackbarAction
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _searchText = MutableStateFlow("")
 
@@ -32,10 +36,13 @@ class TasksViewModel @Inject constructor(
                 }
             )
         }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            TasksState()
+        )
 
     private var getTasksJob: Job? = null
-
-    private var recentlyDeletedTask: Task? = null
 
     init {
         viewModelScope.launch {
@@ -57,14 +64,9 @@ class TasksViewModel @Inject constructor(
                 viewModelScope.launch {
                     val task = event.task
                     taskUseCases.deleteTask(task)
-                    recentlyDeletedTask = task
-                }
-            }
-
-            TasksEvent.RestoreTask -> {
-                viewModelScope.launch {
-                    taskUseCases.addTask(recentlyDeletedTask ?: return@launch)
-                    recentlyDeletedTask = null
+                    showUndoSnackbar {
+                        taskUseCases.addTask(task)
+                    }
                 }
             }
 
@@ -83,6 +85,16 @@ class TasksViewModel @Inject constructor(
 
             is TasksEvent.OnSearchQueryChanged -> _searchText.update { event.query }
         }
+    }
+
+    private fun showUndoSnackbar(onUndo: suspend () -> Unit = {}) {
+        showSnackbar(
+            messageId = R.string.task_deleted,
+            action = SnackbarAction(
+                name = UiText.StringResource(R.string.undo),
+                action = onUndo
+            )
+        )
     }
 
     private fun getTasks(taskOrder: Order) {

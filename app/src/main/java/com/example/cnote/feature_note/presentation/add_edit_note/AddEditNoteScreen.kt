@@ -22,16 +22,11 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -41,9 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.cnote.R
 import com.example.cnote.core.presentation.components.TransparentHintTextField
+import com.example.cnote.core.presentation.components.snackbar.CustomScaffold
 import com.example.cnote.core.util.TestTags
 import com.example.cnote.feature_note.domain.model.Note
 import com.example.cnote.feature_note.presentation.add_edit_note.components.ConfirmExitDialog
@@ -57,68 +55,47 @@ fun AddEditNoteScreen(
     noteColor: Int?,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    var showExitDialog by remember { mutableStateOf(false) }
+    val state by viewModel.noteState.collectAsStateWithLifecycle()
 
     AddEditNoteScreenContent(
-        noteState = viewModel.noteState.value,
+        state = state,
         noteColor = noteColor,
-        sendVmEvent = viewModel::onEvent,
-        snackbarHostState = snackbarHostState
+        onEvent = viewModel::onEvent,
+        navController = navController
     )
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is AddEditNoteViewModel.UiEvent.ShowError -> {
-                    snackbarHostState.showSnackbar(
-                        message = event.message
-                    )
-                }
-
-                is AddEditNoteViewModel.UiEvent.SaveNote -> {
+                is AddEditNoteViewModel.UiEvent.NavigateUp -> {
                     navController.navigateUp()
                 }
             }
         }
     }
 
-    BackHandler {
-        if (viewModel.isNoteEdited())
-            showExitDialog = true
-        else
-            navController.navigateUp()
-    }
-    if (showExitDialog) {
-        ConfirmExitDialog(
-            onConfirmExit = { viewModel.onEvent(AddEditNoteEvent.SaveNote) },
-            onDismissRequest = { showExitDialog = false },
-            onDiscardChanges = { navController.navigateUp() }
-        )
-    }
 }
 
 @Composable
 fun AddEditNoteScreenContent(
-    noteState: NoteState,
+    navController: NavController,
+    state: NoteState,
     noteColor: Int?,
-    sendVmEvent: (AddEditNoteEvent) -> Unit,
-    snackbarHostState: SnackbarHostState
+    onEvent: (AddEditNoteEvent) -> Unit
 ) {
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(noteColor ?: noteState.color)
+            Color(noteColor ?: state.color)
         )
     }
     val scope = rememberCoroutineScope()
 
-    Scaffold(
+    CustomScaffold(
+        navController = navController,
+        showBottomBar = false,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    sendVmEvent(AddEditNoteEvent.SaveNote)
-                },
+                onClick = { onEvent(AddEditNoteEvent.SaveNote) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -126,14 +103,12 @@ fun AddEditNoteScreenContent(
                     contentDescription = stringResource(R.string.save_note)
                 )
             }
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { paddingValues ->
+        }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(noteBackgroundAnimatable.value)
-                .padding(paddingValues)
                 .padding(16.dp)
         ) {
             Row(
@@ -152,7 +127,7 @@ fun AddEditNoteScreenContent(
                             .background(color)
                             .border(
                                 width = 3.dp,
-                                color = if (noteState.color == colorInt) {
+                                color = if (state.color == colorInt) {
                                     Color.Black
                                 } else Color.Transparent,
                                 shape = CircleShape
@@ -166,17 +141,17 @@ fun AddEditNoteScreenContent(
                                         )
                                     )
                                 }
-                                sendVmEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                onEvent(AddEditNoteEvent.ChangeColor(colorInt))
                             }
                     )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
-                text = noteState.title,
+                text = state.title,
                 hint = stringResource(id = R.string.title),
                 onValueChange = {
-                    sendVmEvent(AddEditNoteEvent.EnteredTitle(it))
+                    onEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.headlineSmall.copy(color = Color.Black),
@@ -185,12 +160,22 @@ fun AddEditNoteScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 modifier = Modifier.weight(1f),
-                text = noteState.content,
+                text = state.content,
                 hint = stringResource(id = R.string.content),
-                onValueChange = { sendVmEvent(AddEditNoteEvent.EnteredContent(it)) },
+                onValueChange = { onEvent(AddEditNoteEvent.EnteredContent(it)) },
                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                 testTag = TestTags.NOTE_CONTENT_TEXT_FIELD
             )
+        }
+        if (state.showExitDialog) {
+            ConfirmExitDialog(
+                onConfirmExit = { onEvent(AddEditNoteEvent.SaveNote) },
+                onDismissRequest = { onEvent(AddEditNoteEvent.ExitDialogDismissed) },
+                onDiscardChanges = { navController.navigateUp() }
+            )
+        }
+        BackHandler {
+            onEvent(AddEditNoteEvent.BackButtonClicked)
         }
     }
 }
@@ -200,10 +185,10 @@ fun AddEditNoteScreenContent(
 fun PreviewAddEditNote() {
     CNoteTheme {
         AddEditNoteScreenContent(
-            noteState = NoteState(),
+            navController = rememberNavController(),
+            state = NoteState(),
             noteColor = -1,
-            sendVmEvent = {},
-            snackbarHostState = SnackbarHostState()
+            onEvent = {}
         )
     }
 }
