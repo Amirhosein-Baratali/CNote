@@ -8,7 +8,6 @@ class AddTask(
     private val repository: TaskRepository
 ) {
 
-    @Throws(InvalidTaskException::class)
     suspend operator fun invoke(task: Task) {
         if (task.name.isBlank()) {
             throw InvalidTaskException("Task Name Cannot Be Empty")

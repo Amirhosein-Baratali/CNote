@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
+import com.example.cnote.ui.theme.CNoteTheme
 
 @Composable
 fun TransparentHintTextField(
@@ -22,6 +23,7 @@ fun TransparentHintTextField(
     backgroundColor: Color = Color.Transparent,
     testTag: String = ""
 ) {
+    val contentColor = Color.Black
     TextField(
         value = text,
         onValueChange = onValueChange,
@@ -34,16 +36,33 @@ fun TransparentHintTextField(
         placeholder = {
             CustomText(
                 text = hint,
-                style = textStyle.copy(color = textStyle.color.copy(alpha = 0.5f))
+                style = textStyle.copy(Color.Unspecified),
+                color = Color.Unspecified
             )
         },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = backgroundColor,
             unfocusedIndicatorColor = backgroundColor,
-            cursorColor = textStyle.color,
+            cursorColor = contentColor,
             disabledContainerColor = backgroundColor,
             focusedContainerColor = backgroundColor,
-            unfocusedContainerColor = backgroundColor
+            unfocusedContainerColor = backgroundColor,
+            focusedPlaceholderColor = contentColor,
+            unfocusedPlaceholderColor = contentColor.copy(0.8f),
         )
     )
+}
+
+@LightAndDarkPreview
+@Composable
+private fun TransparentHintTextFieldPreview() {
+    CNoteTheme {
+        TransparentHintTextField(
+            text = "",
+            hint = "Hint",
+            onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = MaterialTheme.typography.bodyMedium
+        )
+    }
 }

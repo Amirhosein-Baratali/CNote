@@ -32,12 +32,13 @@ androidx-test-runner = "1.6.2"
 androidx-test-ext-junit = "1.2.1"
 kotlin-serialization-plugin = "1.5.31"
 ui-test-manifest = "1.7.6"
+material3 = "1.3.1"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.test:core-ktx", version.ref = "core-ktx-version" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hilt-compiler-version" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
-androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-room-compiler-v260 = { module = "androidx.room:room-compiler", version.ref = "room-compiler" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
@@ -80,4 +81,4 @@ kapt = { id = "org.jetbrains.kotlin.kapt" }
 ksp = { id = "com.google.devtools.ksp" }
 hilt = { id = "dagger.hilt.android.plugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization-plugin" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize"  }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize" }

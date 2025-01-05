@@ -1,9 +1,11 @@
 package com.example.cnote.feature_task.presentation.add_edit_task
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.example.cnote.R
+import com.example.cnote.core.presentation.BaseViewModel
+import com.example.cnote.core.presentation.components.snackbar.SnackbarType
 import com.example.cnote.feature_task.domain.model.InvalidTaskException
 import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
@@ -22,7 +24,7 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseViewModel() {
 
     private var getTaskJob: Job? = null
     private var saveTaskJob: Job? = null
@@ -30,10 +32,11 @@ class AddEditTaskViewModel @Inject constructor(
     private val _state = MutableStateFlow(AddEditTaskState())
     val state = _state.asStateFlow()
 
-    private val _eventFlow = Channel<UiEvent>()
+    private val _eventFlow = Channel<UIEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
 
     private var currentTaskId: Int? = null
+    private var currentTask: Task? = null
 
     init {
         savedStateHandle.toRoute<TaskScreens.AddEditTask>().taskId?.let {
@@ -47,6 +50,7 @@ class AddEditTaskViewModel @Inject constructor(
         getTaskJob = viewModelScope.launch {
             taskUseCases.getTask(id)?.also { task ->
                 currentTaskId = task.id
+                currentTask = task
                 _state.update {
                     it.copy(name = task.name, description = task.description)
                 }
@@ -64,20 +68,22 @@ class AddEditTaskViewModel @Inject constructor(
                             name = name,
                             description = description,
                             timeCreated = System.currentTimeMillis(),
-                            completed = true,
-                            importance = true,
+                            completed = currentTask?.completed ?: false,
+                            importance = currentTask?.importance ?: false,
                             id = currentTaskId,
                             date = date
                         )
                     }
                 )
-                _eventFlow.send(UiEvent.SaveTask)
             } catch (e: InvalidTaskException) {
-                _eventFlow.send(
-                    UiEvent.ShowError(
-                        message = e.message ?: "Couldn't save task"
-                    )
+                e.message?.let {
+                    showSnackbar(message = it, snackbarType = SnackbarType.ERROR)
+                } ?: showSnackbar(
+                    messageId = R.string.cant_save_note,
+                    snackbarType = SnackbarType.ERROR
                 )
+            } finally {
+                _eventFlow.send(UIEvent.NavigateUp)
             }
         }
     }
@@ -98,7 +104,7 @@ class AddEditTaskViewModel @Inject constructor(
 
             AddEditTaskEvent.Dismiss -> {
                 viewModelScope.launch {
-                    _eventFlow.send(UiEvent.Dismiss)
+                    _eventFlow.send(UIEvent.NavigateUp)
                 }
             }
 
@@ -111,10 +117,8 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    sealed class UiEvent {
-        data class ShowError(val message: String) : UiEvent()
-        object SaveTask : UiEvent()
-        object Dismiss : UiEvent()
+    sealed class UIEvent {
+        object NavigateUp : UIEvent()
     }
 
     override fun onCleared() {

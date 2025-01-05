@@ -6,7 +6,8 @@ import com.example.cnote.feature_note.domain.model.Note
 data class NoteState(
     val title: String = "",
     val content: String = "",
-    val color: Int = Note.noteColors.random().toArgb()
+    val color: Int = Note.noteColors.random().toArgb(),
+    val showExitDialog: Boolean = false
 ) {
     companion object {
         fun fromNote(note: Note) = NoteState(

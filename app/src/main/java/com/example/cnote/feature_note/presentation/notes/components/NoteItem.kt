@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -40,6 +43,7 @@ fun NoteItem(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 10.dp,
     cutCornerSize: Dp = 30.dp,
+    onClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
     val contentColor = Color.Black
@@ -48,65 +52,73 @@ fun NoteItem(
 
     CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
 
-        Box(
-            modifier = modifier.testTag(TestTags.NOTE_ITEM)
+        ElevatedCard(
+            modifier = modifier,
+            onClick = onClick,
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = colorScheme.background
+            )
         ) {
-            Canvas(modifier = Modifier.matchParentSize()) {
-                val clipPath = Path().apply {
-                    lineTo(size.width - cutCornerSize.toPx(), 0f)
-                    lineTo(size.width, cutCornerSize.toPx())
-                    lineTo(size.width, size.height)
-                    lineTo(0f, size.height)
-                    close()
-                }
+            Box(
+                modifier = Modifier.testTag(TestTags.NOTE_ITEM)
+            ) {
+                Canvas(modifier = Modifier.matchParentSize()) {
+                    val clipPath = Path().apply {
+                        lineTo(size.width - cutCornerSize.toPx(), 0f)
+                        lineTo(size.width, cutCornerSize.toPx())
+                        lineTo(size.width, size.height)
+                        lineTo(0f, size.height)
+                        close()
+                    }
 
-                clipPath(clipPath) {
-                    drawRoundRect(
-                        color = Color(note.color),
-                        size = size,
-                        cornerRadius = CornerRadius(cornerRadius.toPx())
+                    clipPath(clipPath) {
+                        drawRoundRect(
+                            color = Color(note.color),
+                            size = size,
+                            cornerRadius = CornerRadius(cornerRadius.toPx())
+                        )
+                        drawRoundRect(
+                            color = Color(
+                                ColorUtils.blendARGB(note.color, 0x000000, 0.2f)
+                            ),
+                            topLeft = Offset(size.width - cutCornerSize.toPx(), -100f),
+                            size = Size(cutCornerSize.toPx() + 100f, cutCornerSize.toPx() + 100f),
+                            cornerRadius = CornerRadius(cornerRadius.toPx())
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .padding(end = 32.dp)
+                ) {
+                    Text(
+                        text = note.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = contentColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
-                    drawRoundRect(
-                        color = Color(
-                            ColorUtils.blendARGB(note.color, 0x000000, 0.2f)
-                        ),
-                        topLeft = Offset(size.width - cutCornerSize.toPx(), -100f),
-                        size = Size(cutCornerSize.toPx() + 100f, cutCornerSize.toPx() + 100f),
-                        cornerRadius = CornerRadius(cornerRadius.toPx())
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = note.content,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = contentColor,
+                        maxLines = 10,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .padding(end = 32.dp)
-            ) {
-                Text(
-                    text = note.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = contentColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = note.content,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = contentColor,
-                    maxLines = 10,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            IconButton(
-                onClick = onDeleteClick,
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete note",
-                    tint = contentColor
-                )
+                IconButton(
+                    onClick = onDeleteClick,
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete note",
+                        tint = contentColor
+                    )
+                }
             }
         }
     }
