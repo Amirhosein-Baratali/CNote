@@ -2,6 +2,8 @@ package com.example.cnote.feature_task.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.cnote.feature_task.data.util.formatToDisplay
+import java.time.LocalDateTime
 
 @Entity
 data class Task(
@@ -11,10 +13,9 @@ data class Task(
     val completed: Boolean,
     val timeCreated: Long = System.currentTimeMillis(),
     val importance: Boolean = false,
-    val date: String? = null
-) {
-//    val timeStampFormatted: String
-//        get() = DateFormat.getDateTimeInstance().format(timeStamp)
+    val date: LocalDateTime? = null
+){
+    val formattedDate: String?
+        get() = date?.formatToDisplay()
 }
-
 class InvalidTaskException(message: String) : Exception(message)

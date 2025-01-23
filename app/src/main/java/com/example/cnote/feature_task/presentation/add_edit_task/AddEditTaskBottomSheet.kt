@@ -44,6 +44,7 @@ import com.example.cnote.core.presentation.components.snackbar.CustomScaffold
 import com.example.cnote.feature_task.presentation.add_edit_task.component.CustomDatePicker
 import com.example.cnote.ui.theme.CNoteTheme
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalDateTime
 
 @Composable
 fun AddEditTaskBottomSheet(
@@ -175,8 +176,9 @@ fun AddEditTaskContent(
     }
     if (state.showDatePicker) {
         CustomDatePicker(
-            onDismiss = { (onEvent(AddEditTaskEvent.DateDismissed)) },
-            onDateSelected = { onEvent(AddEditTaskEvent.DateSelected(it)) }
+            defaultDateTime = state.date ?: LocalDateTime.now(),
+            onDateTimeSelected = { onEvent(AddEditTaskEvent.DateSelected(it)) },
+            onDismiss = { (onEvent(AddEditTaskEvent.DateDismissed)) }
         )
     }
 }

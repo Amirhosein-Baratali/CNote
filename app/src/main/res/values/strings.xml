@@ -37,4 +37,5 @@
     <string name="cant_save_note">Can\'t save note</string>
     <string name="task_deleted">Task deleted</string>
     <string name="not_now">Not now</string>
+    <string name="select_time">Select Time</string>
 </resources>

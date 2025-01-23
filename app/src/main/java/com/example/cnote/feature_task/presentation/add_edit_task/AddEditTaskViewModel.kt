@@ -52,7 +52,11 @@ class AddEditTaskViewModel @Inject constructor(
                 currentTaskId = task.id
                 currentTask = task
                 _state.update {
-                    it.copy(name = task.name, description = task.description)
+                    it.copy(
+                        name = task.name,
+                        description = task.description,
+                        date = task.date
+                    )
                 }
             }
         }
