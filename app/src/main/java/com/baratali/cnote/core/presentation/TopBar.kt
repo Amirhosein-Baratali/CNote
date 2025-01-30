@@ -47,6 +47,7 @@ fun TopBar(
     onMoreExpandedChange: (Boolean) -> Unit = {},
     extraActions: @Composable RowScope.() -> Unit = {},
     onSearchQueryChange: (String) -> Unit = {},
+    showPriorityOption: Boolean = false,
     settingsClicked: () -> Unit = {}
 ) {
     var sortMenuExpanded by remember { mutableStateOf(false) }
@@ -116,6 +117,7 @@ fun TopBar(
                 order = order,
                 onOrderChange = onOrderChange,
                 expanded = sortMenuExpanded,
+                showPriorityOption = showPriorityOption,
                 onExpandChange = { sortMenuExpanded = it }
             )
 

@@ -77,6 +77,7 @@ fun TasksScreenContent(
                 stringResource(R.string.tasks),
                 order = state.taskOrder,
                 onOrderChange = { onEvent(TasksEvent.Sort(it)) },
+                showPriorityOption = true,
                 dropMenuItems = {
                     if (state.hasCompletedTask)
                         DeleteCompletedMenuItem(

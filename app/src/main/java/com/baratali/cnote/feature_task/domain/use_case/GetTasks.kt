@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.map
 class GetTasks(
     private val repository: TaskRepository
 ) {
-
     operator fun invoke(
         taskOrder: Order = Order.Date(OrderType.Descending)
     ): Flow<List<Task>> {
@@ -20,6 +19,7 @@ class GetTasks(
                     when (taskOrder) {
                         is Order.Name -> tasks.sortedBy { it.name }
                         is Order.Date -> tasks.sortedBy { it.timeCreated }
+                        is Order.Priority -> tasks.sortedBy { it.priority.value }
                     }
                 }
 
@@ -27,9 +27,10 @@ class GetTasks(
                     when (taskOrder) {
                         is Order.Name -> tasks.sortedByDescending { it.name }
                         is Order.Date -> tasks.sortedByDescending { it.timeCreated }
+                        is Order.Priority -> tasks.sortedByDescending { it.priority.value }
                     }
                 }
             }
-        }.map { sortedNotes -> sortedNotes.sortedByDescending { it.importance } }
+        }
     }
 }
