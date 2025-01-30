@@ -29,6 +29,7 @@ import com.example.cnote.core.presentation.components.CustomText
 import com.example.cnote.feature_task.domain.model.Task
 import com.example.cnote.ui.theme.CNoteTheme
 import com.example.cnote.ui.theme.spacing
+import java.time.LocalDateTime
 
 @Composable
 fun TaskItem(
@@ -88,7 +89,7 @@ fun TaskItem(
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start
                 )
-                task.date?.let { date ->
+                task.formattedDate?.let { date ->
                     Spacer(Modifier.height(MaterialTheme.spacing.small))
                     Row {
                         CustomText(date)
@@ -118,7 +119,7 @@ fun TaskItemPreview() {
                 description = "Something",
                 completed = false,
                 importance = true,
-                date = "2025/01/01"
+                date = LocalDateTime.now()
             ),
             onDeleteClick = {},
             onCheckClick = {},

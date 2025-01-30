@@ -86,6 +86,10 @@ class NotesViewModel @Inject constructor(
                     _eventFlow.send(UIEvent.NavigateToAddNote)
                 }
             }
+
+            NotesEvent.SettingsClicked -> viewModelScope.launch {
+                _eventFlow.send(UIEvent.NavigateToSettings)
+            }
         }
     }
 
@@ -109,6 +113,7 @@ class NotesViewModel @Inject constructor(
     sealed class UIEvent {
         object NavigateToAddNote : UIEvent()
         data class NavigateToEditNote(val note: Note) : UIEvent()
+        object NavigateToSettings : UIEvent()
     }
 
     override fun onCleared() {

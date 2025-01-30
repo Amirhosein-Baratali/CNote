@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +27,9 @@ import com.example.cnote.core.presentation.components.snackbar.CustomScaffold
 import com.example.cnote.feature_task.presentation.tasks.components.DeleteCompletedMenuItem
 import com.example.cnote.feature_task.presentation.tasks.components.TaskItem
 import com.example.cnote.feature_task.presentation.util.TaskScreens
+import com.example.cnote.settings.presentation.util.SettingScreens
 import com.example.cnote.ui.theme.CNoteTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun TasksScreen(
@@ -34,6 +37,16 @@ fun TasksScreen(
     viewModel: TasksViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                TasksViewModel.UIEvent.NavigateToSettings -> {
+                    navController.navigate(SettingScreens.Settings)
+                }
+            }
+        }
+    }
 
     TasksScreenContent(
         navController = navController,
@@ -64,18 +77,22 @@ fun TasksScreenContent(
                 stringResource(R.string.tasks),
                 order = state.taskOrder,
                 onOrderChange = { onEvent(TasksEvent.Sort(it)) },
-                showMoreIcon = state.hasCompletedTask,
                 dropMenuItems = {
-                    DeleteCompletedMenuItem(
-                        onDeleteCompletedTasks = {
-                            onEvent(TasksEvent.DeleteCompletedTasks)
-                            moreMenuExpanded = false
-                        }
-                    )
+                    if (state.hasCompletedTask)
+                        DeleteCompletedMenuItem(
+                            onDeleteCompletedTasks = {
+                                onEvent(TasksEvent.DeleteCompletedTasks)
+                                moreMenuExpanded = false
+                            }
+                        )
                 },
                 moreExpanded = moreMenuExpanded,
                 onMoreExpandedChange = { moreMenuExpanded = it },
-                onSearchQueryChange = { onEvent(TasksEvent.OnSearchQueryChanged(it)) }
+                onSearchQueryChange = { onEvent(TasksEvent.OnSearchQueryChanged(it)) },
+                settingsClicked = {
+                    onEvent(TasksEvent.SettingsClicked)
+                    moreMenuExpanded = false
+                }
             )
         },
     ) {

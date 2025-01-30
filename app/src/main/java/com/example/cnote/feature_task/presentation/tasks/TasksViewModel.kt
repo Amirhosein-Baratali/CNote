@@ -6,15 +6,18 @@ import com.example.cnote.core.domain.util.Order
 import com.example.cnote.core.presentation.BaseViewModel
 import com.example.cnote.core.presentation.components.UiText
 import com.example.cnote.core.presentation.components.snackbar.SnackbarAction
+import com.example.cnote.feature_note.presentation.notes.NotesViewModel.UIEvent
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,6 +46,9 @@ class TasksViewModel @Inject constructor(
         )
 
     private var getTasksJob: Job? = null
+
+    private val _eventFlow = Channel<UIEvent>()
+    val eventFlow = _eventFlow.receiveAsFlow()
 
     init {
         viewModelScope.launch {
@@ -84,6 +90,9 @@ class TasksViewModel @Inject constructor(
             }
 
             is TasksEvent.OnSearchQueryChanged -> _searchText.update { event.query }
+            TasksEvent.SettingsClicked -> viewModelScope.launch {
+                _eventFlow.send(UIEvent.NavigateToSettings)
+            }
         }
     }
 
@@ -107,6 +116,10 @@ class TasksViewModel @Inject constructor(
                 )
             }
         }.launchIn(viewModelScope)
+    }
+
+    sealed class UIEvent {
+        object NavigateToSettings : UIEvent()
     }
 
     override fun onCleared() {
