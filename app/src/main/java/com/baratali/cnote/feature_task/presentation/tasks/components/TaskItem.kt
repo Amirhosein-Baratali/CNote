@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -96,6 +97,11 @@ fun TaskItem(
                     }
                 }
             }
+            Icon(
+                imageVector = Icons.Outlined.Flag,
+                contentDescription = "Task priority",
+                tint = task.priority.color
+            )
             IconButton(
                 onClick = onDeleteClick
             ) {
@@ -118,7 +124,6 @@ fun TaskItemPreview() {
                 name = "Sample Task to show a large name what should i do to have you",
                 description = "Something",
                 completed = false,
-                importance = true,
                 date = LocalDateTime.now()
             ),
             onDeleteClick = {},

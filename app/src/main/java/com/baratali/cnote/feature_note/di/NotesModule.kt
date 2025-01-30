@@ -26,27 +26,28 @@ import javax.inject.Singleton
 object NotesModule {
     @Provides
     @Singleton
-    fun provideNoteDatabase(app: Application): NoteDatabase {
-        return Room.databaseBuilder(
-            app,
-            NoteDatabase::class.java,
-            NoteDatabase.DATABASE_NAME
-        ).build()
-    }
+    fun provideNoteDatabase(app: Application): NoteDatabase =
+        Room
+            .databaseBuilder(
+                app,
+                NoteDatabase::class.java,
+                NoteDatabase.DATABASE_NAME
+            )
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Singleton
     fun provideNoteRepository(
         db: NoteDatabase,
         dataStore: DataStore<Preferences>,
-    ): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao, dataStore)
-    }
+    ): NoteRepository = NoteRepositoryImpl(db.noteDao, dataStore)
+
 
     @Provides
     @Singleton
-    fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
-        return NoteUseCases(
+    fun provideNoteUseCases(repository: NoteRepository): NoteUseCases =
+        NoteUseCases(
             getNotes = GetNotes(repository),
             deleteNote = DeleteNote(repository),
             addNote = AddNote(repository),
@@ -54,5 +55,4 @@ object NotesModule {
             storeNoteOrder = StoreNoteOrder(repository),
             retrieveNoteOrder = RetrieveNoteOrder(repository)
         )
-    }
 }

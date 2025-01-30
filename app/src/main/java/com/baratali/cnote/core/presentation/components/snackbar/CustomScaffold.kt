@@ -18,12 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import com.baratali.cnote.core.presentation.bottom_navigation.BottomNavigation
 import kotlinx.coroutines.launch
@@ -55,12 +53,7 @@ fun CustomScaffold(
             SnackbarType.NORMAL -> colorScheme.onPrimary
         }
     )
-    val snackbarAlignment by rememberUpdatedState(
-        when (snackbarType) {
-            SnackbarType.ERROR -> Alignment.TopCenter
-            SnackbarType.NORMAL -> Alignment.BottomCenter
-        }
-    )
+
     ObserveAsEvents(
         flow = SnackbarController.events,
         snackbarHostState
@@ -81,6 +74,7 @@ fun CustomScaffold(
             }
         }
     }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -91,32 +85,13 @@ fun CustomScaffold(
             SnackbarHost(
                 hostState = snackbarHostState,
                 snackbar = { data ->
-                    Popup(
-                        alignment = snackbarAlignment,
-                        onDismissRequest = {
-                            data.dismiss()
-                        }
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = snackbarAlignment
-                        ) {
-                            Snackbar(
-                                snackbarData = data,
-                                containerColor = snackbarContainerColor,
-                                contentColor = snackbarContentColor,
-                                actionColor = snackbarContentColor,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                        }
-                    }
-                    /*Snackbar(
+                    Snackbar(
                         snackbarData = data,
                         containerColor = snackbarContainerColor,
                         contentColor = snackbarContentColor,
                         actionColor = snackbarContentColor,
                         shape = RoundedCornerShape(12.dp)
-                    )*/
+                    )
                 }
             )
         },

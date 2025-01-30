@@ -29,9 +29,14 @@ object TaskModule {
 
     @Provides
     @Singleton
-    fun provideTaskDatabase(app: Application): TaskDatabase = Room.databaseBuilder(
-        app, TaskDatabase::class.java, TaskDatabase.DATABASE_NAME
-    ).build()
+    fun provideTaskDatabase(app: Application): TaskDatabase =
+        Room
+            .databaseBuilder(
+                app, TaskDatabase::class.java,
+                TaskDatabase.DATABASE_NAME
+            )
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Singleton

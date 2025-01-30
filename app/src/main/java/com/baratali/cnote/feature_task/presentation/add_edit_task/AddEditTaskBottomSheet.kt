@@ -10,13 +10,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
@@ -26,11 +28,15 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -41,7 +47,9 @@ import androidx.navigation.NavController
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.snackbar.CustomScaffold
+import com.baratali.cnote.core.util.showShortToast
 import com.baratali.cnote.feature_task.presentation.add_edit_task.component.CustomDatePicker
+import com.baratali.cnote.feature_task.presentation.add_edit_task.component.PriorityBottomSheet
 import com.baratali.cnote.ui.theme.CNoteTheme
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
@@ -51,11 +59,18 @@ fun AddEditTaskBottomSheet(
     navController: NavController,
     viewModel: AddEditTaskViewModel = hiltViewModel()
 ) {
+    val generalSavingError = stringResource(R.string.cant_save_task)
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 AddEditTaskViewModel.UIEvent.NavigateUp -> {
                     navController.popBackStack()
+                }
+
+                is AddEditTaskViewModel.UIEvent.ShowError -> {
+                    val errorMessage = event.message ?: generalSavingError
+                    context.showShortToast(errorMessage)
                 }
             }
         }
@@ -85,6 +100,7 @@ fun AddEditTaskContent(
         initialValue = SheetValue.Expanded,
         skipHiddenState = false
     )
+    var showPrioritySheet by remember { mutableStateOf(false) }
     ModalBottomSheet(
         onDismissRequest = { onEvent(AddEditTaskEvent.Dismiss) },
         sheetState = sheetState,
@@ -117,8 +133,8 @@ fun AddEditTaskContent(
                     imeAction = ImeAction.Next
                 ),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             )
 
@@ -133,8 +149,8 @@ fun AddEditTaskContent(
                     CustomText(text = stringResource(R.string.description))
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             )
 
@@ -143,10 +159,13 @@ fun AddEditTaskContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(onClick = { onEvent(AddEditTaskEvent.DateClicked) }) {
+                    val hasDate = state.date != null
                     Icon(
-                        imageVector = Icons.Outlined.DateRange,
+                        imageVector = if (hasDate) Icons.Default.DateRange
+                        else Icons.Outlined.DateRange,
                         contentDescription = "Timer Icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = if (hasDate) MaterialTheme.colorScheme.surfaceTint
+                        else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { }) {
@@ -156,19 +175,24 @@ fun AddEditTaskContent(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = { showPrioritySheet = true }) {
                     Icon(
                         imageVector = Icons.Outlined.Flag,
                         contentDescription = "Flag Icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = state.priority.color
                     )
                 }
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = { onEvent(AddEditTaskEvent.SaveTask) }) {
+                IconButton(
+                    onClick = { onEvent(AddEditTaskEvent.SaveTask) },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                ) {
                     Icon(
-                        imageVector = Icons.Outlined.Save,
-                        contentDescription = stringResource(R.string.save_task),
-                        tint = MaterialTheme.colorScheme.primary
+                        imageVector = Icons.Rounded.Save,
+                        contentDescription = stringResource(R.string.save_task)
                     )
                 }
             }
@@ -179,6 +203,16 @@ fun AddEditTaskContent(
             defaultDateTime = state.date ?: LocalDateTime.now(),
             onDateTimeSelected = { onEvent(AddEditTaskEvent.DateSelected(it)) },
             onDismiss = { (onEvent(AddEditTaskEvent.DateDismissed)) }
+        )
+    }
+    if (showPrioritySheet) {
+        PriorityBottomSheet(
+            selectedPriority = state.priority,
+            onPrioritySelected = {
+                onEvent(AddEditTaskEvent.PrioritySelected(it))
+                showPrioritySheet = false
+            },
+            onDismiss = { showPrioritySheet = false }
         )
     }
 }

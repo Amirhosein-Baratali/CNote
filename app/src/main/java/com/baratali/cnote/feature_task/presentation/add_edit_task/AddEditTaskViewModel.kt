@@ -3,9 +3,7 @@ package com.baratali.cnote.feature_task.presentation.add_edit_task
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.BaseViewModel
-import com.baratali.cnote.core.presentation.components.snackbar.SnackbarType
 import com.baratali.cnote.feature_task.domain.model.InvalidTaskException
 import com.baratali.cnote.feature_task.domain.model.Task
 import com.baratali.cnote.feature_task.domain.use_case.TaskUseCases
@@ -55,7 +53,8 @@ class AddEditTaskViewModel @Inject constructor(
                     it.copy(
                         name = task.name,
                         description = task.description,
-                        date = task.date
+                        date = task.date,
+                        priority = task.priority
                     )
                 }
             }
@@ -73,21 +72,15 @@ class AddEditTaskViewModel @Inject constructor(
                             description = description,
                             timeCreated = System.currentTimeMillis(),
                             completed = currentTask?.completed ?: false,
-                            importance = currentTask?.importance ?: false,
                             id = currentTaskId,
+                            priority = priority,
                             date = date
                         )
                     }
                 )
-            } catch (e: InvalidTaskException) {
-                e.message?.let {
-                    showSnackbar(message = it, snackbarType = SnackbarType.ERROR)
-                } ?: showSnackbar(
-                    messageId = R.string.cant_save_note,
-                    snackbarType = SnackbarType.ERROR
-                )
-            } finally {
                 _eventFlow.send(UIEvent.NavigateUp)
+            } catch (e: InvalidTaskException) {
+                _eventFlow.send(UIEvent.ShowError(e.message))
             }
         }
     }
@@ -118,11 +111,16 @@ class AddEditTaskViewModel @Inject constructor(
 
             AddEditTaskEvent.DateDismissed -> _state.update { it.copy(showDatePicker = false) }
             is AddEditTaskEvent.DateSelected -> _state.update { it.copy(date = event.date) }
+
+            is AddEditTaskEvent.PrioritySelected -> {
+                _state.update { it.copy(priority = event.priority) }
+            }
         }
     }
 
     sealed class UIEvent {
         object NavigateUp : UIEvent()
+        data class ShowError(val message: String?) : UIEvent()
     }
 
     override fun onCleared() {

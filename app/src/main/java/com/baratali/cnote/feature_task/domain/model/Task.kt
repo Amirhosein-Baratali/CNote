@@ -12,10 +12,11 @@ data class Task(
     val description: String,
     val completed: Boolean,
     val timeCreated: Long = System.currentTimeMillis(),
-    val importance: Boolean = false,
-    val date: LocalDateTime? = null
-){
+    val date: LocalDateTime? = null,
+    val priority: TaskPriority = TaskPriority.MEDIUM
+) {
     val formattedDate: String?
         get() = date?.formatToDisplay()
 }
+
 class InvalidTaskException(message: String) : Exception(message)
