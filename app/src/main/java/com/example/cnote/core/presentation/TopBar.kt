@@ -1,5 +1,6 @@
 package com.example.cnote.core.presentation
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import com.example.cnote.core.domain.util.Order
 import com.example.cnote.core.domain.util.OrderType
 import com.example.cnote.core.presentation.components.TransparentHintTextField
 import com.example.cnote.core.presentation.components.order.OrderSection
+import com.example.cnote.settings.presentation.menu_item.SettingsMenuItem
 import com.example.cnote.ui.theme.CNoteTheme
 
 @Composable
@@ -39,12 +41,13 @@ fun TopBar(
     title: String,
     order: Order = Order.Date(OrderType.Descending),
     onOrderChange: (Order) -> Unit,
-    showMoreIcon: Boolean = false,
+    showMoreIcon: Boolean = true,
     dropMenuItems: @Composable ColumnScope.() -> Unit = {},
     moreExpanded: Boolean = false,
     onMoreExpandedChange: (Boolean) -> Unit = {},
     extraActions: @Composable RowScope.() -> Unit = {},
-    onSearchQueryChange: (String) -> Unit = {}
+    onSearchQueryChange: (String) -> Unit = {},
+    settingsClicked: () -> Unit = {}
 ) {
     var sortMenuExpanded by remember { mutableStateOf(false) }
     var isSearching by remember { mutableStateOf(false) }
@@ -127,7 +130,14 @@ fun TopBar(
             DropdownMenu(
                 expanded = moreExpanded,
                 onDismissRequest = { onMoreExpandedChange(false) },
-                content = dropMenuItems
+                content = {
+                    Column {
+                        SettingsMenuItem(
+                            onClick = settingsClicked
+                        )
+                        dropMenuItems()
+                    }
+                }
             )
         }
     )

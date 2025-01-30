@@ -10,5 +10,5 @@ sealed class NotesEvent {
     data class OnSearchQueryChanged(val query: String) : NotesEvent()
     data class OnNoteClicked(val note: Note) : NotesEvent()
     object AddButtonCLicked : NotesEvent()
-//    object RestoreNote : NotesEvent()
+    object SettingsClicked : NotesEvent()
 }

@@ -9,4 +9,5 @@ sealed class TasksEvent {
     data class UpdateTask(val task: Task) : TasksEvent()
     data class OnSearchQueryChanged(val query: String) : TasksEvent()
     object DeleteCompletedTasks : TasksEvent()
+    object SettingsClicked: TasksEvent()
 }

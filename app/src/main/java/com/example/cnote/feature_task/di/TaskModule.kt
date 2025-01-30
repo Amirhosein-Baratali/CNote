@@ -16,6 +16,7 @@ import com.example.cnote.feature_task.domain.use_case.RetrieveTaskOrder
 import com.example.cnote.feature_task.domain.use_case.StoreTaskOrder
 import com.example.cnote.feature_task.domain.use_case.TaskUseCases
 import com.example.cnote.feature_task.domain.use_case.UpdateTask
+import com.example.cnote.feature_task.domain.use_case.notification.ScheduleTaskNotificationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,10 +42,13 @@ object TaskModule {
 
     @Provides
     @Singleton
-    fun provideTaskUseCases(repository: TaskRepository): TaskUseCases =
+    fun provideTaskUseCases(
+        repository: TaskRepository,
+        scheduleTaskNotificationUseCase: ScheduleTaskNotificationUseCase
+    ): TaskUseCases =
         TaskUseCases(
             getTasks = GetTasks(repository),
-            addTask = AddTask(repository),
+            addTask = AddTask(repository, scheduleTaskNotificationUseCase),
             getTask = GetTask(repository),
             deleteTask = DeleteTask(repository),
             updateTask = UpdateTask(repository),

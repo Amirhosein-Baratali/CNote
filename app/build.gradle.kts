@@ -10,7 +10,7 @@ plugins {
 
 android {
     val versionMajor = 1
-    val versionMinor = 2
+    val versionMinor = 3
     val versionPatch = 0
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
@@ -104,7 +104,6 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.hilt.navigation.compose)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core.v171)
@@ -112,8 +111,8 @@ dependencies {
 
     //Dagger - Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Room
     implementation(libs.room.runtime)
@@ -132,6 +131,11 @@ dependencies {
     // Kotlin
     implementation(libs.kotlinx.serialization.json)
 
+    //Work Manager with Coroutines
+    implementation(libs.work)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.hilt.compiler)
+
     // Local unit tests
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.junit4)
@@ -143,7 +147,7 @@ dependencies {
 
     // Instrumentation tests
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.android.compiler)
+    kaptAndroidTest(libs.dagger.hilt.compiler)
     androidTestImplementation(libs.junit4)
     androidTestImplementation(libs.arch.core.testing)
     androidTestImplementation(libs.truth)
