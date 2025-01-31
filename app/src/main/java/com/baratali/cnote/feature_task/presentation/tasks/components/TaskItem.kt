@@ -26,8 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import com.baratali.cnote.core.presentation.components.CustomText
-import com.baratali.cnote.feature_task.domain.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
+import com.baratali.cnote.feature_task.data.data_source.model.TaskWithCategory
 import com.baratali.cnote.ui.theme.CNoteTheme
 import com.baratali.cnote.ui.theme.spacing
 import java.time.LocalDateTime
@@ -35,7 +38,7 @@ import java.time.LocalDateTime
 @Composable
 fun TaskItem(
     modifier: Modifier = Modifier,
-    task: Task,
+    taskWithCategory: TaskWithCategory,
     onTaskClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onCheckClick: (isChecked: Boolean) -> Unit
@@ -47,12 +50,12 @@ fun TaskItem(
         withStyle(
             style = SpanStyle(
                 textDecoration =
-                if (task.completed) TextDecoration.LineThrough
+                if (taskWithCategory.task.completed) TextDecoration.LineThrough
                 else TextDecoration.None,
                 color = contentColor
             )
         ) {
-            append(task.name)
+            append(taskWithCategory.task.name)
         }
     }
 
@@ -71,7 +74,7 @@ fun TaskItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = task.completed,
+                checked = taskWithCategory.task.completed,
                 onCheckedChange = onCheckClick,
                 colors = CheckboxDefaults.colors(
                     uncheckedColor = contentColor,
@@ -90,17 +93,23 @@ fun TaskItem(
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start
                 )
-                task.formattedDate?.let { date ->
-                    Spacer(Modifier.height(MaterialTheme.spacing.small))
-                    Row {
-                        CustomText(date)
-                    }
+
+                Spacer(Modifier.height(MaterialTheme.spacing.small))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    taskWithCategory.task.formattedDate?.let { CustomText(it) }
+                    Spacer(Modifier.weight(1f))
+                    taskWithCategory.category?.let { CategoryLabel(category = it) }
                 }
             }
             Icon(
                 imageVector = Icons.Outlined.Flag,
                 contentDescription = "Task priority",
-                tint = task.priority.color
+                tint = taskWithCategory.task.priority.color
             )
             IconButton(
                 onClick = onDeleteClick
@@ -120,11 +129,14 @@ fun TaskItem(
 fun TaskItemPreview() {
     CNoteTheme {
         TaskItem(
-            task = Task(
-                name = "Sample Task to show a large name what should i do to have you",
-                description = "Something",
-                completed = false,
-                date = LocalDateTime.now()
+            taskWithCategory = TaskWithCategory(
+                task = Task(
+                    name = "Sample Task to show a large name what should i do to have you",
+                    description = "Something",
+                    completed = false,
+                    date = LocalDateTime.now()
+                ),
+                category = TaskCategory.sampleData
             ),
             onDeleteClick = {},
             onCheckClick = {},

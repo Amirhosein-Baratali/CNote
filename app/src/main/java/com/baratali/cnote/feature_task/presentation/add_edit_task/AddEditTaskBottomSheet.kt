@@ -50,6 +50,7 @@ import com.baratali.cnote.core.presentation.components.snackbar.CustomScaffold
 import com.baratali.cnote.core.util.showShortToast
 import com.baratali.cnote.feature_task.presentation.add_edit_task.component.CustomDatePicker
 import com.baratali.cnote.feature_task.presentation.add_edit_task.component.PriorityBottomSheet
+import com.baratali.cnote.feature_task.presentation.util.TaskScreens
 import com.baratali.cnote.ui.theme.CNoteTheme
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
@@ -57,10 +58,15 @@ import java.time.LocalDateTime
 @Composable
 fun AddEditTaskBottomSheet(
     navController: NavController,
+    selectedCategoryId: Int? = null,
     viewModel: AddEditTaskViewModel = hiltViewModel()
 ) {
     val generalSavingError = stringResource(R.string.cant_save_task)
     val context = LocalContext.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(selectedCategoryId) {
+        selectedCategoryId?.let { viewModel.updateSelectedCategory(it) }
+    }
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -72,11 +78,13 @@ fun AddEditTaskBottomSheet(
                     val errorMessage = event.message ?: generalSavingError
                     context.showShortToast(errorMessage)
                 }
+
+                AddEditTaskViewModel.UIEvent.NavigateToCategoryPicker -> {
+                    navController.navigate(TaskScreens.Categories(state.selectedCategory?.id))
+                }
             }
         }
     }
-
-    val state by viewModel.state.collectAsStateWithLifecycle()
 
     CustomScaffold(
         navController = navController,
@@ -101,6 +109,7 @@ fun AddEditTaskContent(
         skipHiddenState = false
     )
     var showPrioritySheet by remember { mutableStateOf(false) }
+
     ModalBottomSheet(
         onDismissRequest = { onEvent(AddEditTaskEvent.Dismiss) },
         sheetState = sheetState,
@@ -168,11 +177,13 @@ fun AddEditTaskContent(
                         else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = { onEvent(AddEditTaskEvent.CategoryClicked) }) {
                     Icon(
-                        imageVector = Icons.Outlined.Category,
+                        imageVector = state.selectedCategory?.icon?.imageVector
+                            ?: Icons.Outlined.Category,
                         contentDescription = "Category Icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = state.selectedCategory?.color?.let { Color(it) }
+                            ?: MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { showPrioritySheet = true }) {

@@ -6,7 +6,7 @@ import com.baratali.cnote.core.domain.util.Order
 import com.baratali.cnote.core.presentation.BaseViewModel
 import com.baratali.cnote.core.presentation.components.UiText
 import com.baratali.cnote.core.presentation.components.snackbar.SnackbarAction
-import com.baratali.cnote.feature_task.domain.use_case.TaskUseCases
+import com.baratali.cnote.feature_task.domain.use_case.tasks.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -33,8 +33,8 @@ class TasksViewModel @Inject constructor(
     val state = _searchText
         .combine(_state) { text, state ->
             state.copy(
-                tasks = state.tasks.filter {
-                    it.name.contains(text) || it.description.contains(text)
+                tasksWithCategory = state.tasksWithCategory.filter {
+                    it.task.name.contains(text) || it.task.description.contains(text)
                 }
             )
         }
@@ -107,10 +107,10 @@ class TasksViewModel @Inject constructor(
 
     private fun getTasks(taskOrder: Order) {
         getTasksJob?.cancel()
-        getTasksJob = taskUseCases.getTasks(taskOrder).onEach { tasks ->
-            _state.update {
-                it.copy(
-                    tasks = tasks,
+        getTasksJob = taskUseCases.getTasks(taskOrder).onEach { tasksWithCategory ->
+            _state.update { currentState ->
+                currentState.copy(
+                    tasksWithCategory = tasksWithCategory,
                     taskOrder = taskOrder
                 )
             }

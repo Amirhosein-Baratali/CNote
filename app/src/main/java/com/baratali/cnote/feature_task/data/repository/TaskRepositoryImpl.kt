@@ -7,7 +7,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.baratali.cnote.core.domain.util.Order
 import com.baratali.cnote.core.util.getStringValue
 import com.baratali.cnote.feature_task.data.data_source.TaskDao
-import com.baratali.cnote.feature_task.domain.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
+import com.baratali.cnote.feature_task.data.data_source.model.TaskWithCategory
 import com.baratali.cnote.feature_task.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -20,13 +22,10 @@ class TaskRepositoryImpl(
         val KEY_TASK_ORDER = stringPreferencesKey(name = "task_order")
     }
 
-    override fun getTasks(): Flow<List<Task>> {
-        return dao.getTasks()
-    }
+    override fun getTasksWithCategory(): Flow<List<TaskWithCategory>> = dao.getTasksWithCategory()
 
-    override suspend fun getTaskById(id: Int): Task? {
-        return dao.getTaskById(id)
-    }
+    override suspend fun getTaskWithCategoryById(id: Int): TaskWithCategory? =
+        dao.getTaskWithCategoryById(id)
 
     override suspend fun insertTask(task: Task) {
         dao.insertTask(task)
@@ -43,6 +42,19 @@ class TaskRepositoryImpl(
     override suspend fun deleteCompletedTasks() {
         dao.deleteCompletedTasks()
     }
+
+    override fun getCategories(): Flow<List<TaskCategory>> = dao.getCategories()
+
+    override suspend fun getCategoryById(id: Int): TaskCategory? {
+        return dao.getCategoryById(id)
+    }
+
+    override suspend fun insertCategory(taskCategory: TaskCategory) =
+        dao.insertCategory(taskCategory)
+
+    override suspend fun deleteCategory(taskCategory: TaskCategory) =
+        dao.deleteCategory(taskCategory)
+
 
     override suspend fun saveOrder(order: Order) {
         val taskOrderName = order.toStringValue()

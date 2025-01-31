@@ -1,7 +1,7 @@
 package com.baratali.cnote.feature_task.domain.use_case.notification
 
 import com.baratali.cnote.R
-import com.baratali.cnote.feature_task.domain.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.domain.model.TaskNotification
 import javax.inject.Inject
 

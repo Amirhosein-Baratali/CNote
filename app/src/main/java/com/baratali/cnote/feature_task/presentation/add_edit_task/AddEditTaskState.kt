@@ -1,6 +1,7 @@
 package com.baratali.cnote.feature_task.presentation.add_edit_task
 
-import com.baratali.cnote.feature_task.domain.model.TaskPriority
+import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
+import com.baratali.cnote.feature_task.data.data_source.model.TaskPriority
 import java.time.LocalDateTime
 
 data class AddEditTaskState(
@@ -8,5 +9,6 @@ data class AddEditTaskState(
     val description: String = "",
     val date: LocalDateTime? = null,
     val priority: TaskPriority = TaskPriority.MEDIUM,
-    val showDatePicker:Boolean = false
+    val showDatePicker: Boolean = false,
+    val selectedCategory: TaskCategory? = null
 )
