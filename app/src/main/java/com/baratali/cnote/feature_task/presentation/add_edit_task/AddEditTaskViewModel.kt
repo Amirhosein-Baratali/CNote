@@ -4,9 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.baratali.cnote.core.presentation.BaseViewModel
-import com.baratali.cnote.feature_task.domain.model.InvalidTaskException
-import com.baratali.cnote.feature_task.domain.model.Task
-import com.baratali.cnote.feature_task.domain.use_case.TaskUseCases
+import com.baratali.cnote.feature_task.data.data_source.model.InvalidTaskException
+import com.baratali.cnote.feature_task.data.data_source.model.Task
+import com.baratali.cnote.feature_task.domain.use_case.categories.CategoryUseCases
+import com.baratali.cnote.feature_task.domain.use_case.tasks.TaskUseCases
 import com.baratali.cnote.feature_task.presentation.util.TaskScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases,
+    private val categoryUseCases: CategoryUseCases,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
@@ -43,23 +45,35 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    private fun getTask(id: Int) {
-        getTaskJob?.cancel()
-        getTaskJob = viewModelScope.launch {
-            taskUseCases.getTask(id)?.also { task ->
-                currentTaskId = task.id
-                currentTask = task
-                _state.update {
-                    it.copy(
-                        name = task.name,
-                        description = task.description,
-                        date = task.date,
-                        priority = task.priority
-                    )
+    fun updateSelectedCategory(selectedCategoryId: Int?) {
+        selectedCategoryId?.let {
+            viewModelScope.launch {
+                categoryUseCases.getCategory(selectedCategoryId)?.let { category ->
+                    _state.update { it.copy(selectedCategory = category) }
                 }
             }
         }
     }
+
+    private fun getTask(id: Int) {
+        getTaskJob?.cancel()
+        getTaskJob = viewModelScope.launch {
+            taskUseCases.getTaskWithCategory(id)?.also { taskWithCategory ->
+                currentTaskId = taskWithCategory.task.id
+                currentTask = taskWithCategory.task
+                _state.update {
+                    it.copy(
+                        name = currentTask!!.name,
+                        description = currentTask!!.description,
+                        date = currentTask!!.date,
+                        priority = currentTask!!.priority
+                    )
+                }
+                updateSelectedCategory(currentTask?.categoryId)
+            }
+        }
+    }
+
 
     private fun saveTask() {
         saveTaskJob?.cancel()
@@ -74,7 +88,8 @@ class AddEditTaskViewModel @Inject constructor(
                             completed = currentTask?.completed ?: false,
                             id = currentTaskId,
                             priority = priority,
-                            date = date
+                            date = date,
+                            categoryId = selectedCategory?.id
                         )
                     }
                 )
@@ -115,12 +130,17 @@ class AddEditTaskViewModel @Inject constructor(
             is AddEditTaskEvent.PrioritySelected -> {
                 _state.update { it.copy(priority = event.priority) }
             }
+
+            AddEditTaskEvent.CategoryClicked -> viewModelScope.launch {
+                _eventFlow.send(UIEvent.NavigateToCategoryPicker)
+            }
         }
     }
 
     sealed class UIEvent {
         object NavigateUp : UIEvent()
         data class ShowError(val message: String?) : UIEvent()
+        object NavigateToCategoryPicker : UIEvent()
     }
 
     override fun onCleared() {

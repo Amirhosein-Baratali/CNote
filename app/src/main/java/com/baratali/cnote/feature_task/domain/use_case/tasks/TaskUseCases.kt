@@ -1,9 +1,9 @@
-package com.baratali.cnote.feature_task.domain.use_case
+package com.baratali.cnote.feature_task.domain.use_case.tasks
 
 data class TaskUseCases(
     val getTasks: GetTasks,
     val addTask: AddTask,
-    val getTask: GetTask,
+    val getTaskWithCategory: GetTask,
     val deleteTask: DeleteTask,
     val updateTask: UpdateTask,
     val deleteCompletedTasks: DeleteCompletedTasks,

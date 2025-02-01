@@ -102,15 +102,15 @@ fun TasksScreenContent(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            items(state.tasks) { task ->
+            items(state.tasksWithCategory) { tasksWithCategory ->
                 TaskItem(
-                    task = task,
+                    taskWithCategory = tasksWithCategory,
                     onTaskClick = {
-                        navController.navigate(TaskScreens.AddEditTask(taskId = task.id))
+                        navController.navigate(TaskScreens.AddEditTask(taskId = tasksWithCategory.task.id))
                     },
-                    onDeleteClick = { onEvent(TasksEvent.DeleteTask(task)) },
+                    onDeleteClick = { onEvent(TasksEvent.DeleteTask(tasksWithCategory.task)) },
                     onCheckClick = {
-                        onEvent(TasksEvent.UpdateTask(task.copy(completed = it)))
+                        onEvent(TasksEvent.UpdateTask(tasksWithCategory.task.copy(completed = it)))
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))

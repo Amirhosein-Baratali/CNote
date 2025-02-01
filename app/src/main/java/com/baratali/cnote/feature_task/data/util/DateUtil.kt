@@ -12,6 +12,6 @@ fun LocalDateTime.toEpochMillis(): Long =
     this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
 fun LocalDateTime.formatToDisplay(): String {
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a")
+    val formatter = DateTimeFormatter.ofPattern("yy/MM/dd, HH:mm")
     return this.format(formatter)
 }

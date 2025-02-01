@@ -1,4 +1,4 @@
-package com.baratali.cnote.feature_task.domain.model
+package com.baratali.cnote.feature_task.data.data_source.model
 
 import androidx.compose.ui.graphics.Color
 

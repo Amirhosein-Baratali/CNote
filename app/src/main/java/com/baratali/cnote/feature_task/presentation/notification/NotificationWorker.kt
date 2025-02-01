@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.baratali.cnote.feature_task.domain.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.domain.use_case.notification.CalculateTaskNotificationsUseCase
 import com.google.gson.Gson
 import dagger.assisted.Assisted

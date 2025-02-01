@@ -4,7 +4,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.baratali.cnote.feature_task.domain.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.presentation.notification.NotificationWorker
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
 import com.google.gson.Gson

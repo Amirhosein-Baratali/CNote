@@ -1,7 +1,7 @@
-package com.baratali.cnote.feature_task.domain.use_case
+package com.baratali.cnote.feature_task.domain.use_case.tasks
 
-import com.baratali.cnote.feature_task.domain.model.InvalidTaskException
-import com.baratali.cnote.feature_task.domain.model.Task
+import com.baratali.cnote.feature_task.data.data_source.model.InvalidTaskException
+import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.domain.repository.TaskRepository
 import com.baratali.cnote.feature_task.domain.use_case.notification.ScheduleTaskNotificationUseCase
 

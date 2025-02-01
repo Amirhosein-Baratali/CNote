@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import com.baratali.cnote.feature_task.presentation.add_edit_task.AddEditTaskBottomSheet
+import com.baratali.cnote.feature_task.presentation.categories.CategoryPickerBottomSheet
+import com.baratali.cnote.feature_task.presentation.category_creation.CategoryCreationScreen
 import com.baratali.cnote.feature_task.presentation.tasks.TasksScreen
 
 fun NavGraphBuilder.tasksNavigation(navController: NavController) {
@@ -13,8 +15,19 @@ fun NavGraphBuilder.tasksNavigation(navController: NavController) {
         composable<TaskScreens.TaskList> {
             TasksScreen(navController)
         }
-        dialog<TaskScreens.AddEditTask> {
-            AddEditTaskBottomSheet(navController = navController)
+        dialog<TaskScreens.AddEditTask> { entry ->
+            val selectedCategoryId =
+                entry.savedStateHandle.get<Int>(TaskScreens.KEY_SELECTED_CATEGORY_ID)
+            AddEditTaskBottomSheet(
+                navController = navController,
+                selectedCategoryId = selectedCategoryId
+            )
+        }
+        dialog<TaskScreens.Categories> {
+            CategoryPickerBottomSheet(navController = navController)
+        }
+        dialog<TaskScreens.CategoryCreation> {
+            CategoryCreationScreen(navController = navController)
         }
     }
 }

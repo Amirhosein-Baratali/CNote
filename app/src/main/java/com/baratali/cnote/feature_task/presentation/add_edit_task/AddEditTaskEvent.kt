@@ -1,6 +1,6 @@
 package com.baratali.cnote.feature_task.presentation.add_edit_task
 
-import com.baratali.cnote.feature_task.domain.model.TaskPriority
+import com.baratali.cnote.feature_task.data.data_source.model.TaskPriority
 import java.time.LocalDateTime
 
 sealed class AddEditTaskEvent {
@@ -12,4 +12,5 @@ sealed class AddEditTaskEvent {
     data class DateSelected(val date: LocalDateTime?) : AddEditTaskEvent()
     object DateDismissed : AddEditTaskEvent()
     data class PrioritySelected(val priority: TaskPriority) : AddEditTaskEvent()
+    object CategoryClicked : AddEditTaskEvent()
 }

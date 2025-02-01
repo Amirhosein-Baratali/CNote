@@ -1,4 +1,4 @@
-package com.baratali.cnote.feature_task.domain.use_case
+package com.baratali.cnote.feature_task.domain.use_case.tasks
 
 import com.baratali.cnote.feature_task.domain.repository.TaskRepository
 

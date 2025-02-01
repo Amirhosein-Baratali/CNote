@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
-import com.baratali.cnote.feature_task.domain.model.TaskPriority
+import com.baratali.cnote.feature_task.data.data_source.model.TaskPriority
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
