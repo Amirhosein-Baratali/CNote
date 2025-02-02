@@ -56,17 +56,19 @@ fun SettingsContent(
     state: SettingState,
     onEvent: (SettingsEvent) -> Unit
 ) {
+    val containerColor = colorScheme.secondaryContainer
+
     Box(
         Modifier
             .fillMaxSize()
-            .background(color = colorScheme.primaryContainer.copy(0.5f))
+            .background(color = colorScheme.tertiary)
     ) {
         Box(
             Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.35f)
                 .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
-                .background(color = colorScheme.primary)
+                .background(color = colorScheme.secondary)
         )
         Column(
             modifier = Modifier
@@ -80,14 +82,20 @@ fun SettingsContent(
                 modifier = Modifier.fillMaxHeight(), shape = RoundedCornerShape(
                     topStart = 12.dp, topEnd = 12.dp, bottomStart = 0.dp, bottomEnd = 0.dp
                 ), colors = CardDefaults.elevatedCardColors(
-                    containerColor = colorScheme.primaryContainer
+                    containerColor = containerColor
                 )
             ) {
-                SwitchDarkMode(isChecked = state.isDark ?: isSystemInDarkTheme(),
-                    onCheckedChange = { onEvent(SettingsEvent.DarkModeClicked(it)) })
+                SwitchDarkMode(
+                    modifier = Modifier.padding(4.dp),
+                    isChecked = state.isDark ?: isSystemInDarkTheme(),
+                    onCheckedChange = { onEvent(SettingsEvent.DarkModeClicked(it)) }
+                )
 
-                SwitchNotification(isChecked = state.notificationsEnabled,
-                    onCheckedChange = { onEvent(SettingsEvent.NotificationsToggled(it)) })
+                SwitchNotification(
+                    modifier = Modifier.padding(4.dp),
+                    isChecked = state.notificationsEnabled,
+                    onCheckedChange = { onEvent(SettingsEvent.NotificationsToggled(it)) }
+                )
             }
         }
     }
@@ -105,7 +113,7 @@ private fun HeaderSection() {
         Icon(
             painter = painterResource(R.drawable.ic_setting_outlined),
             contentDescription = null,
-            tint = colorScheme.onPrimary,
+            tint = colorScheme.onSecondary,
             modifier = Modifier
                 .fillMaxHeight()
                 .size(45.dp),
@@ -114,7 +122,7 @@ private fun HeaderSection() {
         CustomText(
             text = stringResource(R.string.settings),
             style = MaterialTheme.typography.displaySmall,
-            color = colorScheme.onPrimary
+            color = colorScheme.onSecondary
         )
     }
 }

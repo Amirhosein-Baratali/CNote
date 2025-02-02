@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -19,10 +22,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.feature_task.presentation.categories.component.AddCategoryItem
 import com.baratali.cnote.feature_task.presentation.categories.component.CategoryItem
@@ -69,12 +74,9 @@ fun CategoryPickerBottomSheetContent(
     state: CategoryPickerState,
     onEvent: (CategoryPickerEvent) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
-
-    // Ensure the bottom sheet fully expands initially
-    LaunchedEffect(Unit) {
-        sheetState.show()
-    }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
 
     ModalBottomSheet(
         onDismissRequest = { onEvent(CategoryPickerEvent.Dismiss) },
@@ -89,11 +91,33 @@ fun CategoryPickerBottomSheetContent(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
         ) {
-            CustomText(
-                text = "Choose Category",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomText(
+                    text = "Choose Category",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                IconButton(
+                    onClick = {
+                        if (state.isEditMode) {
+                            onEvent(CategoryPickerEvent.ExitEditMode)
+                        } else {
+                            onEvent(CategoryPickerEvent.EnterEditMode)
+                        }
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(if (state.isEditMode) R.drawable.ic_close_square else R.drawable.ic_edit),
+                        contentDescription = if (state.isEditMode) "Cancel Edit Mode" else "Edit Categories",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
@@ -108,7 +132,10 @@ fun CategoryPickerBottomSheetContent(
                     CategoryItem(
                         category = category,
                         isSelected = category.id == state.selectedCategoryId,
-                        onClick = { onEvent(CategoryPickerEvent.CategorySelected(category)) }
+                        isEditMode = state.isEditMode,
+                        onClick = { onEvent(CategoryPickerEvent.CategorySelected(category)) },
+                        onLongClick = { onEvent(CategoryPickerEvent.EnterEditMode) },
+                        onDelete = { onEvent(CategoryPickerEvent.DeleteCategory(category)) }
                     )
                 }
 

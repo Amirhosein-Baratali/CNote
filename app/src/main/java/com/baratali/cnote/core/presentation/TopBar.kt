@@ -96,7 +96,7 @@ fun TopBar(
                     isSearching = true
                 }) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_search_status),
+                        painter = painterResource(R.drawable.ic_search),
                         contentDescription = stringResource(R.string.search)
                     )
                 }

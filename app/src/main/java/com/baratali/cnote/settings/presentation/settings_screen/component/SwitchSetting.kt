@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.LightAndDarkPreview
@@ -20,6 +21,7 @@ import com.baratali.cnote.ui.theme.CNoteTheme
 
 @Composable
 fun SwitchSetting(
+    modifier: Modifier = Modifier,
     title: String,
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit
@@ -30,7 +32,7 @@ fun SwitchSetting(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(2.dp)
             .clip(RoundedCornerShape(12.dp))
@@ -45,8 +47,8 @@ fun SwitchSetting(
             checked = isChecked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = colorScheme.primary,
-                checkedTrackColor = colorScheme.primaryContainer,
+                checkedThumbColor = colorScheme.outlineVariant,
+                checkedTrackColor = colorScheme.surfaceTint,
                 uncheckedBorderColor = contentColor,
                 checkedBorderColor = contentColor,
                 uncheckedThumbColor = colorScheme.onSurfaceVariant,

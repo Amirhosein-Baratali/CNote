@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.baratali.cnote.core.presentation.BaseViewModel
+import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
 import com.baratali.cnote.feature_task.domain.use_case.categories.CategoryUseCases
 import com.baratali.cnote.feature_task.presentation.util.TaskScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,9 @@ class CategoryPickerViewmodel @Inject constructor(
 
     private val _state = MutableStateFlow(CategoryPickerState())
     val state = _state.asStateFlow()
+
     private var getCategoriesJob: Job? = null
+    private var deleteCategoryJob: Job? = null
 
     init {
         getCategories()
@@ -52,7 +55,25 @@ class CategoryPickerViewmodel @Inject constructor(
             CategoryPickerEvent.Dismiss -> viewModelScope.launch {
                 _eventFlow.send(UIEvent.NavigateUp)
             }
+
+            CategoryPickerEvent.EnterEditMode -> {
+                _state.update { it.copy(isEditMode = true) }
+            }
+            CategoryPickerEvent.ExitEditMode -> {
+                _state.update { it.copy(isEditMode = false) }
+            }
+            is CategoryPickerEvent.DeleteCategory -> {
+               deleteCategory(event.category)
+            }
         }
+    }
+
+    private fun deleteCategory(category: TaskCategory) {
+        deleteCategoryJob?.cancel()
+        deleteCategoryJob = viewModelScope.launch {
+            useCases.deleteCategory(category)
+        }
+        getCategories()
     }
 
     private fun getCategories() {
@@ -76,6 +97,7 @@ class CategoryPickerViewmodel @Inject constructor(
 
     override fun onCleared() {
         getCategoriesJob?.cancel()
+        deleteCategoryJob?.cancel()
         super.onCleared()
     }
 }
