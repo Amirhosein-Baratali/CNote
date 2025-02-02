@@ -1,11 +1,6 @@
 package com.baratali.cnote.core.presentation.bottom_navigation
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checklist
-import androidx.compose.material.icons.filled.NoteAlt
-import androidx.compose.material.icons.outlined.Checklist
-import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -19,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -36,14 +32,14 @@ fun BottomNavigation(navController: NavController) {
     val items = listOf(
         BottomNavItem(
             title = stringResource(R.string.notes),
-            selectedIcon = Icons.Filled.NoteAlt,
-            unselectedIcon = Icons.Outlined.NoteAlt,
+            selectedIcon = painterResource(R.drawable.ic_book_fill),
+            unselectedIcon = painterResource(R.drawable.ic_book_outlined),
             destination = NoteScreens.Notes
         ),
         BottomNavItem(
             title = stringResource(R.string.tasks),
-            selectedIcon = Icons.Default.Checklist,
-            unselectedIcon = Icons.Outlined.Checklist,
+            selectedIcon = painterResource(R.drawable.ic_check_list_fill),
+            unselectedIcon = painterResource(R.drawable.ic_check_list_outlined),
             destination = TaskScreens.Tasks
         )
     )
@@ -64,7 +60,7 @@ fun BottomNavigation(navController: NavController) {
                 },
                 icon = {
                     Icon(
-                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                        painter = if (selected) item.selectedIcon else item.unselectedIcon,
                         contentDescription = item.title
                     )
                 },

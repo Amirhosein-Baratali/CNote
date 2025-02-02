@@ -9,12 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.outlined.Category
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +31,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -170,25 +165,33 @@ fun AddEditTaskContent(
                 IconButton(onClick = { onEvent(AddEditTaskEvent.DateClicked) }) {
                     val hasDate = state.date != null
                     Icon(
-                        imageVector = if (hasDate) Icons.Default.DateRange
-                        else Icons.Outlined.DateRange,
+                        painter = if (hasDate) painterResource(R.drawable.ic_calendar_fill)
+                        else painterResource(R.drawable.ic_calendar),
                         contentDescription = "Timer Icon",
                         tint = if (hasDate) MaterialTheme.colorScheme.surfaceTint
                         else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { onEvent(AddEditTaskEvent.CategoryClicked) }) {
-                    Icon(
-                        imageVector = state.selectedCategory?.icon?.imageVector
-                            ?: Icons.Outlined.Category,
-                        contentDescription = "Category Icon",
-                        tint = state.selectedCategory?.color?.let { Color(it) }
-                            ?: MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+
+                    if (state.selectedCategory?.icon?.imageVector != null) {//FIXME replace image vector
+                        Icon(
+                            imageVector = state.selectedCategory.icon.imageVector,
+                            contentDescription = "Category Icon",
+                            tint = state.selectedCategory.color.let { Color(it) }
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_category),
+                            contentDescription = "Category Icon",
+                            tint = state.selectedCategory?.color?.let { Color(it) }
+                                ?: MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
                 IconButton(onClick = { showPrioritySheet = true }) {
                     Icon(
-                        imageVector = Icons.Outlined.Flag,
+                        painter = painterResource(R.drawable.ic_flag),
                         contentDescription = "Flag Icon",
                         tint = state.priority.color
                     )
@@ -202,7 +205,7 @@ fun AddEditTaskContent(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Save,
+                        painter = painterResource(R.drawable.ic_clipboard_tick),
                         contentDescription = stringResource(R.string.save_task)
                     )
                 }
