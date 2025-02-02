@@ -9,16 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 
 @Composable
@@ -35,7 +35,7 @@ fun AddCategoryItem(onClick: () -> Unit) {
     ) {
         Icon(
             modifier = Modifier.size(24.dp),
-            imageVector = Icons.Default.Add,
+            painter = painterResource(R.drawable.ic_add_square),
             contentDescription = "Add Category",
             tint = MaterialTheme.colorScheme.onPrimaryContainer
         )

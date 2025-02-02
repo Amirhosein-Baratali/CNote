@@ -4,11 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.baratali.cnote.R
@@ -86,7 +82,7 @@ fun TopBar(
                     onSearchQueryChange("")
                 }) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        painter = painterResource(R.drawable.ic_arrow_square_left),
                         contentDescription = stringResource(R.string.back)
                     )
                 }
@@ -100,7 +96,7 @@ fun TopBar(
                     isSearching = true
                 }) {
                     Icon(
-                        imageVector = Icons.Default.Search,
+                        painter = painterResource(R.drawable.ic_search_status),
                         contentDescription = stringResource(R.string.search)
                     )
                 }
@@ -108,7 +104,7 @@ fun TopBar(
 
             IconButton(onClick = { sortMenuExpanded = !sortMenuExpanded }) {
                 Icon(
-                    imageVector = Icons.Default.Sort,
+                    painter = painterResource(R.drawable.ic_sort),
                     contentDescription = stringResource(R.string.sort)
                 )
             }
@@ -124,7 +120,7 @@ fun TopBar(
             if (showMoreIcon)
                 IconButton(onClick = { onMoreExpandedChange(!moreExpanded) }) {
                     Icon(
-                        imageVector = Icons.Default.MoreVert,
+                        painter = painterResource(R.drawable.ic_more_square),
                         contentDescription = stringResource(R.string.more)
                     )
                 }

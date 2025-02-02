@@ -1,13 +1,10 @@
 package com.baratali.cnote.core.presentation.components.order
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.baratali.cnote.R
 import com.baratali.cnote.core.domain.util.Order
@@ -63,7 +60,7 @@ fun OrderSection(
             onClick = orderByDate,
             text = {
                 OrderMenuItem(
-                    icon = Icons.Outlined.DateRange,
+                    icon = painterResource(R.drawable.ic_calendar),
                     text = dateText,
                     isSelected = isDateSelected,
                     orderType = order.orderType
@@ -75,7 +72,7 @@ fun OrderSection(
             onClick = orderByTitle,
             text = {
                 OrderMenuItem(
-                    icon = Icons.Outlined.Title,
+                    icon = painterResource(R.drawable.ic_subtitle),
                     text = titleText,
                     isSelected = isTitleSelected,
                     orderType = order.orderType
@@ -88,7 +85,7 @@ fun OrderSection(
                 onClick = orderByPriority,
                 text = {
                     OrderMenuItem(
-                        icon = Icons.Outlined.Flag,
+                        icon = painterResource(R.drawable.ic_flag),
                         text = priorityText,
                         isSelected = isPrioritySelected,
                         orderType = order.orderType
