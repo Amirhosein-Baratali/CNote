@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.feature_task.data.data_source.model.Task
@@ -94,30 +93,32 @@ fun TaskItem(
                 )
 
                 Spacer(Modifier.height(MaterialTheme.spacing.small))
+                taskWithCategory.task.formattedDate?.let { CustomText(it) }
+            }
+            Column(
+                modifier = Modifier.padding(MaterialTheme.spacing.xxSmall),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    taskWithCategory.task.formattedDate?.let { CustomText(it) }
-                    Spacer(Modifier.weight(1f))
-                    taskWithCategory.category?.let { CategoryLabel(category = it) }
+                    Icon(
+                        painter = painterResource(R.drawable.ic_flag),
+                        contentDescription = "Task priority",
+                        tint = taskWithCategory.task.priority.color
+                    )
+                    IconButton(
+                        onClick = onDeleteClick
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_trash),
+                            contentDescription = "Delete task",
+                            tint = contentColor
+                        )
+                    }
                 }
-            }
-            Icon(
-                painter = painterResource(R.drawable.ic_flag),
-                contentDescription = "Task priority",
-                tint = taskWithCategory.task.priority.color
-            )
-            IconButton(
-                onClick = onDeleteClick
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_trash),
-                    contentDescription = "Delete task",
-                    tint = contentColor
-                )
+                taskWithCategory.category?.let { CategoryLabel(category = it) }
             }
         }
     }

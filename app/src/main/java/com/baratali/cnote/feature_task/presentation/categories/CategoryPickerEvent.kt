@@ -6,4 +6,7 @@ sealed class CategoryPickerEvent {
     data class CategorySelected(val category: TaskCategory) : CategoryPickerEvent()
     object AddNewCategory : CategoryPickerEvent()
     object Dismiss : CategoryPickerEvent()
+    object EnterEditMode : CategoryPickerEvent()
+    object ExitEditMode : CategoryPickerEvent()
+    data class DeleteCategory(val category: TaskCategory) : CategoryPickerEvent()
 }

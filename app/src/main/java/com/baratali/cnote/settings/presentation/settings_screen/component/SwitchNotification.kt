@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -12,6 +13,7 @@ import com.baratali.cnote.R
 
 @Composable
 fun SwitchNotification(
+    modifier: Modifier = Modifier,
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
@@ -28,6 +30,7 @@ fun SwitchNotification(
     }
 
     SwitchSetting(
+        modifier = modifier,
         title = stringResource(R.string.notifications),
         isChecked = isChecked,
         onCheckedChange = { newValue ->

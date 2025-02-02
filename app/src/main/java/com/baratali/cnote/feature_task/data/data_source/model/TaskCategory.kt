@@ -15,7 +15,7 @@ data class TaskCategory(
     companion object {
         val sampleData =   TaskCategory(
             name = "Work",
-            icon = CategoryIcon.WORK,
+            icon = CategoryIcon.UNIVERSITY,
             color = Color(0xFFFFA07A).toArgb().toLong()
         )
     }
