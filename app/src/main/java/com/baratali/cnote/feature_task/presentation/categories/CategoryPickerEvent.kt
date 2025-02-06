@@ -8,5 +8,10 @@ sealed class CategoryPickerEvent {
     object Dismiss : CategoryPickerEvent()
     object EnterEditMode : CategoryPickerEvent()
     object ExitEditMode : CategoryPickerEvent()
-    data class DeleteCategory(val category: TaskCategory) : CategoryPickerEvent()
+    data class DeleteCategory(
+        val category: TaskCategory,
+        val isSelected: Boolean
+    ) : CategoryPickerEvent()
+
+    object NoCategorySelected : CategoryPickerEvent()
 }

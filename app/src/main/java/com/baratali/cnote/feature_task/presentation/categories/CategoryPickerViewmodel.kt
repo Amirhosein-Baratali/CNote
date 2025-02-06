@@ -46,10 +46,7 @@ class CategoryPickerViewmodel @Inject constructor(
             }
 
             is CategoryPickerEvent.CategorySelected -> {
-                _state.update { it.copy(selectedCategoryId = event.category.id) }
-                viewModelScope.launch {
-                    _eventFlow.send(UIEvent.NavigateUpWithResult)
-                }
+                updateSelectedCategory(event.category.id)
             }
 
             CategoryPickerEvent.Dismiss -> viewModelScope.launch {
@@ -59,12 +56,29 @@ class CategoryPickerViewmodel @Inject constructor(
             CategoryPickerEvent.EnterEditMode -> {
                 _state.update { it.copy(isEditMode = true) }
             }
+
             CategoryPickerEvent.ExitEditMode -> {
                 _state.update { it.copy(isEditMode = false) }
             }
+
             is CategoryPickerEvent.DeleteCategory -> {
-               deleteCategory(event.category)
+                deleteCategory(event.category)
             }
+
+            CategoryPickerEvent.NoCategorySelected -> {
+                updateSelectedCategory(null)
+            }
+        }
+    }
+
+    private fun updateSelectedCategory(categoryId: Int? = null) {
+        _state.update { it.copy(selectedCategoryId = categoryId) }
+        navigateUpWithResult()
+    }
+
+    private fun navigateUpWithResult() {
+        viewModelScope.launch {
+            _eventFlow.send(UIEvent.NavigateUpWithResult)
         }
     }
 

@@ -10,5 +10,6 @@ data class AddEditTaskState(
     val date: LocalDateTime? = null,
     val priority: TaskPriority = TaskPriority.MEDIUM,
     val showDatePicker: Boolean = false,
-    val selectedCategory: TaskCategory? = null
+    val selectedCategory: TaskCategory? = null,
+    val currentTaskId: Int? = null
 )

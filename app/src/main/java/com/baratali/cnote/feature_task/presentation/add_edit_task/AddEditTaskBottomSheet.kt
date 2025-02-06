@@ -53,14 +53,15 @@ import java.time.LocalDateTime
 @Composable
 fun AddEditTaskBottomSheet(
     navController: NavController,
-    selectedCategoryId: Int? = null,
+    selectedCategoryId: Int?,
+    refreshCount: Int? = null,
     viewModel: AddEditTaskViewModel = hiltViewModel()
 ) {
     val generalSavingError = stringResource(R.string.cant_save_task)
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(selectedCategoryId) {
-        selectedCategoryId?.let { viewModel.updateSelectedCategory(it) }
+    LaunchedEffect(selectedCategoryId, refreshCount) {
+        viewModel.updateSelectedCategory(selectedCategoryId)
     }
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->

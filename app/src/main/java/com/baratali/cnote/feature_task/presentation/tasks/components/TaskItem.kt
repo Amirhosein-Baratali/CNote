@@ -3,9 +3,7 @@ package com.baratali.cnote.feature_task.presentation.tasks.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -24,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.feature_task.data.data_source.model.Task
@@ -83,17 +82,21 @@ fun TaskItem(
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = MaterialTheme.spacing.small),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.Center
             ) {
                 CustomText(
+                    modifier = Modifier.padding(vertical = 4.dp),
                     text = nameText,
                     maxLines = 1,
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start
                 )
-
-                Spacer(Modifier.height(MaterialTheme.spacing.small))
-                taskWithCategory.task.formattedDate?.let { CustomText(it) }
+                taskWithCategory.task.formattedDate?.let {
+                    CustomText(
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        text = it
+                    )
+                }
             }
             Column(
                 modifier = Modifier.padding(MaterialTheme.spacing.xxSmall),

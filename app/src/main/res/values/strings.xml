@@ -49,4 +49,5 @@
     <string name="cant_save_task">Can\'t Save Task</string>
     <string name="create">Create</string>
     <string name="enter_category_name">Enter category name</string>
+    <string name="none">None</string>
 </resources>

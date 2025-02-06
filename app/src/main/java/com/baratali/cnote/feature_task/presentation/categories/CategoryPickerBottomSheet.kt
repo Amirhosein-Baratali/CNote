@@ -31,6 +31,7 @@ import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.feature_task.presentation.categories.component.AddCategoryItem
 import com.baratali.cnote.feature_task.presentation.categories.component.CategoryItem
+import com.baratali.cnote.feature_task.presentation.categories.component.NoCategoryItem
 import com.baratali.cnote.feature_task.presentation.util.TaskScreens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -53,10 +54,17 @@ fun CategoryPickerBottomSheet(
                 }
 
                 CategoryPickerViewmodel.UIEvent.NavigateUpWithResult -> {
-                    navController.previousBackStackEntry?.savedStateHandle?.set(
-                        key = TaskScreens.KEY_SELECTED_CATEGORY_ID,
-                        value = state.selectedCategoryId
-                    )
+                    navController.previousBackStackEntry?.savedStateHandle?.apply {
+                        set(
+                            key = TaskScreens.KEY_SELECTED_CATEGORY_ID,
+                            value = state.selectedCategoryId
+                        )
+                        val currentRefreshCount = get(TaskScreens.KEY_REFRESH_COUNT) ?: 0
+                        set(
+                            key = TaskScreens.KEY_REFRESH_COUNT,
+                            value = currentRefreshCount + 1
+                        )
+                    }
                     navController.popBackStack()
                 }
             }
@@ -112,8 +120,13 @@ fun CategoryPickerBottomSheetContent(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(if (state.isEditMode) R.drawable.ic_close_square else R.drawable.ic_edit),
-                        contentDescription = if (state.isEditMode) "Cancel Edit Mode" else "Edit Categories",
+                        painter = painterResource(
+                            if (state.isEditMode) R.drawable.ic_close_square
+                            else R.drawable.ic_edit
+                        ),
+                        contentDescription =
+                        if (state.isEditMode) "Cancel Edit Mode"
+                        else "Edit Categories",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -128,17 +141,29 @@ fun CategoryPickerBottomSheetContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                item {
+                    NoCategoryItem(
+                        isSelected = state.selectedCategoryId == null,
+                        onClick = { onEvent(CategoryPickerEvent.NoCategorySelected) })
+                }
                 items(state.categories) { category ->
+                    val isSelected = category.id == state.selectedCategoryId
                     CategoryItem(
                         category = category,
-                        isSelected = category.id == state.selectedCategoryId,
+                        isSelected = isSelected,
                         isEditMode = state.isEditMode,
                         onClick = { onEvent(CategoryPickerEvent.CategorySelected(category)) },
                         onLongClick = { onEvent(CategoryPickerEvent.EnterEditMode) },
-                        onDelete = { onEvent(CategoryPickerEvent.DeleteCategory(category)) }
+                        onDelete = {
+                            onEvent(
+                                CategoryPickerEvent.DeleteCategory(
+                                    category,
+                                    isSelected
+                                )
+                            )
+                        }
                     )
                 }
-
                 item {
                     AddCategoryItem(
                         onClick = { onEvent(CategoryPickerEvent.AddNewCategory) }

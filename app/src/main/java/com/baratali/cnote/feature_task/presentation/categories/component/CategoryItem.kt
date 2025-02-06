@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,7 +76,7 @@ fun CategoryItem(
             )
         }
 
-        if (isEditMode) {
+        if (isEditMode && isSelected.not()) {
             IconButton(
                 onClick = onDelete,
                 modifier = Modifier
@@ -85,7 +86,7 @@ fun CategoryItem(
                 Icon(
                     painter = painterResource(R.drawable.ic_trash),
                     contentDescription = "Delete",
-                    tint = Color.White
+                    tint = colorScheme.primary
                 )
             }
         }
