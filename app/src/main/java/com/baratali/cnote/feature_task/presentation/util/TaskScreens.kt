@@ -20,5 +20,6 @@ sealed class TaskScreens {
 
     companion object {
         const val KEY_SELECTED_CATEGORY_ID = "selectedCategoryId"
+        const val KEY_REFRESH_COUNT = "refreshCount"
     }
 }

@@ -18,8 +18,10 @@ fun NavGraphBuilder.tasksNavigation(navController: NavController) {
         dialog<TaskScreens.AddEditTask> { entry ->
             val selectedCategoryId =
                 entry.savedStateHandle.get<Int>(TaskScreens.KEY_SELECTED_CATEGORY_ID)
+            val refreshCount = entry.savedStateHandle[TaskScreens.KEY_REFRESH_COUNT] ?: 0
             AddEditTaskBottomSheet(
                 navController = navController,
+                refreshCount = refreshCount,
                 selectedCategoryId = selectedCategoryId
             )
         }

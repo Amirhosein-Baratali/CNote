@@ -35,22 +35,19 @@ class AddEditTaskViewModel @Inject constructor(
     private val _eventFlow = Channel<UIEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
 
-    private var currentTaskId: Int? = null
     private var currentTask: Task? = null
 
     init {
-        savedStateHandle.toRoute<TaskScreens.AddEditTask>().taskId?.let {
-            currentTaskId = it
-            getTask(it)
+        savedStateHandle.toRoute<TaskScreens.AddEditTask>().taskId?.let { taskId ->
+            _state.update { it.copy(currentTaskId = taskId) }
+            getTask(taskId)
         }
     }
 
     fun updateSelectedCategory(selectedCategoryId: Int?) {
-        selectedCategoryId?.let {
-            viewModelScope.launch {
-                categoryUseCases.getCategory(selectedCategoryId)?.let { category ->
-                    _state.update { it.copy(selectedCategory = category) }
-                }
+        viewModelScope.launch {
+            categoryUseCases.getCategory(selectedCategoryId).also { category ->
+                _state.update { it.copy(selectedCategory = category) }
             }
         }
     }
@@ -59,14 +56,14 @@ class AddEditTaskViewModel @Inject constructor(
         getTaskJob?.cancel()
         getTaskJob = viewModelScope.launch {
             taskUseCases.getTaskWithCategory(id)?.also { taskWithCategory ->
-                currentTaskId = taskWithCategory.task.id
                 currentTask = taskWithCategory.task
                 _state.update {
                     it.copy(
                         name = currentTask!!.name,
                         description = currentTask!!.description,
                         date = currentTask!!.date,
-                        priority = currentTask!!.priority
+                        priority = currentTask!!.priority,
+                        currentTaskId = currentTask!!.id
                     )
                 }
                 updateSelectedCategory(currentTask?.categoryId)
