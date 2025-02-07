@@ -13,4 +13,5 @@ sealed class AddEditTaskEvent {
     object DateDismissed : AddEditTaskEvent()
     data class PrioritySelected(val priority: TaskPriority) : AddEditTaskEvent()
     object CategoryClicked : AddEditTaskEvent()
+    data class NotificationPermissionResult(val isGranted: Boolean): AddEditTaskEvent()
 }

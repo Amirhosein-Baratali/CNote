@@ -1,6 +1,8 @@
 # CNote - Android Note-Taking App
 
-CNote is a modern Android note-taking app built with **Clean Architecture**, **Jetpack Compose**, **Room Database**, and **Dagger Hilt** for dependency injection. It provides a clean and intuitive user interface for creating, editing, and managing notes efficiently.
+CNote is a modern Android note-taking app built with **Clean Architecture**, **Jetpack Compose**, *
+*Room Database**, and **Dagger Hilt** for dependency injection. It provides a clean and intuitive
+user interface for creating, editing, and managing notes efficiently.
 
 ---
 
@@ -19,9 +21,21 @@ CNote is a modern Android note-taking app built with **Clean Architecture**, **J
 
 ## Screenshots
 
-| Home Screen | Add Note | Search Notes |
-|-------------|----------|--------------|
-| ![Home Screen](screenshots/home.png) | ![Add Note](screenshots/add_note.png) | ![Search Notes](screenshots/search.png) |
+| Notes                           | Add Note                              |
+|---------------------------------|---------------------------------------|
+| ![Notes](screenshots/notes.png) | ![Add Note](screenshots/add_note.png) |
+
+| Tasks                           | Add Task                              |
+|---------------------------------|---------------------------------------|
+| ![Tasks](screenshots/tasks.png) | ![Add Task](screenshots/add_task.png) |
+
+| Task Category                                   | Create Category                                     |
+|-------------------------------------------------|-----------------------------------------------------|
+| ![Task Category](screenshots/task_category.png) | ![Create Category](screenshots/create_category.png) |
+
+| Task Priority                                   | Task Calendar                                   |
+|-------------------------------------------------|-------------------------------------------------|
+| ![Task Priority](screenshots/task_priority.png) | ![Task Calendar](screenshots/task_calendar.png) |
 
 ---
 

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
@@ -44,7 +45,7 @@ fun NoCategoryItem(
         Icon(
             modifier = Modifier
                 .size(24.dp)
-                .scale(if (isSelected) 1.5f else 1f),
+                .scale(if (isSelected) 1.3f else 1f),
             imageVector = Icons.Rounded.DoNotDisturb,
             contentDescription = "No Category",
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -52,7 +53,9 @@ fun NoCategoryItem(
         Spacer(modifier = Modifier.height(4.dp))
         CustomText(
             text = stringResource(R.string.none),
-            style = if (isSelected) typography.titleSmall else typography.bodySmall,
+            style =
+            if (isSelected) typography.bodyMedium.copy(fontWeight = FontWeight.Black)
+            else typography.bodySmall,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
