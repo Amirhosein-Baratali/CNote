@@ -1,5 +1,10 @@
 package com.baratali.cnote.feature_task.presentation.add_edit_task
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -60,6 +66,12 @@ fun AddEditTaskBottomSheet(
     val generalSavingError = stringResource(R.string.cant_save_task)
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.onEvent(AddEditTaskEvent.NotificationPermissionResult(isGranted))
+    }
     LaunchedEffect(selectedCategoryId, refreshCount) {
         viewModel.updateSelectedCategory(selectedCategoryId)
     }
@@ -77,6 +89,22 @@ fun AddEditTaskBottomSheet(
 
                 AddEditTaskViewModel.UIEvent.NavigateToCategoryPicker -> {
                     navController.navigate(TaskScreens.Categories(state.selectedCategory?.id))
+                }
+
+                AddEditTaskViewModel.UIEvent.CheckForNotification -> {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                        return@collectLatest
+                    }
+                    val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            notificationPermission
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        viewModel.onEvent(AddEditTaskEvent.NotificationPermissionResult(true))
+                    } else {
+                        notificationPermissionLauncher.launch(notificationPermission)
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.baratali.cnote.settings.presentation.settings_screen.component
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -18,14 +19,13 @@ fun SwitchNotification(
     onCheckedChange: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            onCheckedChange(true) // Update the state if permission is granted
+            onCheckedChange(true)
         } else {
-            onCheckedChange(false) // Revert the toggle if permission is denied
+            onCheckedChange(false)
         }
     }
 
@@ -34,19 +34,23 @@ fun SwitchNotification(
         title = stringResource(R.string.notifications),
         isChecked = isChecked,
         onCheckedChange = { newValue ->
-            if (newValue) {
-                if (ContextCompat.checkSelfPermission(
-                        context,
-                        notificationPermission
-                    ) == PackageManager.PERMISSION_GRANTED
-
-                ) {
-                    onCheckedChange(true)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
+                if (newValue) {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            notificationPermission
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        onCheckedChange(true)
+                    } else {
+                        notificationPermissionLauncher.launch(notificationPermission)
+                    }
                 } else {
-                    notificationPermissionLauncher.launch(notificationPermission)
+                    onCheckedChange(false)
                 }
             } else {
-                onCheckedChange(false)
+                onCheckedChange(newValue)
             }
         }
     )

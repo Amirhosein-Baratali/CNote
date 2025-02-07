@@ -9,6 +9,7 @@ import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.domain.use_case.categories.CategoryUseCases
 import com.baratali.cnote.feature_task.domain.use_case.tasks.TaskUseCases
 import com.baratali.cnote.feature_task.presentation.util.TaskScreens
+import com.baratali.cnote.settings.domain.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases,
     private val categoryUseCases: CategoryUseCases,
+    private val dataStoreRepository: DataStoreRepository,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
@@ -71,7 +73,6 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-
     private fun saveTask() {
         saveTaskJob?.cancel()
         saveTaskJob = viewModelScope.launch {
@@ -108,7 +109,13 @@ class AddEditTaskViewModel @Inject constructor(
             }
 
             is AddEditTaskEvent.SaveTask -> {
-                saveTask()
+                if (state.value.date != null) {
+                    viewModelScope.launch {
+                        _eventFlow.send(UIEvent.CheckForNotification)
+                    }
+                } else {
+                    saveTask()
+                }
             }
 
             AddEditTaskEvent.Dismiss -> {
@@ -131,6 +138,14 @@ class AddEditTaskViewModel @Inject constructor(
             AddEditTaskEvent.CategoryClicked -> viewModelScope.launch {
                 _eventFlow.send(UIEvent.NavigateToCategoryPicker)
             }
+
+            is AddEditTaskEvent.NotificationPermissionResult -> {
+                viewModelScope.launch {
+                    dataStoreRepository.updateNotificationsEnabled(event.isGranted)
+                }.invokeOnCompletion {
+                    saveTask()
+                }
+            }
         }
     }
 
@@ -138,6 +153,7 @@ class AddEditTaskViewModel @Inject constructor(
         object NavigateUp : UIEvent()
         data class ShowError(val message: String?) : UIEvent()
         object NavigateToCategoryPicker : UIEvent()
+        object CheckForNotification : UIEvent()
     }
 
     override fun onCleared() {

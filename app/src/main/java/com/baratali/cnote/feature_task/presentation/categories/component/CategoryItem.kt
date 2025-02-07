@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
@@ -46,7 +47,7 @@ fun CategoryItem(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(containerColor.copy(alpha = if (isSelected) 1f else 0.3f))
+            .background(containerColor.copy(alpha = if (isSelected) 0.7f else 0.3f))
             .combinedClickable(
                 onClick = { if (!isEditMode) onClick() },
                 onLongClick = onLongClick
@@ -62,7 +63,7 @@ fun CategoryItem(
             Icon(
                 modifier = Modifier
                     .size(24.dp)
-                    .scale(if (isSelected) 1.5f else 1f),
+                    .scale(if (isSelected) 1.3f else 1f),
                 imageVector = category.icon.imageVector,
                 contentDescription = category.name,
                 tint = contentColor
@@ -70,7 +71,9 @@ fun CategoryItem(
             Spacer(modifier = Modifier.height(4.dp))
             CustomText(
                 text = category.name,
-                style = if (isSelected) typography.titleSmall else typography.bodySmall,
+                style =
+                if (isSelected) typography.bodyMedium.copy(fontWeight = FontWeight.Black)
+                else typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = contentColor
             )
