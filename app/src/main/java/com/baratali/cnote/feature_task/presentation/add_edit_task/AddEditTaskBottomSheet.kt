@@ -93,13 +93,14 @@ fun AddEditTaskBottomSheet(
 
                 AddEditTaskViewModel.UIEvent.CheckForNotification -> {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                        viewModel.onEvent(AddEditTaskEvent.NotificationPermissionResult(true))
                         return@collectLatest
                     }
                     val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
                     if (ContextCompat.checkSelfPermission(
                             context,
                             notificationPermission
-                        ) != PackageManager.PERMISSION_GRANTED
+                        ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         viewModel.onEvent(AddEditTaskEvent.NotificationPermissionResult(true))
                     } else {
