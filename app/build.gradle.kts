@@ -10,8 +10,8 @@ plugins {
 
 android {
     val versionMajor = 1
-    val versionMinor = 8
-    val versionPatch = 1
+    val versionMinor = 9
+    val versionPatch = 0
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
@@ -33,6 +33,17 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(rootProject.file(properties["CN_NOTE_STORE_FILE"] ?: ""))
+            storePassword = properties["CN_NOTE_STORE_PASSWORD"] as String
+            keyAlias = properties["CN_NOTE_KEY_ALIAS"] as String
+            keyPassword = properties["CN_NOTE_KEY_PASSWORD"] as String
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+    }
+
     buildTypes {
         getByName("release") {
             isDebuggable = false
@@ -42,6 +53,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
 
         getByName("debug") {
