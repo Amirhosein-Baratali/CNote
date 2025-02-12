@@ -35,15 +35,21 @@ jobs:
         env:
           ENCODED_KEYSTORE: ${{ secrets.CN_NOTE_STORE_FILE }}
         run: |
-          echo "$ENCODED_KEYSTORE" | base64 --decode > app/cnote-keystore.jks
+          echo "$ENCODED_KEYSTORE" | base64 --decode > cnote.keystore
+          ls -l  # Debug to check if file exists
 
       # Inject Secrets into gradle.properties
       - name: Inject Signing Configs
         run: |
+          echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" >> gradle.properties
           echo "CN_NOTE_STORE_FILE=app/cnote-keystore.jks" >> gradle.properties
           echo "CN_NOTE_STORE_PASSWORD=${{ secrets.CN_NOTE_STORE_PASSWORD }}" >> gradle.properties
           echo "CN_NOTE_KEY_ALIAS=${{ secrets.CN_NOTE_KEY_ALIAS }}" >> gradle.properties
           echo "CN_NOTE_KEY_PASSWORD=${{ secrets.CN_NOTE_KEY_PASSWORD }}" >> gradle.properties
+          echo "android.useAndroidX=true" >> gradle.properties
+          echo "android.nonTransitiveRClass=true" >> gradle.properties
+          echo "kotlin.code.style=official" >> gradle.properties
+          
 
       # Grant execute permission for Gradlew
       - name: Grant execute permission for Gradlew
