@@ -1,7 +1,6 @@
 package com.baratali.cnote.settings.presentation.settings_screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -34,7 +33,7 @@ import androidx.navigation.NavController
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.LightAndDarkPreview
-import com.baratali.cnote.settings.presentation.settings_screen.component.SwitchDarkMode
+import com.baratali.cnote.settings.presentation.settings_screen.component.DarkModeSetting
 import com.baratali.cnote.settings.presentation.settings_screen.component.SwitchNotification
 import com.baratali.cnote.ui.theme.CNoteTheme
 
@@ -85,10 +84,10 @@ fun SettingsContent(
                     containerColor = containerColor
                 )
             ) {
-                SwitchDarkMode(
+                DarkModeSetting(
                     modifier = Modifier.padding(4.dp),
-                    isChecked = state.isDark ?: isSystemInDarkTheme(),
-                    onCheckedChange = { onEvent(SettingsEvent.DarkModeClicked(it)) }
+                    selectedMode = state.darkMode,
+                    onModeChange = { onEvent(SettingsEvent.DarkModeChanged(it)) }
                 )
 
                 SwitchNotification(
