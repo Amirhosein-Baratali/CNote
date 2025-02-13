@@ -23,7 +23,7 @@ class SettingsViewModel @Inject constructor(
             dataStoreRepository.getSettings().collect { timeSettings ->
                 _state.update {
                     it.copy(
-                        isDark = timeSettings.isDark,
+                        darkMode = timeSettings.darkMode,
                         notificationsEnabled = timeSettings.notificationEnabled
                     )
                 }
@@ -33,11 +33,11 @@ class SettingsViewModel @Inject constructor(
 
     fun onEvent(event: SettingsEvent) {
         when (event) {
-            is SettingsEvent.DarkModeClicked -> {
+            is SettingsEvent.DarkModeChanged -> {
                 viewModelScope.launch {
-                    dataStoreRepository.updateDarkMode(event.isDark)
+                    dataStoreRepository.updateDarkMode(event.darkMode)
                 }.invokeOnCompletion {
-                    _state.update { it.copy(isDark = event.isDark) }
+                    _state.update { it.copy(darkMode = event.darkMode) }
                 }
             }
 

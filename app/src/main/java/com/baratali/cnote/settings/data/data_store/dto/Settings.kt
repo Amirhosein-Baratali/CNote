@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Settings(
-    val isDark: Boolean? = null,
+    val darkMode: DarkMode = DarkMode.SystemDefault,
     val notificationEnabled: Boolean = false
 )

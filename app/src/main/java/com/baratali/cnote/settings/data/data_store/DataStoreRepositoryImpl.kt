@@ -1,6 +1,7 @@
 package com.baratali.cnote.settings.data.data_store
 
 import androidx.datastore.core.DataStore
+import com.baratali.cnote.settings.data.data_store.dto.DarkMode
 import com.baratali.cnote.settings.data.data_store.dto.Settings
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
 import kotlinx.coroutines.flow.Flow
@@ -20,9 +21,9 @@ class DataStoreRepositoryImpl(
             }
         }
 
-    override suspend fun updateDarkMode(isDark: Boolean) {
+    override suspend fun updateDarkMode(darkMode: DarkMode) {
         dataStore.updateData { currentSettings ->
-            currentSettings.copy(isDark = isDark)
+            currentSettings.copy(darkMode = darkMode)
         }
     }
 

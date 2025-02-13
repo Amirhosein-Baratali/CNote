@@ -3,7 +3,6 @@ package com.baratali.cnote.core.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -23,8 +22,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = hiltViewModel()
 
             CNoteTheme(
-                darkTheme = viewModel.isDark.collectAsStateWithLifecycle().value
-                    ?: isSystemInDarkTheme()
+                darkMode = viewModel.darkMode.collectAsStateWithLifecycle().value
             ) {
                 val navController = rememberNavController()
                 NavHost(
