@@ -1,5 +1,7 @@
 package com.baratali.cnote.settings.presentation.password
 
+import com.baratali.cnote.settings.presentation.util.PasswordMode
+
 data class PasswordState(
     val password: String = "",
     val passwordHasError: Boolean = false,

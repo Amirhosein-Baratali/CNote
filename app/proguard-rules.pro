@@ -22,3 +22,4 @@
 
 -keep class com.baratali.cnote.feature_note.presentation.util.** { *; }
 -keep class com.baratali.cnote.feature_task.presentation.util.** { *; }
+-keep class com.baratali.cnote.settings.presentation.util.** { *; }

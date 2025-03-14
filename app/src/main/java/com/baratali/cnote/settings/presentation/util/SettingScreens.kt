@@ -1,6 +1,5 @@
 package com.baratali.cnote.settings.presentation.util
 
-import com.baratali.cnote.settings.presentation.password.PasswordMode
 import kotlinx.serialization.Serializable
 
 sealed class SettingScreens {

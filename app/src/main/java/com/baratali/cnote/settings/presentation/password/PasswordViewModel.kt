@@ -7,6 +7,7 @@ import com.baratali.cnote.core.presentation.BaseViewModel
 import com.baratali.cnote.feature_note.domain.use_case.NoteUseCases
 import com.baratali.cnote.settings.domain.use_case.UpdatePasswordUseCase
 import com.baratali.cnote.settings.domain.use_case.VerifyPasswordUseCase
+import com.baratali.cnote.settings.presentation.util.PasswordMode
 import com.baratali.cnote.settings.presentation.util.SettingScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

@@ -1,9 +1,12 @@
 package com.baratali.cnote.feature_note.presentation.notes
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,7 +45,7 @@ fun NotesScreen(
                 }
 
                 NotesViewModel.UIEvent.NavigateToAddNote -> {
-                    navController.navigate(NoteScreens.AddEditNote(null))
+                    navController.navigate(NoteScreens.AddEditNote())
                 }
 
                 NotesViewModel.UIEvent.NavigateToSettings -> {
@@ -99,15 +102,18 @@ fun NotesScreenContent(
             )
         }
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(vertical = 4.dp)
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(state.notes) { note ->
                 NoteItem(
                     note = note,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    modifier = Modifier.aspectRatio(1.1f),
                     onClick = { onEvent(NotesEvent.OnNoteClicked(note)) },
                     onDeleteClick = { onEvent(NotesEvent.DeleteNote(note)) },
                     onLockClick = { onEvent(NotesEvent.LockNote(note)) }

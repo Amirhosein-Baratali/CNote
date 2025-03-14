@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
+import com.baratali.cnote.core.presentation.components.RoundedCornerCheckbox
 import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
 import com.baratali.cnote.feature_task.data.data_source.model.TaskWithCategory
@@ -70,22 +69,22 @@ fun TaskItem(
                 .padding(MaterialTheme.spacing.xxSmall),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(
-                checked = taskWithCategory.task.completed,
-                onCheckedChange = onCheckClick,
-                colors = CheckboxDefaults.colors(
-                    uncheckedColor = contentColor,
-                    checkedColor = MaterialTheme.colorScheme.primary
-                )
+            RoundedCornerCheckbox(
+                modifier = Modifier.padding(12.dp),
+                checkedColor = contentColor,
+                uncheckedColor = containerColor,
+                isChecked = taskWithCategory.task.completed,
+                onValueChange = { onCheckClick(it) },
             )
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(vertical = MaterialTheme.spacing.small),
-                verticalArrangement = Arrangement.Center
+                    .padding(vertical = MaterialTheme.spacing.small)
             ) {
                 CustomText(
-                    modifier = Modifier.padding(vertical = 4.dp),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth(),
                     text = nameText,
                     maxLines = 1,
                     style = MaterialTheme.typography.titleMedium,
@@ -134,7 +133,7 @@ fun TaskItemPreview() {
         TaskItem(
             taskWithCategory = TaskWithCategory(
                 task = Task(
-                    name = "Sample Task to show a large name what should i do to have you",
+                    name = "تست",
                     description = "Something",
                     completed = false,
                     date = LocalDateTime.now()

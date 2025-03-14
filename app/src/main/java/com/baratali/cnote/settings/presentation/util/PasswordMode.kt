@@ -1,4 +1,4 @@
-package com.baratali.cnote.settings.presentation.password
+package com.baratali.cnote.settings.presentation.util
 
 enum class PasswordMode {
     SET_PASSWORD,

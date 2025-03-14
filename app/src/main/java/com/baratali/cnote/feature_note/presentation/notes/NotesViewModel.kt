@@ -9,7 +9,7 @@ import com.baratali.cnote.core.presentation.components.snackbar.SnackbarAction
 import com.baratali.cnote.feature_note.domain.model.Note
 import com.baratali.cnote.feature_note.domain.use_case.NoteUseCases
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
-import com.baratali.cnote.settings.presentation.password.PasswordMode
+import com.baratali.cnote.settings.presentation.util.PasswordMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel

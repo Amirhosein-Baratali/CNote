@@ -3,7 +3,7 @@ package com.baratali.cnote.settings.presentation.settings_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
-import com.baratali.cnote.settings.presentation.password.PasswordMode
+import com.baratali.cnote.settings.presentation.util.PasswordMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
