@@ -37,4 +37,12 @@ class FakeNoteRepository : NoteRepository {
     override suspend fun deleteNote(note: Note) {
         notes.remove(note)
     }
+
+    override suspend fun setNoteLocked(noteId: Int, isLocked: Boolean) {
+        notes.find { it.id == noteId }?.let {
+            val newNote = it.copy(locked = isLocked)
+            notes.remove(it)
+            notes.add(newNote)
+        }
+    }
 }

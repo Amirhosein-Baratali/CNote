@@ -9,11 +9,11 @@ import androidx.room.PrimaryKey
 data class TaskCategory(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val icon: CategoryIcon, // Store icon name or reference
-    val color: Long // Store color as a Long (use Color.toArgb())
-){
+    val icon: CategoryIcon,
+    val color: Long
+) {
     companion object {
-        val sampleData =   TaskCategory(
+        val sampleData = TaskCategory(
             name = "Work",
             icon = CategoryIcon.UNIVERSITY,
             color = Color(0xFFFFA07A).toArgb().toLong()

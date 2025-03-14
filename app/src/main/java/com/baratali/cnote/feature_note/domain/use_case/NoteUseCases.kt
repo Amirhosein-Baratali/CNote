@@ -6,5 +6,6 @@ data class NoteUseCases(
     val addNote: AddNote,
     val getNote: GetNote,
     val storeNoteOrder: StoreNoteOrder,
-    val retrieveNoteOrder: RetrieveNoteOrder
+    val retrieveNoteOrder: RetrieveNoteOrder,
+    val setLockedNote: SetLockedNote
 )

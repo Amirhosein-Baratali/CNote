@@ -13,4 +13,6 @@ interface NoteRepository : OrderRepository {
     suspend fun insertNote(note: Note)
 
     suspend fun deleteNote(note: Note)
+
+    suspend fun setNoteLocked(noteId: Int, isLocked: Boolean)
 }

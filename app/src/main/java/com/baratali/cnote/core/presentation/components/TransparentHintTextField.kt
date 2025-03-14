@@ -3,6 +3,7 @@ package com.baratali.cnote.core.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -19,11 +20,11 @@ fun TransparentHintTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    contentColor: Color = colorScheme.onBackground,
     singleLine: Boolean = false,
     backgroundColor: Color = Color.Transparent,
     testTag: String = ""
 ) {
-    val contentColor = Color.Black
     TextField(
         value = text,
         onValueChange = onValueChange,
@@ -33,13 +34,7 @@ fun TransparentHintTextField(
             .testTag(testTag),
         textStyle = textStyle,
         singleLine = singleLine,
-        placeholder = {
-            CustomText(
-                text = hint,
-                style = textStyle.copy(Color.Unspecified),
-                color = Color.Unspecified
-            )
-        },
+        placeholder = { CustomText(text = hint, color = Color.Unspecified) },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = backgroundColor,
             unfocusedIndicatorColor = backgroundColor,

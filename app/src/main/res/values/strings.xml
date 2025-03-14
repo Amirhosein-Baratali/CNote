@@ -53,4 +53,14 @@
     <string name="system_default">System Default</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="password">Password</string>
+    <string name="confirm">Confirm</string>
+    <string name="set_password">Set Password</string>
+    <string name="change_password">Change Password</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="password_must_match">Password must match</string>
+    <string name="wrong_password">Wrong Password</string>
+    <string name="incorrect_password">Incorrect password</string>
 </resources>

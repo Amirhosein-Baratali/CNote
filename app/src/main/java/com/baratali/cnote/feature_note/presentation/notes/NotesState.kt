@@ -6,5 +6,6 @@ import com.baratali.cnote.feature_note.domain.model.Note
 
 data class NotesState(
     val notes: List<Note> = emptyList(),
-    val noteOrder: Order = Order.Date(OrderType.Descending)
+    val noteOrder: Order = Order.Date(OrderType.Descending),
+    val unlocked: Boolean = false
 )

@@ -14,10 +14,18 @@ data class Note(
     val content: String,
     val timestamp: Long,
     val color: Int,
+    val  locked: Boolean = false,
     @PrimaryKey val id: Int? = null
 ) {
     companion object {
         val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
+    }
+
+    fun matchWithSearchQuery(query: String): Boolean {
+        return title.contains(query, ignoreCase = true) || content.contains(
+            query,
+            ignoreCase = true
+        )
     }
 }
 

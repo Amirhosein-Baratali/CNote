@@ -13,6 +13,7 @@ import com.baratali.cnote.feature_note.domain.use_case.GetNote
 import com.baratali.cnote.feature_note.domain.use_case.GetNotes
 import com.baratali.cnote.feature_note.domain.use_case.NoteUseCases
 import com.baratali.cnote.feature_note.domain.use_case.RetrieveNoteOrder
+import com.baratali.cnote.feature_note.domain.use_case.SetLockedNote
 import com.baratali.cnote.feature_note.domain.use_case.StoreNoteOrder
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,6 @@ object NotesModule {
                 NoteDatabase::class.java,
                 NoteDatabase.DATABASE_NAME
             )
-            .fallbackToDestructiveMigration()
             .build()
 
     @Provides
@@ -53,6 +53,7 @@ object NotesModule {
             addNote = AddNote(repository),
             getNote = GetNote(repository),
             storeNoteOrder = StoreNoteOrder(repository),
-            retrieveNoteOrder = RetrieveNoteOrder(repository)
+            retrieveNoteOrder = RetrieveNoteOrder(repository),
+            setLockedNote = SetLockedNote(repository)
         )
 }

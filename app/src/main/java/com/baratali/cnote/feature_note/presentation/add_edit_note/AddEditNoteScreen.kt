@@ -51,14 +51,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
-    noteColor: Int?,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
     val state by viewModel.noteState.collectAsStateWithLifecycle()
 
     AddEditNoteScreenContent(
         state = state,
-        noteColor = noteColor,
         onEvent = viewModel::onEvent,
         navController = navController
     )
@@ -79,12 +77,11 @@ fun AddEditNoteScreen(
 fun AddEditNoteScreenContent(
     navController: NavController,
     state: NoteState,
-    noteColor: Int?,
     onEvent: (AddEditNoteEvent) -> Unit
 ) {
-    val noteBackgroundAnimatable = remember {
+    val noteBackgroundAnimatable = remember(state.color) {
         Animatable(
-            Color(noteColor ?: state.color)
+            Color(state.color)
         )
     }
     val scope = rememberCoroutineScope()
@@ -152,6 +149,7 @@ fun AddEditNoteScreenContent(
                 onValueChange = {
                     onEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
+                contentColor = Color.Black,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.headlineSmall.copy(color = Color.Black),
                 testTag = TestTags.NOTE_TITLE_TEXT_FIELD
@@ -161,6 +159,7 @@ fun AddEditNoteScreenContent(
                 modifier = Modifier.weight(1f),
                 text = state.content,
                 hint = stringResource(id = R.string.content),
+                contentColor = Color.Black,
                 onValueChange = { onEvent(AddEditNoteEvent.EnteredContent(it)) },
                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                 testTag = TestTags.NOTE_CONTENT_TEXT_FIELD
@@ -186,7 +185,6 @@ fun PreviewAddEditNote() {
         AddEditNoteScreenContent(
             navController = rememberNavController(),
             state = NoteState(),
-            noteColor = -1,
             onEvent = {}
         )
     }

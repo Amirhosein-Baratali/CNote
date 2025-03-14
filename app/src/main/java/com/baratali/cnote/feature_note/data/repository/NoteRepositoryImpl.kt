@@ -43,6 +43,10 @@ class NoteRepositoryImpl(
         }
     }
 
+    override suspend fun setNoteLocked(noteId: Int, isLocked: Boolean) {
+        dao.setNoteLocked(noteId, isLocked)
+    }
+
     override suspend fun getSavedOrder(): Order {
         val noteOrderName: String? = dataStorePreferences.getStringValue(KEY_NOTE_ORDER)
         return Order.fromString(noteOrderName)
