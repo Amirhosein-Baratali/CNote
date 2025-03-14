@@ -11,7 +11,7 @@ plugins {
 android {
     val versionMajor = 1
     val versionMinor = 11
-    val versionPatch = 0
+    val versionPatch = 1
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
@@ -60,10 +60,8 @@ android {
             isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = ".d"
         }
     }
     compileOptions {
