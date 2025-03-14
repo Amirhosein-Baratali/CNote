@@ -3,6 +3,7 @@ package com.baratali.cnote.feature_note.presentation.notes.components
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -44,7 +45,8 @@ fun NoteItem(
     cornerRadius: Dp = 10.dp,
     cutCornerSize: Dp = 30.dp,
     onClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onLockClick: () -> Unit
 ) {
     val contentColor = Color.Black
     val layoutDirection =
@@ -109,15 +111,30 @@ fun NoteItem(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.align(Alignment.BottomEnd)
+                Row(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_trash),
-                        contentDescription = "Delete note",
-                        tint = contentColor
-                    )
+                    IconButton(
+                        onClick = onLockClick,
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (note.locked) R.drawable.ic_lock else R.drawable.ic_opened_lock
+                            ),
+                            contentDescription = "Delete note",
+                            tint = contentColor
+                        )
+                    }
+                    IconButton(
+                        onClick = onDeleteClick,
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_trash),
+                            contentDescription = "Delete note",
+                            tint = contentColor
+                        )
+                    }
                 }
             }
         }

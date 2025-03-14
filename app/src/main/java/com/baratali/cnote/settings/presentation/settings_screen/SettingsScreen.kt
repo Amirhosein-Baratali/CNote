@@ -1,5 +1,6 @@
 package com.baratali.cnote.settings.presentation.settings_screen
 
+import SetOrChangePasswordItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +37,9 @@ import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.LightAndDarkPreview
 import com.baratali.cnote.settings.presentation.settings_screen.component.DarkModeSetting
 import com.baratali.cnote.settings.presentation.settings_screen.component.SwitchNotification
+import com.baratali.cnote.settings.presentation.util.SettingScreens
 import com.baratali.cnote.ui.theme.CNoteTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SettingsScreen(
@@ -44,6 +48,15 @@ fun SettingsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is SettingsViewModel.UIEvent.NavigateToPasswordScreen -> {
+                    navController.navigate(SettingScreens.Password(event.mode))
+                }
+            }
+        }
+    }
     SettingsContent(
         state = state,
         onEvent = viewModel::onEvent
@@ -78,9 +91,9 @@ fun SettingsContent(
             HeaderSection()
             Spacer(Modifier.height(30.dp))
             ElevatedCard(
-                modifier = Modifier.fillMaxHeight(), shape = RoundedCornerShape(
-                    topStart = 12.dp, topEnd = 12.dp, bottomStart = 0.dp, bottomEnd = 0.dp
-                ), colors = CardDefaults.elevatedCardColors(
+                modifier = Modifier.fillMaxHeight(),
+                shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                colors = CardDefaults.elevatedCardColors(
                     containerColor = containerColor
                 )
             ) {
@@ -91,9 +104,15 @@ fun SettingsContent(
                 )
 
                 SwitchNotification(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 2.dp),
                     isChecked = state.notificationsEnabled,
                     onCheckedChange = { onEvent(SettingsEvent.NotificationsToggled(it)) }
+                )
+
+                SetOrChangePasswordItem(
+                    modifier = Modifier.padding(4.dp),
+                    passwordSet = state.passwordSet,
+                    onClick = { onEvent(SettingsEvent.SetOrChangePasswordClicked) }
                 )
             }
         }

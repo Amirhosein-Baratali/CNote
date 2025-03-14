@@ -43,7 +43,6 @@ object TaskModule {
                 app, TaskDatabase::class.java,
                 TaskDatabase.DATABASE_NAME
             )
-            .fallbackToDestructiveMigration()
             .addCallback(callback)
             .build()
 

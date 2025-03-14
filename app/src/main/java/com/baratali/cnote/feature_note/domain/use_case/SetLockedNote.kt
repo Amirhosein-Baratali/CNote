@@ -1,12 +1,11 @@
 package com.baratali.cnote.feature_note.domain.use_case
 
-import com.baratali.cnote.feature_note.domain.model.Note
 import com.baratali.cnote.feature_note.domain.repository.NoteRepository
 
-class DeleteNote(
+class SetLockedNote(
     private val repository: NoteRepository
 ) {
-    suspend operator fun invoke(note: Note) {
-        repository.deleteNote(note)
+    suspend operator fun invoke(id: Int, isLocked: Boolean) {
+        repository.setNoteLocked(id, isLocked)
     }
 }

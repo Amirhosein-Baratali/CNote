@@ -4,5 +4,6 @@ import com.baratali.cnote.settings.data.data_store.dto.DarkMode
 
 data class SettingState(
     val darkMode: DarkMode = DarkMode.SystemDefault,
-    val notificationsEnabled: Boolean = false
+    val notificationsEnabled: Boolean = false,
+    val passwordSet: Boolean = false
 )

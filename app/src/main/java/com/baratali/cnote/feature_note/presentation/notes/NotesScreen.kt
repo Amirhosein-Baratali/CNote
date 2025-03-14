@@ -38,15 +38,24 @@ fun NotesScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is NotesViewModel.UIEvent.NavigateToEditNote -> {
-                    navController.navigate(NoteScreens.AddEditNote(event.note.id, event.note.color))
+                    navController.navigate(NoteScreens.AddEditNote(event.note.id))
                 }
 
                 NotesViewModel.UIEvent.NavigateToAddNote -> {
-                    navController.navigate(NoteScreens.AddEditNote(null, null))
+                    navController.navigate(NoteScreens.AddEditNote(null))
                 }
 
                 NotesViewModel.UIEvent.NavigateToSettings -> {
                     navController.navigate(SettingScreens.Settings)
+                }
+
+                is NotesViewModel.UIEvent.NavigateToPassword -> {
+                    navController.navigate(
+                        SettingScreens.Password(
+                            mode = event.mode,
+                            noteId = event.noteId
+                        )
+                    )
                 }
             }
         }
@@ -100,7 +109,8 @@ fun NotesScreenContent(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     onClick = { onEvent(NotesEvent.OnNoteClicked(note)) },
-                    onDeleteClick = { onEvent(NotesEvent.DeleteNote(note)) }
+                    onDeleteClick = { onEvent(NotesEvent.DeleteNote(note)) },
+                    onLockClick = { onEvent(NotesEvent.LockNote(note)) }
                 )
             }
         }

@@ -26,6 +26,9 @@ data class Task(
 ) {
     val formattedDate: String?
         get() = date?.formatToDisplay()
+
+    fun matchWithSearchQuery(query: String): Boolean =
+        name.contains(query, ignoreCase = true) || description.contains(query, ignoreCase = true)
 }
 
 class InvalidTaskException(message: String) : Exception(message)

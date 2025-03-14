@@ -22,4 +22,7 @@ interface NoteDao {
 
     @Delete
     suspend fun deleteNote(note: Note)
+
+    @Query("UPDATE note SET locked = :isLocked WHERE id = :noteId")
+    suspend fun setNoteLocked(noteId: Int, isLocked: Boolean)
 }

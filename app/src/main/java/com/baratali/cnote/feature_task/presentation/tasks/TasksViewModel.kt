@@ -34,7 +34,7 @@ class TasksViewModel @Inject constructor(
         .combine(_state) { text, state ->
             state.copy(
                 tasksWithCategory = state.tasksWithCategory.filter {
-                    it.task.name.contains(text) || it.task.description.contains(text)
+                    it.task.matchWithSearchQuery(text)
                 }
             )
         }

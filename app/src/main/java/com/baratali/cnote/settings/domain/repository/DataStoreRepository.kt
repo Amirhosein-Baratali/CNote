@@ -8,4 +8,6 @@ interface DataStoreRepository {
     fun getSettings(): Flow<Settings>
     suspend fun updateDarkMode(darkMode: DarkMode)
     suspend fun updateNotificationsEnabled(isEnabled: Boolean)
+    suspend fun updatePassword(password: String)
+    suspend fun getPasswordHash(): String?
 }

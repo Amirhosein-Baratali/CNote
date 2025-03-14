@@ -8,6 +8,8 @@ import com.baratali.cnote.core.presentation.components.UiText
 import com.baratali.cnote.core.presentation.components.snackbar.SnackbarAction
 import com.baratali.cnote.feature_note.domain.model.Note
 import com.baratali.cnote.feature_note.domain.use_case.NoteUseCases
+import com.baratali.cnote.settings.domain.repository.DataStoreRepository
+import com.baratali.cnote.settings.presentation.password.PasswordMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -24,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val noteUseCases: NoteUseCases
+    private val noteUseCases: NoteUseCases,
+    private val dataStoreRepository: DataStoreRepository
 ) : BaseViewModel() {
 
     private val _eventFlow = Channel<UIEvent>()
@@ -36,9 +39,7 @@ class NotesViewModel @Inject constructor(
     val state = _searchText
         .combine(_state) { text, state ->
             state.copy(
-                notes = state.notes.filter {
-                    it.title.contains(text) || it.content.contains(text)
-                }
+                notes = state.notes.filter { it.matchWithSearchQuery(text) }
             )
         }.stateIn(
             viewModelScope,
@@ -76,7 +77,13 @@ class NotesViewModel @Inject constructor(
 
             is NotesEvent.OnNoteClicked -> {
                 viewModelScope.launch {
-                    _eventFlow.send(UIEvent.NavigateToEditNote(event.note))
+                    event.note.run {
+                        if (locked) {
+                            _eventFlow.send(UIEvent.NavigateToPassword(id, PasswordMode.OPEN_NOTE))
+                        } else {
+                            _eventFlow.send(UIEvent.NavigateToEditNote(this))
+                        }
+                    }
                 }
             }
 
@@ -89,6 +96,32 @@ class NotesViewModel @Inject constructor(
 
             NotesEvent.SettingsClicked -> viewModelScope.launch {
                 _eventFlow.send(UIEvent.NavigateToSettings)
+            }
+
+            is NotesEvent.LockNote -> viewModelScope.launch {
+                val note = event.note
+                note.id?.let { noteId ->
+                    if (note.locked) {
+                        _eventFlow.send(
+                            UIEvent.NavigateToPassword(
+                                noteId,
+                                PasswordMode.UNLOCK_NOTE
+                            )
+                        )
+                    } else {
+                        if (dataStoreRepository.getPasswordHash().isNullOrEmpty()) {
+                            _eventFlow.send(
+                                UIEvent.NavigateToPassword(
+                                    noteId,
+                                    PasswordMode.LOCK_NOTE_WITH_NEW_PASSWORD
+                                )
+                            )
+                        } else {
+                            noteUseCases.setLockedNote(noteId, true)
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -114,6 +147,10 @@ class NotesViewModel @Inject constructor(
         object NavigateToAddNote : UIEvent()
         data class NavigateToEditNote(val note: Note) : UIEvent()
         object NavigateToSettings : UIEvent()
+        data class NavigateToPassword(
+            val noteId: Int?,
+            val mode: PasswordMode
+        ) : UIEvent()
     }
 
     override fun onCleared() {
