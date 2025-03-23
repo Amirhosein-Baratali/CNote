@@ -54,7 +54,7 @@ fun NoteItem(
         )
     ) {
         Box(
-            modifier = Modifier.testTag(TestTags.NOTE_ITEM)
+            modifier = Modifier.testTag(TestTags.NOTE_ITEM),
         ) {
             Canvas(modifier = Modifier.matchParentSize()) {
                 val clipPath = Path().apply {
@@ -98,6 +98,7 @@ fun NoteItem(
                     text = note.content,
                     obfuscate = note.locked
                 )
+                Spacer(Modifier.height(16.dp))
             }
             Row(
                 modifier = Modifier.align(Alignment.BottomEnd),
