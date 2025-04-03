@@ -19,7 +19,8 @@
         <activity
             android:name=".core.presentation.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.CNote">
+            android:theme="@style/Theme.CNote"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,8 +30,7 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
+            tools:node="remove" />
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.baratali.cnote.core.presentation.components.CustomText
@@ -34,11 +35,19 @@ fun CategoryLabel(
             .background(containerColor, shape = RoundedCornerShape(6.dp))
             .padding(8.dp)
     ) {
-        Icon(
-            imageVector = category.icon.imageVector,
-            contentDescription = category.name,
-            tint = contentColor
-        )
+        category.icon.iconRes?.let {
+            Icon(
+                painter = painterResource(it),
+                contentDescription = category.name,
+                tint = contentColor
+            )
+        } ?: category.icon.imageVector?.let {
+            Icon(
+                imageVector = it,
+                contentDescription = category.name,
+                tint = contentColor
+            )
+        }
         Spacer(Modifier.width(4.dp))
         CustomText(
             text = category.name,

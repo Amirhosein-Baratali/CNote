@@ -63,4 +63,7 @@
     <string name="password_must_match">Password must match</string>
     <string name="wrong_password">Wrong Password</string>
     <string name="incorrect_password">Incorrect password</string>
+    <string name="choose_color">Choose Color</string>
+    <string name="create_new_category">Create New Category</string>
+    <string name="choose_icon">Choose Icon</string>
 </resources>

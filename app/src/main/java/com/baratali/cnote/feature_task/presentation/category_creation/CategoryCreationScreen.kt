@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -70,6 +72,7 @@ fun CategoryCreationContent(
 ) {
     val selectedIcon = state.selectedIcon
     val selectedColor = state.selectedColor
+    val iconWidth = 48.dp
     AlertDialog(
         onDismissRequest = { onEvent(CategoryCreationEvent.Dismiss) },
         confirmButton = {
@@ -91,7 +94,7 @@ fun CategoryCreationContent(
                 CustomText(stringResource(R.string.cancel))
             }
         },
-        title = { CustomText("Create New Category") },
+        title = { CustomText(stringResource(R.string.create_new_category)) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -106,43 +109,72 @@ fun CategoryCreationContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                CustomText("Choose Icon", style = MaterialTheme.typography.bodyMedium)
+                CustomText(
+                    stringResource(R.string.choose_icon),
+                    style = MaterialTheme.typography.bodyMedium
+                )
 
+                Spacer(modifier = Modifier.height(2.dp))
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = iconWidth / 3)
                 ) {
                     items(CategoryIcon.values()) { icon ->
-                        Icon(
-                            imageVector = icon.imageVector,
-                            contentDescription = icon.name,
-                            tint = if (icon == selectedIcon) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    if (icon == selectedIcon) MaterialTheme.colorScheme.primary.copy(
-                                        alpha = 0.3f
-                                    ) else Color.Transparent
-                                )
-                                .clickable { onEvent(CategoryCreationEvent.IconSelected(icon)) }
-                                .padding(8.dp)
-                        )
+                        icon.iconRes?.let {
+                            Icon(
+                                painter = painterResource(it),
+                                contentDescription = icon.name,
+                                tint = if (icon == selectedIcon) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .size(iconWidth)
+                                    .clip(CircleShape)
+                                    .background(
+                                        if (icon == selectedIcon) MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.3f
+                                        ) else Color.Transparent
+                                    )
+                                    .clickable { onEvent(CategoryCreationEvent.IconSelected(icon)) }
+                                    .padding(8.dp)
+                            )
+                        } ?: icon.imageVector?.let {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = icon.name,
+                                tint = if (icon == selectedIcon) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .size(iconWidth)
+                                    .clip(CircleShape)
+                                    .background(
+                                        if (icon == selectedIcon) MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.3f
+                                        ) else Color.Transparent
+                                    )
+                                    .clickable { onEvent(CategoryCreationEvent.IconSelected(icon)) }
+                                    .padding(8.dp)
+                            )
+                        }
                     }
+                    item { Spacer(modifier = Modifier.width(iconWidth / 2f)) }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                CustomText("Choose Color", style = MaterialTheme.typography.bodyMedium)
-
+                CustomText(
+                    stringResource(R.string.choose_color),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = iconWidth / 4),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
                 ) {
                     items(CategoryColor.values()) { color ->
                         Box(
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(iconWidth)
                                 .clip(CircleShape)
                                 .background(color.color)
                                 .border(

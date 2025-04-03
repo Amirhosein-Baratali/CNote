@@ -113,7 +113,7 @@ fun AddEditTaskBottomSheet(
 
     CustomScaffold(
         navController = navController,
-        showBottomBar = false,
+        showBottomNavigation = false,
         containerColor = Color.Transparent
     ) {
         AddEditTaskContent(
@@ -203,21 +203,26 @@ fun AddEditTaskContent(
                     )
                 }
                 IconButton(onClick = { onEvent(AddEditTaskEvent.CategoryClicked) }) {
-
-                    if (state.selectedCategory?.icon?.imageVector != null) {//FIXME replace image vector
-                        Icon(
-                            imageVector = state.selectedCategory.icon.imageVector,
-                            contentDescription = "Category Icon",
-                            tint = state.selectedCategory.color.let { Color(it) }
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_category),
-                            contentDescription = "Category Icon",
-                            tint = state.selectedCategory?.color?.let { Color(it) }
-                                ?: MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+                    state.selectedCategory?.icon?.let {
+                        it.iconRes?.let {
+                            Icon(
+                                painter = painterResource(it),
+                                contentDescription = "Category Icon",
+                                tint = state.selectedCategory.color.let { Color(it) }
+                            )
+                        } ?: it.imageVector?.let {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = "Category Icon",
+                                tint = state.selectedCategory.color.let { Color(it) }
+                            )
+                        }
+                    } ?: Icon(
+                        painter = painterResource(R.drawable.ic_category),
+                        contentDescription = "Category Icon",
+                        tint = state.selectedCategory?.color?.let { Color(it) }
+                            ?: MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
                 IconButton(onClick = { showPrioritySheet = true }) {
                     Icon(
@@ -263,7 +268,7 @@ fun AddEditTaskContent(
 
 @PreviewLightDark
 @Composable
-fun AddEditTaskBottomSheetPreview(modifier: Modifier = Modifier) {
+fun AddEditTaskBottomSheetPreview() {
     CNoteTheme {
         AddEditTaskContent(
             state = AddEditTaskState(),

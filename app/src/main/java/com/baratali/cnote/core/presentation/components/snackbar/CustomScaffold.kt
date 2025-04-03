@@ -32,7 +32,7 @@ fun CustomScaffold(
     snackbarDuration: SnackbarDuration = SnackbarDuration.Short,
     topBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
-    showBottomBar: Boolean = true,
+    showBottomNavigation: Boolean = true,
     containerColor: Color = colorScheme.background,
     content: @Composable () -> Unit
 ) {
@@ -78,7 +78,7 @@ fun CustomScaffold(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            if (showBottomBar) BottomNavigation(navController)
+            if (showBottomNavigation) BottomNavigation(navController)
         },
         containerColor = containerColor,
         snackbarHost = {

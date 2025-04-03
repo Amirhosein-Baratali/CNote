@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.baratali.cnote.core.di.ApplicationScope
 import com.baratali.cnote.feature_task.data.data_source.model.CategoryIcon
@@ -16,9 +17,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @Database(
-    entities = [Task::class, TaskCategory::class],
-    version = 1,
-    exportSchema = false
+    entities = [Task::class, TaskCategory::class], version = 2, exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class TaskDatabase : RoomDatabase() {
@@ -27,6 +26,19 @@ abstract class TaskDatabase : RoomDatabase() {
 
     companion object {
         const val DATABASE_NAME = "tasks_db"
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Ensures data consistency after modifying the CategoryIcon enum.
+                // Previously, CategoryIcon stored only ImageVector references. Now, it supports both ImageVector and drawable resource IDs.
+                // Since Room stores the icon as a string (enum name), this update ensures that all existing values are still valid.
+                // Any outdated or non-existent enum values will be replaced with 'DEFAULT' to prevent potential crashes.
+                database.execSQL(
+                    "UPDATE taskcategory SET icon = 'DEFAULT' WHERE icon NOT IN (${
+                        CategoryIcon.values().joinToString { "'${it.name}'" }
+                    })")
+            }
+        }
     }
 
     class Callback @Inject constructor(
