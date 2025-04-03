@@ -60,20 +60,31 @@ fun CategoryItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .scale(if (isSelected) 1.3f else 1f),
-                imageVector = category.icon.imageVector,
-                contentDescription = category.name,
-                tint = contentColor
-            )
+            category.icon.iconRes?.let {
+                Icon(
+                    painter = painterResource(it),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .scale(if (isSelected) 1.3f else 1f),
+                    contentDescription = category.name,
+                    tint = contentColor
+                )
+            } ?: category.icon.imageVector?.let {
+                Icon(
+                    imageVector = it,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .scale(if (isSelected) 1.3f else 1f),
+                    contentDescription = category.name,
+                    tint = contentColor
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
             CustomText(
                 text = category.name,
                 style =
-                if (isSelected) typography.bodyMedium.copy(fontWeight = FontWeight.Black)
-                else typography.bodySmall,
+                    if (isSelected) typography.bodyMedium.copy(fontWeight = FontWeight.Black)
+                    else typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = contentColor
             )

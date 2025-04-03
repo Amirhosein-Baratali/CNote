@@ -88,7 +88,7 @@ fun AddEditNoteScreenContent(
 
     CustomScaffold(
         navController = navController,
-        showBottomBar = false,
+        showBottomNavigation = false,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onEvent(AddEditNoteEvent.SaveNote) },

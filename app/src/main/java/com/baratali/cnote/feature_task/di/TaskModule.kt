@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.baratali.cnote.feature_task.data.data_source.TaskDatabase
+import com.baratali.cnote.feature_task.data.data_source.TaskDatabase.Companion.MIGRATION_1_2
 import com.baratali.cnote.feature_task.data.repository.TaskRepositoryImpl
 import com.baratali.cnote.feature_task.domain.repository.TaskRepository
 import com.baratali.cnote.feature_task.domain.use_case.categories.AddCategory
@@ -43,6 +44,7 @@ object TaskModule {
                 app, TaskDatabase::class.java,
                 TaskDatabase.DATABASE_NAME
             )
+            .addMigrations(MIGRATION_1_2)
             .addCallback(callback)
             .build()
 
