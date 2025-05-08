@@ -57,11 +57,16 @@ class PasswordViewModel @Inject constructor(
                     _eventFlow.send(UIEvent.NavigateBack)
                 }
             }
+
+            PasswordEvent.BiometricSuccess -> {
+                viewModelScope.launch {
+                    handlePasswordConfirmation(true)
+                }
+            }
         }
     }
 
-    private suspend fun handlePasswordConfirmation() {
-
+    private suspend fun handlePasswordConfirmation(isBiometricSucceed: Boolean = false) {
         when (state.value.mode) {
             PasswordMode.SET_PASSWORD -> {
                 updatePassword()
@@ -69,7 +74,7 @@ class PasswordViewModel @Inject constructor(
 
             PasswordMode.CHANGE_PASSWORD -> {
                 when (state.value.changePasswordStep) {
-                    ChangePasswordStep.EnterCurrent -> verifyPassword {
+                    ChangePasswordStep.EnterCurrent -> verifyPassword(isBiometricSucceed) {
                         _state.update {
                             it.copy(
                                 changePasswordStep = ChangePasswordStep.SetNew,
@@ -83,19 +88,14 @@ class PasswordViewModel @Inject constructor(
             }
 
             PasswordMode.UNLOCK_NOTE -> {
-                verifyPassword {
-                    savedStateHandle.toRoute<SettingScreens.Password>().noteId?.let {
-                        noteUseCases.setLockedNote(it, false)
-                    }
-                    _eventFlow.send(UIEvent.NavigateBack)
+                verifyPassword(isBiometricSucceed) {
+                    unlockNote()
                 }
             }
 
             PasswordMode.OPEN_NOTE -> {
-                verifyPassword {
-                    savedStateHandle.toRoute<SettingScreens.Password>().noteId?.let {
-                        _eventFlow.send(UIEvent.NavigateToNoteDetails(it))
-                    }
+                verifyPassword(isBiometricSucceed) {
+                    openNote()
                 }
             }
 
@@ -109,15 +109,31 @@ class PasswordViewModel @Inject constructor(
         }
     }
 
+    private suspend fun unlockNote() {
+        savedStateHandle.toRoute<SettingScreens.Password>().noteId?.let {
+            noteUseCases.setLockedNote(it, false)
+        }
+        _eventFlow.send(UIEvent.NavigateBack)
+    }
+
+    private suspend fun openNote() {
+        savedStateHandle.toRoute<SettingScreens.Password>().noteId?.let {
+            _eventFlow.send(UIEvent.NavigateToNoteDetails(it))
+        }
+    }
+
     private suspend fun updatePassword() {
         updatePasswordUseCase(state.value.password)
         _eventFlow.send(UIEvent.NavigateBack)
     }
 
-    private suspend fun verifyPassword(onVerified: suspend () -> Unit) {
+    private suspend fun verifyPassword(
+        isBiometricSucceed: Boolean = false,
+        onVerified: suspend () -> Unit
+    ) {
         val passwordVerified = verifyPasswordUseCase(state.value.password)
         _state.update { it.copy(passwordHasError = passwordVerified.not()) }
-        if (passwordVerified) onVerified()
+        if (passwordVerified || isBiometricSucceed) onVerified()
     }
 
     sealed class UIEvent {

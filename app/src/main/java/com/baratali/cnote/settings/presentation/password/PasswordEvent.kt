@@ -5,4 +5,5 @@ sealed class PasswordEvent {
     data class RepeatPasswordChanged(val repeatPassword: String) : PasswordEvent()
     object PasswordConfirmed : PasswordEvent()
     object Dismiss : PasswordEvent()
+    object BiometricSuccess : PasswordEvent()
 }

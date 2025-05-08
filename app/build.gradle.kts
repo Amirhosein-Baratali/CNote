@@ -10,8 +10,8 @@ plugins {
 
 android {
     val versionMajor = 1
-    val versionMinor = 11
-    val versionPatch = 5
+    val versionMinor = 12
+    val versionPatch = 0
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
@@ -96,7 +96,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -154,6 +153,9 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.mockwebserver)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //biometric
+    implementation(libs.biometric)
 
     // Instrumentation tests
     androidTestImplementation(libs.hilt.android.testing)
