@@ -96,7 +96,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -154,6 +153,9 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.mockwebserver)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //biometric
+    implementation(libs.biometric)
 
     // Instrumentation tests
     androidTestImplementation(libs.hilt.android.testing)

@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.baratali.cnote.R
+import com.baratali.cnote.core.presentation.biometric.BiometricPrompt
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.PasswordTextInput
 import com.baratali.cnote.feature_note.presentation.util.NoteScreens
@@ -141,6 +142,12 @@ fun PasswordBottomSheetContent(
                 Icon(
                     painter = painterResource(R.drawable.ic_clipboard_tick),
                     contentDescription = stringResource(R.string.confirm)
+                )
+            }
+            if (state.showBiometric) {
+                Spacer(modifier = Modifier.height(12.dp))
+                BiometricPrompt(
+                    onSuccess = { onEvent(PasswordEvent.BiometricSuccess) }
                 )
             }
         }

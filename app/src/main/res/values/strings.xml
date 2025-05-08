@@ -66,4 +66,7 @@
     <string name="choose_color">Choose Color</string>
     <string name="create_new_category">Create New Category</string>
     <string name="choose_icon">Choose Icon</string>
+    <string name="or_use_your_fingerprint">Or use your fingerprint</string>
+    <string name="or_use_your_face">Or use your face</string>
+    <string name="or_use_your_fingerprint_face">Or use your fingerprint/face</string>
 </resources>

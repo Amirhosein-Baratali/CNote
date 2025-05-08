@@ -18,5 +18,9 @@ data class PasswordState(
         get() = repeatPassword.isNotEmpty() && repeatPassword != password
 
     val buttonEnabled: Boolean
-        get() = passwordHasError.not() && repeatPasswordHasError.not()
+        get() = password.isNotEmpty() && passwordHasError.not() && repeatPasswordHasError.not()
+
+    val showBiometric: Boolean
+        get() = mode == PasswordMode.UNLOCK_NOTE
+                || mode == PasswordMode.OPEN_NOTE
 }
