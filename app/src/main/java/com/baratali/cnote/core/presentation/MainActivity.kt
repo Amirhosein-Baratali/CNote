@@ -7,8 +7,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.baratali.cnote.feature_note.presentation.util.NoteScreens
 import com.baratali.cnote.feature_note.presentation.util.notesNavigation
+import com.baratali.cnote.feature_task.presentation.util.TaskScreens
 import com.baratali.cnote.feature_task.presentation.util.tasksNavigation
 import com.baratali.cnote.settings.presentation.util.settingsNavigation
 import com.baratali.cnote.ui.theme.CNoteTheme
@@ -26,10 +26,10 @@ class MainActivity : FragmentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = NoteScreens.Notes
+                    startDestination = TaskScreens.Tasks
                 ) {
-                    notesNavigation(navController)
                     tasksNavigation(navController)
+                    notesNavigation(navController)
                     settingsNavigation(navController)
                 }
             }

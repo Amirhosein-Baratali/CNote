@@ -36,6 +36,7 @@ import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.LightAndDarkPreview
 import com.baratali.cnote.settings.presentation.settings_screen.component.DarkModeSetting
+import com.baratali.cnote.settings.presentation.settings_screen.component.DatePickerTypeSetting
 import com.baratali.cnote.settings.presentation.settings_screen.component.SwitchNotification
 import com.baratali.cnote.settings.presentation.util.SettingScreens
 import com.baratali.cnote.ui.theme.CNoteTheme
@@ -113,6 +114,12 @@ fun SettingsContent(
                     modifier = Modifier.padding(4.dp),
                     passwordSet = state.passwordSet,
                     onClick = { onEvent(SettingsEvent.SetOrChangePasswordClicked) }
+                )
+
+                DatePickerTypeSetting(
+                    modifier = Modifier.padding(4.dp),
+                    selectedType = state.datePickerType,
+                    onTypeChange = { onEvent(SettingsEvent.UpdateDatePickerType(it)) }
                 )
             }
         }

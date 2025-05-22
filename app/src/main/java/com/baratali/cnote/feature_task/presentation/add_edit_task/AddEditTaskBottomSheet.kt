@@ -251,7 +251,8 @@ fun AddEditTaskContent(
         CustomDatePicker(
             defaultDateTime = state.date ?: LocalDateTime.now(),
             onDateTimeSelected = { onEvent(AddEditTaskEvent.DateSelected(it)) },
-            onDismiss = { (onEvent(AddEditTaskEvent.DateDismissed)) }
+            onDismiss = { onEvent(AddEditTaskEvent.DateDismissed) },
+            datePickerType = state.datePickerType
         )
     }
     if (showPrioritySheet) {

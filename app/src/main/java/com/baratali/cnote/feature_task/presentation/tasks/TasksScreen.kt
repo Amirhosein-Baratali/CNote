@@ -1,5 +1,7 @@
 package com.baratali.cnote.feature_task.presentation.tasks
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -62,6 +64,10 @@ fun TasksScreenContent(
     onEvent: (TasksEvent) -> Unit
 ) {
     var moreMenuExpanded by remember { mutableStateOf(false) }
+    val activity = LocalActivity.current
+    BackHandler {
+        activity?.finish()
+    }
 
     CustomScaffold(
         navController = navController,
@@ -111,7 +117,8 @@ fun TasksScreenContent(
                     onDeleteClick = { onEvent(TasksEvent.DeleteTask(tasksWithCategory.task)) },
                     onCheckClick = {
                         onEvent(TasksEvent.UpdateTask(tasksWithCategory.task.copy(completed = it)))
-                    }
+                    },
+                    datePickerType = state.datePickerType
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

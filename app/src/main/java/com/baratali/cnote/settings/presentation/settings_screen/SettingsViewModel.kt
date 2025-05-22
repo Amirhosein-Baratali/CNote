@@ -3,6 +3,7 @@ package com.baratali.cnote.settings.presentation.settings_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
+import com.baratali.cnote.settings.presentation.settings_screen.SettingsViewModel.UIEvent.NavigateToPasswordScreen
 import com.baratali.cnote.settings.presentation.util.PasswordMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -31,7 +32,8 @@ class SettingsViewModel @Inject constructor(
                     it.copy(
                         darkMode = settings.darkMode,
                         notificationsEnabled = settings.notificationEnabled,
-                        passwordSet = settings.passwordHash != null
+                        passwordSet = settings.passwordHash != null,
+                        datePickerType = settings.datePickerType
                     )
                 }
             }
@@ -63,8 +65,16 @@ class SettingsViewModel @Inject constructor(
 
                 viewModelScope.launch {
                     _eventFlow.send(
-                        UIEvent.NavigateToPasswordScreen(passwordMode)
+                        NavigateToPasswordScreen(passwordMode)
                     )
+                }
+            }
+
+            is SettingsEvent.UpdateDatePickerType -> {
+                viewModelScope.launch {
+                    dataStoreRepository.updateDatePickerType(event.type)
+                }.invokeOnCompletion {
+                    _state.update { it.copy(datePickerType = event.type) }
                 }
             }
         }

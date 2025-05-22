@@ -10,8 +10,8 @@ plugins {
 
 android {
     val versionMajor = 1
-    val versionMinor = 12
-    val versionPatch = 0
+    val versionMinor = 13
+    val versionPatch = 2
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
@@ -62,6 +62,7 @@ android {
             isShrinkResources = false
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".d"
+            resValue("string", "app_name", "Cnote debug")
         }
     }
     compileOptions {

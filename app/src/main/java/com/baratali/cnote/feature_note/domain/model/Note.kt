@@ -14,7 +14,7 @@ data class Note(
     val content: String,
     val timestamp: Long,
     val color: Int,
-    val  locked: Boolean = false,
+    val locked: Boolean = false,
     @PrimaryKey val id: Int? = null
 ) {
     companion object {

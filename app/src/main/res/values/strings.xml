@@ -38,6 +38,7 @@
     <string name="task_deleted">Task deleted</string>
     <string name="not_now">Not now</string>
     <string name="select_time">Select Time</string>
+    <string name="select_date">Select Date</string>
     <string name="time_to_do_it">Time to Do it!😁</string>
     <string name="only_1_hour_left">Only 1 hour left</string>
     <string name="task_reminder">Task Reminder</string>
@@ -69,4 +70,10 @@
     <string name="or_use_your_fingerprint">Or use your fingerprint</string>
     <string name="or_use_your_face">Or use your face</string>
     <string name="or_use_your_fingerprint_face">Or use your fingerprint/face</string>
+    <string name="gregorian">Georgian</string>
+    <string name="jalali">Jalali</string>
+    <string name="calendar_type">Calendar type</string>
+    <string name="confirm_persian" translatable="false">تایید</string>
+    <string name="cancel_persian" translatable="false">لغو</string>
+    <string name="today_persian" translatable="false">امروز</string>
 </resources>

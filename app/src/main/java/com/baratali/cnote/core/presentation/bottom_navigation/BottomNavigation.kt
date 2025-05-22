@@ -31,16 +31,16 @@ fun BottomNavigation(navController: NavController) {
 
     val items = listOf(
         BottomNavItem(
-            title = stringResource(R.string.notes),
-            selectedIcon = painterResource(R.drawable.ic_book_fill),
-            unselectedIcon = painterResource(R.drawable.ic_book_outlined),
-            destination = NoteScreens.Notes
-        ),
-        BottomNavItem(
             title = stringResource(R.string.tasks),
             selectedIcon = painterResource(R.drawable.ic_check_list_fill),
             unselectedIcon = painterResource(R.drawable.ic_check_list_outlined),
             destination = TaskScreens.Tasks
+        ),
+        BottomNavItem(
+            title = stringResource(R.string.notes),
+            selectedIcon = painterResource(R.drawable.ic_book_fill),
+            unselectedIcon = painterResource(R.drawable.ic_book_outlined),
+            destination = NoteScreens.Notes
         )
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -82,8 +82,8 @@ fun BottomNavigation(navController: NavController) {
     }
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.route) {
-            NoteScreens.NoteList.javaClass.canonicalName -> selectedItemIndex = 0
-            TaskScreens.TaskList.javaClass.canonicalName -> selectedItemIndex = 1
+            TaskScreens.TaskList.javaClass.canonicalName -> selectedItemIndex = items.indexOfFirst { it.destination ==  TaskScreens.Tasks}
+            NoteScreens.NoteList.javaClass.canonicalName -> selectedItemIndex = items.indexOfFirst { it.destination ==  NoteScreens.Notes}
         }
     }
 }
