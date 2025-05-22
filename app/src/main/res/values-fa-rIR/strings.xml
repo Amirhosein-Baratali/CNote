@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">سی‌نوت</string>
+    <string name="title">عنوان</string>
+    <string name="content">محتوا</string>
+    <string name="date">تاریخ</string>
+    <string name="color">رنگ</string>
+    <string name="ascending">صعودی</string>
+    <string name="descending">نزولی</string>
+    <string name="add_task">افزودن وظیفه</string>
+    <string name="edit_task">ویرایش وظیفه</string>
+    <string name="add_note">افزودن یادداشت</string>
+    <string name="tasks">وظایف</string>
+    <string name="name">نام</string>
+    <string name="description">توضیحات</string>
+    <string name="notes">یادداشت‌ها</string>
+    <string name="sort">مرتب‌سازی</string>
+    <string name="important_task">وظیفه مهم</string>
+    <string name="task_completed">وظیفه تکمیل شد</string>
+    <string name="save_task">ذخیره وظیفه</string>
+    <string name="sort_by_date">مرتب‌سازی بر اساس تاریخ</string>
+    <string name="sort_by_title">مرتب‌سازی بر اساس عنوان</string>
+    <string name="more">بیشتر</string>
+    <string name="delete_all_completed">حذف همه وظایف تکمیل‌شده</string>
+    <string name="completed">تکمیل‌شده</string>
+    <string name="important">مهم</string>
+    <string name="save_note">ذخیره یادداشت</string>
+    <string name="exit_check_message">می‌خواهید یادداشت را نگه دارید؟ روی «ذخیره» کلیک کنید! 😊</string>
+    <string name="exit_check_title">بررسی سریع</string>
+    <string name="exit_check_confirm">ذخیره</string>
+    <string name="exit_check_discard">دور انداختن</string>
+    <string name="search">جستجو</string>
+    <string name="back">بازگشت</string>
+    <string name="cancel">لغو</string>
+    <string name="ok">تأیید</string>
+    <string name="note_deleted">یادداشت حذف شد</string>
+    <string name="undo">بازگرداندن</string>
+    <string name="cant_save_note">یادداشت قابل ذخیره نیست</string>
+    <string name="task_deleted">وظیفه حذف شد</string>
+    <string name="not_now">اکنون نه</string>
+    <string name="select_time">انتخاب زمان</string>
+    <string name="select_date">انتخاب تاریخ</string>
+    <string name="time_to_do_it">وقت انجامش است! 😁</string>
+    <string name="only_1_hour_left">فقط یک ساعت باقی مانده</string>
+    <string name="task_reminder">یادآور وظیفه</string>
+    <string name="dark_mode">حالت تاریک</string>
+    <string name="notifications">اعلان‌ها</string>
+    <string name="settings">تنظیمات</string>
+    <string name="select_priority">انتخاب اولویت</string>
+    <string name="sort_by_priority">مرتب‌سازی بر اساس اولویت</string>
+    <string name="cant_save_task">وظیفه قابل ذخیره نیست</string>
+    <string name="create">ایجاد</string>
+    <string name="enter_category_name">نام دسته‌بندی را وارد کنید</string>
+    <string name="none">هیچ‌کدام</string>
+    <string name="system_default">پیش‌فرض سیستم</string>
+    <string name="dark">تاریک</string>
+    <string name="light">روشن</string>
+    <string name="enter_new_password">رمز عبور جدید را وارد کنید</string>
+    <string name="password">رمز عبور</string>
+    <string name="confirm">تأیید</string>
+    <string name="set_password">تنظیم رمز عبور</string>
+    <string name="change_password">تغییر رمز عبور</string>
+    <string name="enter_password">رمز عبور را وارد کنید</string>
+    <string name="repeat_password">تکرار رمز عبور</string>
+    <string name="password_must_match">رمز عبور باید مطابقت داشته باشد</string>
+    <string name="wrong_password">رمز عبور اشتباه است</string>
+    <string name="incorrect_password">رمز عبور نادرست</string>
+    <string name="choose_color">انتخاب رنگ</string>
+    <string name="create_new_category">ایجاد دسته‌بندی جدید</string>
+    <string name="choose_icon">انتخاب آیکون</string>
+    <string name="or_use_your_fingerprint">یا از اثر انگشت خود استفاده کنید</string>
+    <string name="or_use_your_face">یا از چهره خود استفاده کنید</string>
+    <string name="or_use_your_fingerprint_face">یا از اثر انگشت/چهره خود استفاده کنید</string>
+    <string name="gregorian">میلادی</string>
+    <string name="jalali">شمسی</string>
+    <string name="calendar_type">توع تقویم</string>
+</resources>

@@ -7,6 +7,7 @@ import com.baratali.cnote.core.presentation.BaseViewModel
 import com.baratali.cnote.core.presentation.components.UiText
 import com.baratali.cnote.core.presentation.components.snackbar.SnackbarAction
 import com.baratali.cnote.feature_task.domain.use_case.tasks.TaskUseCases
+import com.baratali.cnote.settings.domain.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -24,25 +25,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    private val taskUseCases: TaskUseCases
+    private val taskUseCases: TaskUseCases,
+    dataStoreRepository: DataStoreRepository
 ) : BaseViewModel() {
 
     private val _searchText = MutableStateFlow("")
 
     private val _state = MutableStateFlow(TasksState())
-    val state = _searchText
-        .combine(_state) { text, state ->
-            state.copy(
-                tasksWithCategory = state.tasksWithCategory.filter {
-                    it.task.matchWithSearchQuery(text)
-                }
-            )
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            TasksState()
+    val state = combine(
+        _searchText,
+        _state,
+        dataStoreRepository.getSettings()
+    ) { searchText, baseState, settings ->
+        baseState.copy(
+            tasksWithCategory = baseState.tasksWithCategory.filter {
+                it.task.matchWithSearchQuery(searchText)
+            },
+            datePickerType = settings.datePickerType // reactively update picker type
         )
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        TasksState()
+    )
 
     private var getTasksJob: Job? = null
 

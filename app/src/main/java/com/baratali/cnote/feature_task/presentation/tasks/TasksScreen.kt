@@ -111,7 +111,8 @@ fun TasksScreenContent(
                     onDeleteClick = { onEvent(TasksEvent.DeleteTask(tasksWithCategory.task)) },
                     onCheckClick = {
                         onEvent(TasksEvent.UpdateTask(tasksWithCategory.task.copy(completed = it)))
-                    }
+                    },
+                    datePickerType = state.datePickerType
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,9 +41,20 @@ class AddEditTaskViewModel @Inject constructor(
     private var currentTask: Task? = null
 
     init {
+        updateDatePickerTypeFromSetting()
         savedStateHandle.toRoute<TaskScreens.AddEditTask>().taskId?.let { taskId ->
             _state.update { it.copy(currentTaskId = taskId) }
             getTask(taskId)
+        }
+    }
+
+    private fun updateDatePickerTypeFromSetting() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    datePickerType = dataStoreRepository.getSettings().first().datePickerType
+                )
+            }
         }
     }
 
@@ -83,7 +95,7 @@ class AddEditTaskViewModel @Inject constructor(
                             name = name,
                             description = description,
                             timeCreated = System.currentTimeMillis(),
-                            completed = currentTask?.completed ?: false,
+                            completed = currentTask?.completed == true,
                             id = currentTaskId,
                             priority = priority,
                             date = date,

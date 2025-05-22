@@ -24,9 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.RoundedCornerCheckbox
+import com.baratali.cnote.core.util.JalaliDate.Companion.toJalaliString
 import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
 import com.baratali.cnote.feature_task.data.data_source.model.TaskWithCategory
+import com.baratali.cnote.feature_task.presentation.add_edit_task.component.jalali_date_picker.DatePickerType
 import com.baratali.cnote.ui.theme.CNoteTheme
 import com.baratali.cnote.ui.theme.spacing
 import java.time.LocalDateTime
@@ -36,6 +38,7 @@ fun TaskItem(
     modifier: Modifier = Modifier,
     taskWithCategory: TaskWithCategory,
     onTaskClick: () -> Unit,
+    datePickerType: DatePickerType = DatePickerType.GEORGIAN,
     onDeleteClick: () -> Unit,
     onCheckClick: (isChecked: Boolean) -> Unit
 ) {
@@ -46,8 +49,8 @@ fun TaskItem(
         withStyle(
             style = SpanStyle(
                 textDecoration =
-                if (taskWithCategory.task.completed) TextDecoration.LineThrough
-                else TextDecoration.None,
+                    if (taskWithCategory.task.completed) TextDecoration.LineThrough
+                    else TextDecoration.None,
                 color = contentColor
             )
         ) {
@@ -90,7 +93,11 @@ fun TaskItem(
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start
                 )
-                taskWithCategory.task.formattedDate?.let {
+                val date = when (datePickerType) {
+                    DatePickerType.GEORGIAN -> taskWithCategory.task.formattedDate
+                    DatePickerType.JALALI -> taskWithCategory.task.date?.toJalaliString()
+                }
+                date?.let {
                     CustomText(
                         modifier = Modifier.padding(vertical = 4.dp),
                         text = it

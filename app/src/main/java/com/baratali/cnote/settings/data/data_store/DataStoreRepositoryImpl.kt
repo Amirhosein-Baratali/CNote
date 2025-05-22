@@ -2,6 +2,7 @@ package com.baratali.cnote.settings.data.data_store
 
 import androidx.datastore.core.DataStore
 import com.baratali.cnote.feature_note.util.PasswordUtils.hashPassword
+import com.baratali.cnote.feature_task.presentation.add_edit_task.component.jalali_date_picker.DatePickerType
 import com.baratali.cnote.settings.data.data_store.dto.DarkMode
 import com.baratali.cnote.settings.data.data_store.dto.Settings
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
@@ -38,5 +39,9 @@ class DataStoreRepositoryImpl(
 
     override suspend fun getPasswordHash(): String? {
         return dataStore.data.first().passwordHash
+    }
+
+    override suspend fun updateDatePickerType(type: DatePickerType) {
+        dataStore.updateData { it.copy(datePickerType = type) }
     }
 }
