@@ -11,4 +11,10 @@ data class TaskWithCategory(
         entityColumn = "id"
     )
     val category: TaskCategory?
-)
+) {
+    fun matchesSearchQuery(query: String): Boolean {
+        val taskMatches = task.matchWithSearchQuery(query)
+        val categoryMatches = category?.name?.contains(query, ignoreCase = true) == true
+        return taskMatches || categoryMatches
+    }
+}

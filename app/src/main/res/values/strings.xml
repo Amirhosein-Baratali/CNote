@@ -76,4 +76,6 @@
     <string name="confirm_persian" translatable="false">تایید</string>
     <string name="cancel_persian" translatable="false">لغو</string>
     <string name="today_persian" translatable="false">امروز</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>
