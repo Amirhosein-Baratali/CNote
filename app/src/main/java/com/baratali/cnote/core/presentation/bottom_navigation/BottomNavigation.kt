@@ -71,19 +71,21 @@ fun BottomNavigation(navController: NavController) {
                     selectedTextColor = MaterialTheme.colorScheme.primary,
                 ),
                 label = {
-                    if (selected)
-                        CustomText(
-                            text = item.title,
-                            color = Color.Unspecified
-                        )
+                    CustomText(
+                        text = item.title,
+                        color = Color.Unspecified
+                    )
                 }
             )
         }
     }
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.route) {
-            TaskScreens.TaskList.javaClass.canonicalName -> selectedItemIndex = items.indexOfFirst { it.destination ==  TaskScreens.Tasks}
-            NoteScreens.NoteList.javaClass.canonicalName -> selectedItemIndex = items.indexOfFirst { it.destination ==  NoteScreens.Notes}
+            TaskScreens.TaskList.javaClass.canonicalName -> selectedItemIndex =
+                items.indexOfFirst { it.destination == TaskScreens.Tasks }
+
+            NoteScreens.NoteList.javaClass.canonicalName -> selectedItemIndex =
+                items.indexOfFirst { it.destination == NoteScreens.Notes }
         }
     }
 }

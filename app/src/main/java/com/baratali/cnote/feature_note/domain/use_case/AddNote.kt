@@ -1,5 +1,6 @@
 package com.baratali.cnote.feature_note.domain.use_case
 
+import android.util.Log
 import com.baratali.cnote.feature_note.domain.model.InvalidNoteException
 import com.baratali.cnote.feature_note.domain.model.Note
 import com.baratali.cnote.feature_note.domain.repository.NoteRepository
@@ -9,7 +10,7 @@ class AddNote(
 ) {
 
     @Throws(InvalidNoteException::class)
-    suspend operator fun invoke(note: Note) {
+    suspend operator fun invoke(note: Note): Long {
         with(note) {
             if (title.isBlank() && content.isBlank()) {
                 throw InvalidNoteException("Oops! It's empty. Fill me up?")
@@ -18,7 +19,9 @@ class AddNote(
                 title = title.ifBlank { content.take(10) },
                 content = content.ifBlank { title }
             )
-            repository.insertNote(updatedNote)
+            val id = repository.insertNote(updatedNote)
+            Log.d("TAGg", "saveNote IN USE CASE with id: $id")
+            return id
         }
     }
 }

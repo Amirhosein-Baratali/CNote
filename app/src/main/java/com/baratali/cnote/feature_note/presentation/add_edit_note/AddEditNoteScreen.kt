@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.baratali.cnote.R
+import com.baratali.cnote.core.presentation.components.HandleOnStop
 import com.baratali.cnote.core.presentation.components.TransparentHintTextField
 import com.baratali.cnote.core.presentation.components.snackbar.CustomScaffold
 import com.baratali.cnote.core.util.TestTags
@@ -53,7 +54,10 @@ fun AddEditNoteScreen(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
-    val state by viewModel.noteState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    HandleOnStop {
+        viewModel.onEvent(AddEditNoteEvent.OnStop)
+    }
 
     AddEditNoteScreenContent(
         state = state,
@@ -169,7 +173,7 @@ fun AddEditNoteScreenContent(
             ConfirmExitDialog(
                 onConfirmExit = { onEvent(AddEditNoteEvent.SaveNote) },
                 onDismissRequest = { onEvent(AddEditNoteEvent.ExitDialogDismissed) },
-                onDiscardChanges = { navController.navigateUp() }
+                onDiscardChanges = { onEvent(AddEditNoteEvent.DiscardChanges) }
             )
         }
         BackHandler {

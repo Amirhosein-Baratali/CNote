@@ -4,8 +4,8 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.media.AudioAttributes
-import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.baratali.cnote.feature_task.presentation.notification.NotificationHelper
@@ -30,7 +30,7 @@ class CNoteApp : Application(), Configuration.Provider {
     }
 
     private fun createNotificationChannel() {
-        val sound = Uri.parse("android.resource://${packageName}/${R.raw.notif_sound}")
+        val sound = "android.resource://${packageName}/${R.raw.notif_sound}".toUri()
         val audioAttributes = AudioAttributes
             .Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)

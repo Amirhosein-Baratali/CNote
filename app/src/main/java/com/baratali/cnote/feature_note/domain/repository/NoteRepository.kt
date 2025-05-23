@@ -10,7 +10,7 @@ interface NoteRepository : OrderRepository {
 
     suspend fun getNoteById(id: Int): Note?
 
-    suspend fun insertNote(note: Note)
+    suspend fun insertNote(note: Note): Long
 
     suspend fun deleteNote(note: Note)
 

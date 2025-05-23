@@ -7,4 +7,6 @@ sealed class AddEditNoteEvent {
     object SaveNote : AddEditNoteEvent()
     object ExitDialogDismissed : AddEditNoteEvent()
     object BackButtonClicked : AddEditNoteEvent()
+    object OnStop : AddEditNoteEvent()
+    object DiscardChanges : AddEditNoteEvent()
 }
