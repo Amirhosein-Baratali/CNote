@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.baratali.cnote.R
 import com.baratali.cnote.core.presentation.components.CustomText
 import com.baratali.cnote.core.presentation.components.RoundedCornerCheckbox
+import com.baratali.cnote.core.util.JalaliDate
 import com.baratali.cnote.core.util.JalaliDate.Companion.toJalaliString
 import com.baratali.cnote.feature_task.data.data_source.model.Task
 import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
@@ -31,7 +33,9 @@ import com.baratali.cnote.feature_task.data.data_source.model.TaskWithCategory
 import com.baratali.cnote.feature_task.presentation.add_edit_task.component.jalali_date_picker.DatePickerType
 import com.baratali.cnote.ui.theme.CNoteTheme
 import com.baratali.cnote.ui.theme.spacing
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun TaskItem(
@@ -93,14 +97,32 @@ fun TaskItem(
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start
                 )
-                val date = when (datePickerType) {
-                    DatePickerType.GEORGIAN -> taskWithCategory.task.formattedDate
-                    DatePickerType.JALALI -> taskWithCategory.task.date?.toJalaliString()
-                }
-                date?.let {
+                taskWithCategory.task.date?.let { taskDate ->
+                    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                    val formattedTime = taskDate.format(timeFormatter)
+                    val displayText = when (datePickerType) {
+                        DatePickerType.GEORGIAN -> {
+                            val today = LocalDate.now()
+                            val tomorrow = today.plusDays(1)
+                            when (taskDate.toLocalDate()) {
+                                today -> "${stringResource(R.string.today)}, $formattedTime"
+                                tomorrow -> "${stringResource(R.string.tomorrow)}, $formattedTime"
+                                else -> taskWithCategory.task.formattedDate ?: ""
+                            }
+                        }
+
+                        DatePickerType.JALALI -> {
+                            val jalaliTaskDate = JalaliDate.fromLocalDateTime(taskDate)
+                            when {
+                                jalaliTaskDate.isToday() -> "${stringResource(R.string.today)}, $formattedTime"
+                                jalaliTaskDate.isTomorrow() -> "${stringResource(R.string.tomorrow)}, $formattedTime"
+                                else -> taskDate.toJalaliString()
+                            }
+                        }
+                    }
                     CustomText(
                         modifier = Modifier.padding(vertical = 4.dp),
-                        text = it
+                        text = displayText
                     )
                 }
             }

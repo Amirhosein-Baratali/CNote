@@ -74,4 +74,6 @@
     <string name="gregorian">میلادی</string>
     <string name="jalali">شمسی</string>
     <string name="calendar_type">توع تقویم</string>
+    <string name="today">امروز</string>
+    <string name="tomorrow">فردا</string>
 </resources>

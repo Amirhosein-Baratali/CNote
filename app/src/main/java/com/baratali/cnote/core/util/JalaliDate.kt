@@ -108,6 +108,20 @@ data class JalaliDate(
         }
     }
 
+    fun isToday(): Boolean {
+        val today = today()
+        return year == today.year &&
+                month == today.month &&
+                day == today.day
+    }
+
+    fun isTomorrow(): Boolean {
+        val tomorrow = today().tomorrow()
+        return year == tomorrow.year &&
+                month == tomorrow.month &&
+                day == tomorrow.day
+    }
+
     init {
         if (year == 0) {
             val today = today()

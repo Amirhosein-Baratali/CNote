@@ -39,9 +39,9 @@ class TasksViewModel @Inject constructor(
     ) { searchText, baseState, settings ->
         baseState.copy(
             tasksWithCategory = baseState.tasksWithCategory.filter {
-                it.task.matchWithSearchQuery(searchText)
+                it.matchesSearchQuery(searchText)
             },
-            datePickerType = settings.datePickerType // reactively update picker type
+            datePickerType = settings.datePickerType
         )
     }.stateIn(
         viewModelScope,
