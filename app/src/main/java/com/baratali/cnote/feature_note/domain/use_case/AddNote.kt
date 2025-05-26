@@ -1,6 +1,5 @@
 package com.baratali.cnote.feature_note.domain.use_case
 
-import android.util.Log
 import com.baratali.cnote.feature_note.domain.model.InvalidNoteException
 import com.baratali.cnote.feature_note.domain.model.Note
 import com.baratali.cnote.feature_note.domain.repository.NoteRepository
@@ -20,7 +19,6 @@ class AddNote(
                 content = content.ifBlank { title }
             )
             val id = repository.insertNote(updatedNote)
-            Log.d("TAGg", "saveNote IN USE CASE with id: $id")
             return id
         }
     }

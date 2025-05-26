@@ -12,20 +12,8 @@ class CalculateTaskNotificationsUseCase @Inject constructor() {
                 TaskNotification(
                     time = date,
                     titleId = R.string.time_to_do_it,
-                    description = task.name,
-                    notificationId = task.id ?: 0
+                    description = task.name
                 )
-            )/*.apply {
-                if (date.minusHours(1).isAfter(LocalDateTime.now())) {
-                    add(
-                        TaskNotification(
-                            time = date.minusHours(1),
-                            titleId = R.string.only_1_hour_left,
-                            description = task.name,
-                            notificationId = task.id ?: 0
-                        )
-                    )
-                }
-            }*/
+            )
         } ?: emptyList()
 }

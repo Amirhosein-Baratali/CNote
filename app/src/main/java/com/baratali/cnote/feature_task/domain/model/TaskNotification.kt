@@ -6,6 +6,5 @@ import java.time.LocalDateTime
 data class TaskNotification(
     val time: LocalDateTime,
     @StringRes val titleId: Int,
-    val description: String,
-    val notificationId: Int
+    val description: String
 )
