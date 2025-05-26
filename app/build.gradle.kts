@@ -1,29 +1,27 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.room)
+    kotlin("plugin.serialization") version "2.1.0"
 }
 
 android {
     val versionMajor = 1
     val versionMinor = 14
-    val versionPatch = 3
+    val versionPatch = 4
     val appName = "CNote"
     val appVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
     val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
-
-    namespace = "com.baratali.cnote"
-
-    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.baratali.cnote"
         minSdk = 26
         targetSdk = 35
+        compileSdk = 35
+        namespace = "com.baratali.cnote"
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -65,16 +63,10 @@ android {
             resValue("string", "app_name", "Cnote debug")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
-    kotlin {
-        jvmToolchain(17)
-    }
+
     buildFeatures {
         compose = true
     }
@@ -86,13 +78,17 @@ android {
                 "${appName}-${buildType}-v${appVersionName}-c${appVersionCode}.apk"
         }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    room {
+        schemaDirectory("$projectDir/schemas/")
     }
 }
 
@@ -121,15 +117,14 @@ dependencies {
 
     //Dagger - Hilt
     implementation(libs.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Room
-    implementation(libs.room.runtime)
-    kapt(libs.androidx.room.compiler.v260)
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation(libs.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.serialization)
 
     //Data Store
     implementation(libs.datastore.preferences)
@@ -138,13 +133,10 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.gson.extras)
 
-    // Kotlin
-    implementation(libs.kotlinx.serialization.json)
-
     //Work Manager with Coroutines
     implementation(libs.work)
     implementation(libs.androidx.hilt.work)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // Local unit tests
     testImplementation(libs.androidx.test.core)
@@ -160,7 +152,7 @@ dependencies {
 
     // Instrumentation tests
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.dagger.hilt.compiler)
+    kspAndroidTest(libs.dagger.hilt.compiler)
     androidTestImplementation(libs.junit4)
     androidTestImplementation(libs.arch.core.testing)
     androidTestImplementation(libs.truth)

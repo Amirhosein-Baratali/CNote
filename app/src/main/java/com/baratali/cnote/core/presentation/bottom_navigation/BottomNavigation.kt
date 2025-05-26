@@ -1,5 +1,6 @@
 package com.baratali.cnote.core.presentation.bottom_navigation
 
+import android.util.Log
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -7,6 +8,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,6 +52,7 @@ fun BottomNavigation(navController: NavController) {
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         items.forEachIndexed { index, item ->
+            Log.d("BottomNavigation", "selectedItemIndex: $selectedItemIndex")
             val selected = selectedItemIndex == index
             NavigationBarItem(
                 selected = selected,
@@ -79,13 +82,14 @@ fun BottomNavigation(navController: NavController) {
             )
         }
     }
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        when (destination.route) {
-            TaskScreens.TaskList.javaClass.canonicalName -> selectedItemIndex =
-                items.indexOfFirst { it.destination == TaskScreens.Tasks }
 
-            NoteScreens.NoteList.javaClass.canonicalName -> selectedItemIndex =
-                items.indexOfFirst { it.destination == NoteScreens.Notes }
+    LaunchedEffect(Unit) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            selectedItemIndex = when (destination.route) {
+                TaskScreens.TaskList.javaClass.canonicalName -> items.indexOfFirst { it.destination == TaskScreens.Tasks }
+                NoteScreens.NoteList.javaClass.canonicalName -> items.indexOfFirst { it.destination == NoteScreens.Notes }
+                else -> selectedItemIndex
+            }
         }
     }
 }

@@ -17,7 +17,9 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @Database(
-    entities = [Task::class, TaskCategory::class], version = 2, exportSchema = false
+    entities = [Task::class, TaskCategory::class],
+    version = 3,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class TaskDatabase : RoomDatabase() {
@@ -35,8 +37,16 @@ abstract class TaskDatabase : RoomDatabase() {
                 // Any outdated or non-existent enum values will be replaced with 'DEFAULT' to prevent potential crashes.
                 database.execSQL(
                     "UPDATE taskcategory SET icon = 'DEFAULT' WHERE icon NOT IN (${
-                        CategoryIcon.values().joinToString { "'${it.name}'" }
+                        CategoryIcon.entries.joinToString { "'${it.name}'" }
                     })")
+            }
+        }
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Add index on categoryId column in Task table
+                database.execSQL(
+                    "CREATE INDEX IF NOT EXISTS index_task_categoryId ON Task(categoryId)"
+                )
             }
         }
     }

@@ -2,6 +2,7 @@ package com.baratali.cnote.feature_task.data.data_source.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.baratali.cnote.feature_task.data.util.formatToDisplay
 import java.time.LocalDateTime
@@ -12,7 +13,8 @@ import java.time.LocalDateTime
         parentColumns = ["id"],
         childColumns = ["categoryId"],
         onDelete = ForeignKey.SET_NULL
-    )]
+    )],
+    indices = [Index(value = ["categoryId"])]
 )
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
