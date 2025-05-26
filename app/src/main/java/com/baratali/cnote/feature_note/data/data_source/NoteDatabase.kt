@@ -6,7 +6,8 @@ import com.baratali.cnote.feature_note.domain.model.Note
 
 @Database(
     entities = [Note::class],
-    version = 1
+    version = 1,
+    exportSchema = true
 )
 abstract class NoteDatabase : RoomDatabase() {
 
