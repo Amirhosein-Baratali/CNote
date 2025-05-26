@@ -16,7 +16,7 @@ class ScheduleTaskNotificationUseCase @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
     private val gson: Gson
 ) {
-    suspend operator fun invoke(task: Task) {
+    suspend operator fun invoke(task: Task, taskColumnId: Long) {
         if (dataStoreRepository.getSettings().first().notificationEnabled) {
             val taskJson = gson.toJson(task)
             val inputData =
@@ -24,8 +24,10 @@ class ScheduleTaskNotificationUseCase @Inject constructor(
             val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
                 .setInputData(inputData)
                 .build()
+
+            val uniqueWorkName = "NotificationWorkerForTask${taskColumnId}"
             workManager.enqueueUniqueWork(
-                "NotificationWorkerForCnote",
+                uniqueWorkName,
                 ExistingWorkPolicy.REPLACE,
                 workRequest
             )

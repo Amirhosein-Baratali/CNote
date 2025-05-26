@@ -27,8 +27,8 @@ class TaskRepositoryImpl(
     override suspend fun getTaskWithCategoryById(id: Int): TaskWithCategory? =
         dao.getTaskWithCategoryById(id)
 
-    override suspend fun insertTask(task: Task) {
-        dao.insertTask(task)
+    override suspend fun insertTask(task: Task): Long {
+        return dao.insertTask(task)
     }
 
     override suspend fun deleteTask(task: Task) {

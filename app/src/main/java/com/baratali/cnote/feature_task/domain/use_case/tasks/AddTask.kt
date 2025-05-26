@@ -13,7 +13,7 @@ class AddTask(
         if (task.name.isBlank()) {
             throw InvalidTaskException("Task Name Cannot Be Empty")
         }
-        repository.insertTask(task)
-        scheduleTaskNotificationUseCase(task)
+        val taskColumnId = repository.insertTask(task)
+        scheduleTaskNotificationUseCase(task, taskColumnId)
     }
 }

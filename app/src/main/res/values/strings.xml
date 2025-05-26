@@ -39,8 +39,8 @@
     <string name="not_now">Not now</string>
     <string name="select_time">Select Time</string>
     <string name="select_date">Select Date</string>
-    <string name="time_to_do_it">Time to Do it!😁</string>
-    <string name="only_1_hour_left">Only 1 hour left</string>
+    <string name="time_to_do_it">Let’s get it done!</string>
+    <string name="only_1_hour_left">Just 1 hour left — stay on it</string>
     <string name="task_reminder">Task Reminder</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="notifications">Notification</string>

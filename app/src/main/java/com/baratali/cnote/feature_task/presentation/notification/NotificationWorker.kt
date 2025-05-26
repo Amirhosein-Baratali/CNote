@@ -33,12 +33,13 @@ class NotificationWorker @AssistedInject constructor(
 
         taskNotifications.forEach { taskNotification ->
             val delay = Duration.between(LocalDateTime.now(), taskNotification.time)
+            val notificationId = taskNotification.time.toString().hashCode()
             delay.toMillis().takeIf { it > 0 }?.let {
                 delay(it)
                 notificationHelper.showNotification(
                     title = context.getString(taskNotification.titleId),
                     message = taskNotification.description,
-                    notificationId = taskNotification.notificationId
+                    notificationId = notificationId
                 )
             }
         }

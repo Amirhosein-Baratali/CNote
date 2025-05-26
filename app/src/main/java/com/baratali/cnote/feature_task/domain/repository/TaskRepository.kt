@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface TaskRepository : OrderRepository {
     fun getTasksWithCategory(): Flow<List<TaskWithCategory>>
     suspend fun getTaskWithCategoryById(id: Int): TaskWithCategory?
-    suspend fun insertTask(task: Task)
+    suspend fun insertTask(task: Task): Long
     suspend fun deleteTask(task: Task)
     suspend fun updateTask(task: Task)
     suspend fun deleteCompletedTasks()
