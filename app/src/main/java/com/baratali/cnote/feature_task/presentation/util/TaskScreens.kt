@@ -10,7 +10,7 @@ sealed class TaskScreens {
     object TaskList : TaskScreens()
 
     @Serializable
-    data class AddEditTask(val taskId: Int?) : TaskScreens()
+    data class AddEditTask(val taskId: Int?, val categoryId: Int? = null) : TaskScreens()
 
     @Serializable
     data class Categories(val categoryId: Int?) : TaskScreens()

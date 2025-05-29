@@ -6,6 +6,8 @@ import com.baratali.cnote.core.domain.util.Order
 import com.baratali.cnote.core.presentation.BaseViewModel
 import com.baratali.cnote.core.presentation.components.UiText
 import com.baratali.cnote.core.presentation.components.snackbar.SnackbarAction
+import com.baratali.cnote.feature_task.data.data_source.model.TaskCategory
+import com.baratali.cnote.feature_task.data.data_source.model.TaskWithCategory
 import com.baratali.cnote.feature_task.domain.use_case.tasks.TaskUseCases
 import com.baratali.cnote.settings.domain.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +41,10 @@ class TasksViewModel @Inject constructor(
     ) { searchText, baseState, settings ->
         baseState.copy(
             tasksWithCategory = baseState.tasksWithCategory.filter {
-                it.matchesSearchQuery(searchText)
+                it.matchesSearchQuery(searchText) && matchesSelectedCategory(
+                    it,
+                    baseState.selectedCategory
+                )
             },
             datePickerType = settings.datePickerType
         )
@@ -97,6 +102,10 @@ class TasksViewModel @Inject constructor(
             TasksEvent.SettingsClicked -> viewModelScope.launch {
                 _eventFlow.send(UIEvent.NavigateToSettings)
             }
+
+            is TasksEvent.SelectedCategoryChanged -> {
+                _state.update { it.copy(selectedCategory = event.selectedCategory) }
+            }
         }
     }
 
@@ -113,14 +122,27 @@ class TasksViewModel @Inject constructor(
     private fun getTasks(taskOrder: Order) {
         getTasksJob?.cancel()
         getTasksJob = taskUseCases.getTasks(taskOrder).onEach { tasksWithCategory ->
+            val uniqueCategories =
+                tasksWithCategory
+                    .map { it.category }
+                    .distinctBy { it?.id }
+                    .sortedBy { it?.name }
+                    .filterNotNull()
             _state.update { currentState ->
                 currentState.copy(
                     tasksWithCategory = tasksWithCategory,
+                    allCategories = uniqueCategories,
                     taskOrder = taskOrder
                 )
             }
         }.launchIn(viewModelScope)
     }
+
+    private fun matchesSelectedCategory(
+        taskWithCategory: TaskWithCategory,
+        selectedCategory: TaskCategory?
+    ) = selectedCategory == null || taskWithCategory.category?.id == selectedCategory.id
+
 
     sealed class UIEvent {
         object NavigateToSettings : UIEvent()

@@ -42,9 +42,16 @@ class AddEditTaskViewModel @Inject constructor(
 
     init {
         updateDatePickerTypeFromSetting()
-        savedStateHandle.toRoute<TaskScreens.AddEditTask>().taskId?.let { taskId ->
+        initializeFromRoute(savedStateHandle.toRoute<TaskScreens.AddEditTask>())
+    }
+
+    private fun initializeFromRoute(route: TaskScreens.AddEditTask) {
+        route.taskId?.let { taskId ->
             _state.update { it.copy(currentTaskId = taskId) }
             getTask(taskId)
+        }
+        route.categoryId?.let {
+            updateSelectedCategory(it)
         }
     }
 

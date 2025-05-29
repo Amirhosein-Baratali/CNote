@@ -2,8 +2,10 @@ package com.baratali.cnote.feature_task.presentation.tasks
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +28,7 @@ import com.baratali.cnote.core.presentation.TopBar
 import com.baratali.cnote.core.presentation.components.FloatingAddButton
 import com.baratali.cnote.core.presentation.components.LightAndDarkPreview
 import com.baratali.cnote.core.presentation.components.snackbar.CustomScaffold
+import com.baratali.cnote.feature_task.presentation.tasks.components.CategoryChips
 import com.baratali.cnote.feature_task.presentation.tasks.components.DeleteCompletedMenuItem
 import com.baratali.cnote.feature_task.presentation.tasks.components.TaskItem
 import com.baratali.cnote.feature_task.presentation.util.TaskScreens
@@ -74,7 +77,12 @@ fun TasksScreenContent(
         floatingActionButton = {
             FloatingAddButton(
                 onClick = {
-                    navController.navigate(TaskScreens.AddEditTask(null))
+                    navController.navigate(
+                        TaskScreens.AddEditTask(
+                            taskId = null,
+                            categoryId = state.selectedCategory?.id
+                        )
+                    )
                 }
             )
         },
@@ -103,24 +111,44 @@ fun TasksScreenContent(
             )
         },
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            items(state.tasksWithCategory) { tasksWithCategory ->
-                TaskItem(
-                    taskWithCategory = tasksWithCategory,
-                    onTaskClick = {
-                        navController.navigate(TaskScreens.AddEditTask(taskId = tasksWithCategory.task.id))
-                    },
-                    onDeleteClick = { onEvent(TasksEvent.DeleteTask(tasksWithCategory.task)) },
-                    onCheckClick = {
-                        onEvent(TasksEvent.UpdateTask(tasksWithCategory.task.copy(completed = it)))
-                    },
-                    datePickerType = state.datePickerType
+            state.allCategories.takeIf { it.isNotEmpty() }?.let { categories ->
+                Spacer(Modifier.height(12.dp))
+                CategoryChips(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    categories = categories,
+                    selectedCategory = state.selectedCategory,
+                    onSelectedCategoryChanged = { onEvent(TasksEvent.SelectedCategoryChanged(it)) }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(1f)
+            ) {
+                items(state.tasksWithCategory) { tasksWithCategory ->
+                    TaskItem(
+                        taskWithCategory = tasksWithCategory,
+                        onTaskClick = {
+                            navController.navigate(
+                                TaskScreens.AddEditTask(
+                                    taskId = tasksWithCategory.task.id,
+                                    categoryId = state.selectedCategory?.id
+                                )
+                            )
+                        },
+                        onDeleteClick = { onEvent(TasksEvent.DeleteTask(tasksWithCategory.task)) },
+                        onCheckClick = {
+                            onEvent(TasksEvent.UpdateTask(tasksWithCategory.task.copy(completed = it)))
+                        },
+                        datePickerType = state.datePickerType
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
